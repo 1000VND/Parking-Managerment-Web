@@ -1,0 +1,18 @@
+<parking-loading></parking-loading>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="title" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+    [nzOkLoading]="isOkLoading">
+    <div *nzModalContent>
+        <nz-input-group *ngIf="selectedData.id == null" class="mb-2" nzAddOnBefore="User name">
+            <input type="text" nz-input [(ngModel)]="selectedData.userName" />
+        </nz-input-group>
+        <nz-input-group *ngIf="selectedData.id == null" class="mb-2" nzAddOnBefore="Pass word">
+            <input type="password" nz-input [(ngModel)]="selectedData.passWord" />
+        </nz-input-group>
+        <nz-input-group class="mb-2" nzAddOnBefore="Full name">
+            <input type="text" nz-input [(ngModel)]="selectedData.fullName" />
+        </nz-input-group>
+        <nz-input-group class="mb-2" nzAddOnBefore="Role">
+            <input type="text" nz-input [(ngModel)]="selectedData.role" />
+        </nz-input-group>
+    </div>
+</nz-modal>

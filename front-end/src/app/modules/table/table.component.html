@@ -1,0 +1,14 @@
+<nz-table #table [nzData]="rows">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns">{{column.header}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of table.data">
+      <td *ngFor="let column of columns">
+        {{data[column.key]}}
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

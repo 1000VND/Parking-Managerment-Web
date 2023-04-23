@@ -1,0 +1,21 @@
+/* img{
+    transform: scaleX(-1);
+} */
+/* .webcamid>webcam {
+    transform: scaleX(-1) !important;
+} */
+:host{
+    margin: 0px;
+    padding: 0;
+}
+webcam {
+    transform: scaleX(-1);
+}
+
+mark{
+    color: red;
+    background: white;
+}
+.container{
+    display: inline-block;
+}
