@@ -26,13 +26,13 @@ namespace API.Controllers
         }
 
         [HttpPost("CreateOrEdit")]
-        public async Task<IActionResult> CreateOrEdit([FromQuery]RegisterDto input)
+        public async Task<IActionResult> CreateOrEdit(RegisterDto input)
         {
             if (input.Id == null) return await Create(input);
             else return await Update(input);
         }
 
-        private async Task<IActionResult> Create([FromQuery]RegisterDto input)
+        private async Task<IActionResult> Create(RegisterDto input)
         {
             var checkExist = await _dataContext.Users.FirstOrDefaultAsync(user => user.UserName == input.UserName.ToLower() && user.IsDelete == 0);
 
@@ -56,14 +56,14 @@ namespace API.Controllers
             return CustomResult(user);
         }
 
-        private async Task<IActionResult> Update([FromQuery]RegisterDto input)
+        private async Task<IActionResult> Update(RegisterDto input)
         {
-            var dataExit = _dataContext.Users.FirstOrDefaultAsync(user => user.Id == input.Id).Result;
+            var dataExit = await _dataContext.Users.FindAsync(input.Id);
             dataExit.FullName = input.FullName;
             dataExit.Role = input.Role;
             dataExit.LastModificationTime = DateTime.Now;
 
-            _dataContext.Users.UpdateRange(dataExit);
+            _dataContext.Users.Update(dataExit);
             await _dataContext.SaveChangesAsync();
 
             return CustomResult(dataExit);

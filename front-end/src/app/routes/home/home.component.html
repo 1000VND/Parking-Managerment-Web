@@ -1,34 +1,72 @@
 <parking-loading></parking-loading>
-<div class="container">
-    <div>
-        <div nz-row *ngIf="isCameraExist; else noCameraExist" class="camera" style="display: flex;">
-            <webcam class="mirrored" [height]="350" [width]="350" [trigger]="triggerObservable"
-                (imageCapture)="handleImage($event)" *ngIf="showWebcam" [switchCamera]="nextWebcamObservable"></webcam>
-            <div nz-col class="gutter-row ml-3" [nzSpan]="12">
-                <img nz-image width="350" height="262.5" *ngIf="imga" [src]="imga" [nzFallback]="imga">
+<div class="d-flex">
+    <div class="container">
+        <div>
+            <div nz-row *ngIf="isCameraExist; else noCameraExist" class="camera" style="display: flex;">
+                <webcam class="mirrored" [height]="350" [width]="350" [trigger]="triggerObservable"
+                    (imageCapture)="handleImage($event)" *ngIf="showWebcam" [switchCamera]="nextWebcamObservable">
+                </webcam>
+                <div nz-col class="gutter-row ml-3" [nzSpan]="12">
+                    <img nz-image width="350" height="262.5" *ngIf="imga" [src]="imga" [nzFallback]="imga">
+                </div>
+            </div>
+            <ng-template #noCameraExist>
+                Camera Device not Available
+            </ng-template>
+
+        </div>
+        <h2 *ngIf="isScan">Biển số xe vào: <mark style="color: green; background-color: white;">{{ resultImage }}</mark>
+        </h2>
+        <h2 *ngIf="!isScan">Biển số xe vào: <mark>{{ resultImage }}</mark> </h2>
+        <h5>Mã gửi xe: {{ maGuixe }} </h5>
+
+        <div nz-row>
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <button nz-button nzType="default" (click)="cappicture()">
+                    <i class="fa-solid fa-arrow-right mr-2"></i>
+                    Lấy biển số xe vào
+                </button>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <button nz-button nzType="default" (click)="cappicture()">
+                    <i class="fa-solid fa-arrow-left mr-2"></i>
+                    Lấy biển số xe ra
+                </button>
+            </div>
+
+            <div nz-col class="gutter-row" [nzSpan]="6">
+                <button nz-button nzType="default" (click)="inputCar()">
+                    <i class="fa-solid fa-rotate mr-1"></i>
+                    Lấy mã
+                </button>
             </div>
         </div>
-        <ng-template #noCameraExist>
-            Camera Device not Available
+    </div>
+
+    <nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5"
+        [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate" style="width: 50%;">
+        <ng-template #rangeTemplate let-range="range" let-total>
+            {{ range[0] }}-{{ range[1] }} of {{ total }} items
         </ng-template>
-
-    </div>
-    <h2 *ngIf="isScan">Biển số xe vào: <mark style="color: green; background-color: white;">{{ resultImage }}</mark> </h2>
-    <h2 *ngIf="!isScan">Biển số xe vào: <mark>{{ resultImage }}</mark> </h2>
-    <h5>Mã gửi xe: {{ maGuixe }} </h5>
-
-    <div nz-row>
-        <div nz-col class="gutter-row" [nzSpan]="6">
-            <button nz-button nzType="default" (click)="cappicture()">
-                <i class="fa-solid fa-camera-rotate mr-1"></i>
-                Nhập xe
-            </button>
-        </div>
-        <div nz-col class="gutter-row" [nzSpan]="6">
-            <button nz-button nzType="default" (click)="inputCar()">
-                <i class="fa-solid fa-rotate mr-1"></i>
-                Lấy mã
-            </button>
-        </div>
-    </div>
+        <thead>
+            <tr>
+                <th nzAlign="center">Creation Time</th>
+                <th nzAlign="center">LastModification Time</th>
+                <th nzAlign="center">User Name</th>
+                <th nzAlign="center">Full Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="rowData" *ngFor="let data of virtualTable.data;">
+                <ng-container>
+                    <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                    <td nzAlign="center" [nzDisabled]="true">{{ data.lastModificationTime | date: 'dd/MM/yyyy HH:mm'}}
+                    </td>
+                    <td>{{ data.userName }}</td>
+                    <td>{{ data.fullName }}</td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </nz-table>
 </div>

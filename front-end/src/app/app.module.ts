@@ -23,7 +23,7 @@ import { LoadingComponent } from './routes/common/loading/loading.component';
 import { NgOptimizedImage } from '@angular/common';
 import { NgZorroAntdModule } from './ng-zorro-antd/ng-zorro-antd/ng-zorro-antd.module';
 import { UserComponent } from './routes/user/user.component';
-import { CreateEditUserComponent } from './routes/user/create-edit-user/create-edit-user.component';
+import { UserCreateEditComponent } from './routes/user/user-create-edit/user-create-edit.component';
 
 @NgModule({
   declarations: [
@@ -34,9 +34,9 @@ import { CreateEditUserComponent } from './routes/user/create-edit-user/create-e
     NavBarComponent,
     CarComponent,
     UserComponent,
-    CreateEditUserComponent,
     TicketMonthlyComponent,
     TicketMonthlyComponent,
+    UserCreateEditComponent
   ],
   imports: [
     BrowserModule,

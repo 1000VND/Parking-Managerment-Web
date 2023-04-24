@@ -1,19 +1,19 @@
 <parking-loading></parking-loading>
 <div class="d-flex justify-content-between">
     <h1>Quản lý nhân viên</h1>
-    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createOrEditModal.show(addUser)">
+    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
         <i class="fa-solid fa-user-plus mr-2"></i>
         Add
     </button>
 </div>
 
-<nz-table #virtualTable [nzBordered]="true" [nzData]="listData" [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
+<nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30]
+    [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>
     <thead>
         <tr>
-            <th nzAlign="center" nzWidth="5%">ID</th> 
             <th nzAlign="center">Creation Time</th>
             <th nzAlign="center">LastModification Time</th>
             <th nzAlign="center">User Name</th>
@@ -23,16 +23,15 @@
         </tr>
     </thead>
     <tbody>
-        <tr class="rowData" *ngFor="let data of virtualTable.data;let indexOfelement=index;">
+        <tr class="rowData" *ngFor="let data of virtualTable.data;">
             <ng-container>
-                <td nzAlign="center" >{{ indexOfelement + 1 }}</td>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.lastModificationTime | date: 'dd/MM/yyyy HH:mm'}}</td>
                 <td>{{ data.userName }}</td>
                 <td>{{ data.fullName }}</td>
-                <td nzAlign="center">{{ data.role }}</td>
+                <td nzAlign="center">{{ data.role == 1 ? 'Admin' : 'User'}}</td>
                 <td nzAlign="center">
-                    <button class="mr-3" nz-button nzType="default" (click)="showModal(data)">
+                    <button class="mr-3" nz-button nzType="default" (click)="createModal.show(data)">
                         <i class="fa-regular fa-pen-to-square mr-1"></i>
                         Edit
                     </button>
@@ -43,7 +42,6 @@
                 </td>
             </ng-container>
         </tr>
-        <create-edit-user #createOrEditModal (modalClose)="getAllData()"
-            (modalSave)="getAllData()"></create-edit-user>
+        <user-create-edit #createModal (modalSave)="getAllData()"></user-create-edit>
     </tbody>
 </nz-table>
