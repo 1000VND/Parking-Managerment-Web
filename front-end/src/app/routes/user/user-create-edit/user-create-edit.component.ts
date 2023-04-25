@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { CreateEditUserDto } from 'src/app/models/User/createedit.model';
 import { finalize } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'user-create-edit',
@@ -25,13 +26,14 @@ export class UserCreateEditComponent implements OnInit {
   constructor(
     private _service: UserService,
     private fb: FormBuilder,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
     this.form = this.fb.group({
       id: [null],
       userName: [null, Validators.required],
-      passWord: [null],
+      passWord: [null, Validators.required],
       fullName: [null, Validators.required],
       role: [null, Validators.required],
     })
@@ -43,15 +45,19 @@ export class UserCreateEditComponent implements OnInit {
   }
 
   save(): void {
-    this.form.controls['passWord'].setValue(this.userDto?.passWord);
+    //this.form.controls['passWord'].setValue(this.userDto?.passWord);
+    this.isOkLoading = true;
+    this.validateForm(this.form);
+    this._service.createOrEdit(this.form.value).pipe(finalize(() => {
+      this.isVisible = false;
+      this.isOkLoading = false;
+      this.modalSave.emit(null);
+    })).subscribe((res) => {
+      if (res.statusCode == 200){
+        this.toastr.success('Add user success!');
+      }
+    })
     if (this.form.valid) {
-      this.isOkLoading = true;
-      this._service.createOrEdit(this.form.value).pipe(finalize(() => {
-        this.isVisible = false;
-        this.isOkLoading = false;
-        this.modalSave.emit(null);
-      })).subscribe(() => {
-      })
     }
     else {
       Object.values(this.form.controls).forEach(control => {
@@ -67,13 +73,20 @@ export class UserCreateEditComponent implements OnInit {
     this.form.reset();
     this.userDto = null;
     if (userDto) {
-      this.form.controls['passWord'].setValidators(null);
+      //this.form.controls['passWord'].setValidators(null);
       this.form.patchValue(userDto);
       this.userDto = userDto;
     } else {
       this.form.controls['passWord'].setValidators(Validators.required);
     }
     this.isVisible = true;
+  }
+
+  validateForm(form: FormGroup): void {
+    for (const i in form.controls) {
+      form.controls[i].markAsDirty();
+      form.controls[i].updateValueAndValidity();
+    }
   }
 
 }

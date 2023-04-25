@@ -1,50 +1,60 @@
 <parking-loading></parking-loading>
-<div class="d-flex">
-    <div class="container">
-        <div>
-            <div nz-row *ngIf="isCameraExist; else noCameraExist" class="camera" style="display: flex;">
-                <webcam class="mirrored" [height]="350" [width]="350" [trigger]="triggerObservable"
+<div>
+    <div nz-row [nzAlign]="'middle'">
+        <div nz-col nzSpan="8">
+            <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+                <webcam class="mirrored" [height]="400" [width]="400" [trigger]="triggerObservable"
                     (imageCapture)="handleImage($event)" *ngIf="showWebcam" [switchCamera]="nextWebcamObservable">
                 </webcam>
-                <div nz-col class="gutter-row ml-3" [nzSpan]="12">
-                    <img nz-image width="350" height="262.5" *ngIf="imga" [src]="imga" [nzFallback]="imga">
-                </div>
             </div>
             <ng-template #noCameraExist>
                 Camera Device not Available
             </ng-template>
-
         </div>
-        <h2 *ngIf="isScan">Biển số xe vào: <mark style="color: green; background-color: white;">{{ resultImage }}</mark>
-        </h2>
-        <h2 *ngIf="!isScan">Biển số xe vào: <mark>{{ resultImage }}</mark> </h2>
-        <h5>Mã gửi xe: {{ maGuixe }} </h5>
-
-        <div nz-row>
-            <div nz-col class="gutter-row" [nzSpan]="6">
-                <button nz-button nzType="default" (click)="cappicture()">
-                    <i class="fa-solid fa-arrow-right mr-2"></i>
-                    Lấy biển số xe vào
-                </button>
+        <div nz-col nzSpan="8">
+            <div nz-col class="gutter-row" [nzSpan]="12">
+                <img nz-image width="400" height="300" *ngIf="imga" [src]="imga" [nzFallback]="imga">
             </div>
-
-            <div nz-col class="gutter-row" [nzSpan]="6">
-                <button nz-button nzType="default" (click)="cappicture()">
-                    <i class="fa-solid fa-arrow-left mr-2"></i>
-                    Lấy biển số xe ra
-                </button>
-            </div>
-
-            <div nz-col class="gutter-row" [nzSpan]="6">
-                <button nz-button nzType="default" (click)="inputCar()">
-                    <i class="fa-solid fa-rotate mr-1"></i>
-                    Lấy mã
-                </button>
+        </div>
+        <div nz-col nzSpan="8">
+            <div nz-col class="gutter-row" [nzSpan]="12">
+                <img nz-image width="400" height="300" *ngIf="imga" [src]="imga" [nzFallback]="imga">
             </div>
         </div>
     </div>
+</div>
 
-    <nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5"
+<div>
+    <h2 *ngIf="isScan">Biển số xe vào: <mark style="color: green; background-color: white;">{{ resultImage }}</mark>
+    </h2>
+    <h2 *ngIf="!isScan">Biển số xe vào: <mark>{{ resultImage }}</mark> </h2>
+    <h5>Mã gửi xe: {{ maGuixe }} </h5>
+    <div nz-row>
+        <div nz-col class="gutter-row" [nzSpan]="6">
+            <button nz-button nzType="default" (click)="cappicture()">
+                <i class="fa-solid fa-arrow-right mr-2"></i>
+                Lấy biển số xe vào
+            </button>
+        </div>
+
+        <div nz-col class="gutter-row" [nzSpan]="6">
+            <button nz-button nzType="default" (click)="cappicture()">
+                <i class="fa-solid fa-arrow-left mr-2"></i>
+                Lấy biển số xe ra
+            </button>
+        </div>
+
+        <div nz-col class="gutter-row" [nzSpan]="6">
+            <button nz-button nzType="default" (click)="inputCar()">
+                <i class="fa-solid fa-rotate mr-1"></i>
+                Lấy mã
+            </button>
+        </div>
+    </div>
+</div>
+
+
+    <!-- <nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5"
         [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate" style="width: 50%;">
         <ng-template #rangeTemplate let-range="range" let-total>
             {{ range[0] }}-{{ range[1] }} of {{ total }} items
@@ -68,5 +78,7 @@
                 </ng-container>
             </tr>
         </tbody>
-    </nz-table>
+    </nz-table> 
 </div>
+
+-->

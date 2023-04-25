@@ -37,11 +37,6 @@ export class UserComponent implements OnInit {
       this.listData = res.data;
     });
   }
-  
-
-  showModal(data: any) {
-    this.selectedData = Object.assign({}, data);
-  }
 
   deleteUser(id: number) {
     this.loading(true);
@@ -49,18 +44,14 @@ export class UserComponent implements OnInit {
       .pipe(
         finalize(() => {
           this.loading(false);
-        }),
-        catchError((error) => {
-          this._toast.error('Delete fail');
-          return throwError(error);
-        })
-      )
-      .subscribe(() => {
-        this._toast.success('Delete success');
-        this.listData = this.listData.filter((user) => user.id !== id);
-      });
+        })).subscribe((res) => {
+          if (res.statusCode == 200) {
+            this._toast.success('Delete success');
+          }
+          this.listData = this.listData.filter((user) => user.id !== id);
+        });
   }
-  
+
 
   loading(loading: boolean) {
     if (loading) this.spinner.show();

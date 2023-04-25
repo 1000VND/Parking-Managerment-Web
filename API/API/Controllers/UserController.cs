@@ -74,6 +74,7 @@ namespace API.Controllers
         {
             var data = await (from u in _dataContext.Users
                               where u.IsDelete == 0
+                              orderby u.CreationTime descending
                               select new UserDto
                               {
                                   Id = u.Id,
@@ -87,14 +88,31 @@ namespace API.Controllers
             return CustomResult(data);
         }
 
-        [HttpDelete("Delete")]
+        /*[HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dataExit = _dataContext.Users.FirstOrDefaultAsync(e => e.Id == id && e.IsDelete == 0).Result;
+            var dataExit = await _dataContext.Users.FirstOrDefaultAsync(e => e.Id == id && e.IsDelete == 0);
 
             _dataContext.Users.Remove(dataExit);
             await _dataContext.SaveChangesAsync();
             return CustomResult(dataExit);
+        }*/
+
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var dataExits = await _dataContext.Users.FindAsync(id);
+
+            if (dataExits != null && dataExits.IsDelete == Status.No)
+            {
+                dataExits.IsDelete = Status.Yes;
+                dataExits.LastModificationTime = DateTime.Now;
+                _dataContext.Entry(dataExits).State = EntityState.Modified;
+                await _dataContext.SaveChangesAsync();
+                return CustomResult(dataExits);
+            }
+
+            return NotFound();
         }
     }
 }
