@@ -19,7 +19,7 @@
   </nz-sider>
   <nz-layout>
     <nz-header>
-      <nav class="navbar navbar-expand navbar-dark bg-dark px-2">
+      <nav class="navbar navbar-expand px-2" style="background-color: #001529;">
         <div class="ml-2 text-light" nz-button nzType="primary" (click)="toggleCollapsed()">
           <span nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
         </div>
@@ -34,13 +34,13 @@
               <div class="side-nav-button p-2 me-3 text-light">
                 <a nz-dropdown [nzDropdownMenu]="menu">
                   {{userLocal}}
-                  <span nz-icon nzType="down"></span>
+                  <i class="fa-solid fa-caret-down ml-1"></i>
                 </a>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu>
-                    <li nz-menu-item>Đổi mật khẩu</li>
+                    <li nz-menu-item>Your Account</li>
                     <li nz-menu-divider></li>
-                    <li nz-menu-item nzDanger routerLink="/login" (click)="logout()">Đăng xuất</li>
+                    <li nz-menu-item nzDanger routerLink="/login" (click)="logout()">Logout</li>
                   </ul>
                 </nz-dropdown-menu>
               </div>

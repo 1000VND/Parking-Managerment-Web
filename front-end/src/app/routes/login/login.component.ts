@@ -51,4 +51,10 @@ export class LoginComponent implements OnInit {
       }
     })
   }
+
+  handleEnterKeyPress(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      this.submitForm();
+    }
+  }
 }

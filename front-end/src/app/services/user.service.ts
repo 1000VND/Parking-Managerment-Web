@@ -32,8 +32,8 @@ export class UserService {
     }));
   }
 
-  deleteUser(id: number) {
-    return this.http.delete(this.baseUrl + 'Delete?id=' + id).pipe(catchError((err) => {
+  deleteUser(id: number): Observable<any> {
+    return this.http.post(this.baseUrl + 'Delete?id=' + id, id).pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
     }));

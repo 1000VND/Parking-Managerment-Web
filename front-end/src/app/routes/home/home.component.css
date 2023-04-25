@@ -1,11 +1,5 @@
-/* img{
-    transform: scaleX(-1);
-} */
-/* .webcamid>webcam {
-    transform: scaleX(-1) !important;
-} */
-:host{
-    margin: 0px;
+.container{
+    margin: 0;
     padding: 0;
 }
 webcam {
@@ -18,4 +12,5 @@ mark{
 }
 .container{
     display: inline-block;
+    width: 50%;
 }

@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   maGuixe: string | undefined;
   isScan: boolean = true;
   isLoading: boolean = true;
+  listData: any;
 
   constructor(
     private _dataformat: DataFormatService,

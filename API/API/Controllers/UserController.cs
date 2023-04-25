@@ -26,13 +26,13 @@ namespace API.Controllers
         }
 
         [HttpPost("CreateOrEdit")]
-        public async Task<IActionResult> CreateOrEdit([FromQuery]RegisterDto input)
+        public async Task<IActionResult> CreateOrEdit(RegisterDto input)
         {
             if (input.Id == null) return await Create(input);
             else return await Update(input);
         }
 
-        private async Task<IActionResult> Create([FromQuery]RegisterDto input)
+        private async Task<IActionResult> Create(RegisterDto input)
         {
             var checkExist = await _dataContext.Users.FirstOrDefaultAsync(user => user.UserName == input.UserName.ToLower() && user.IsDelete == 0);
 
@@ -56,14 +56,14 @@ namespace API.Controllers
             return CustomResult(user);
         }
 
-        private async Task<IActionResult> Update([FromQuery]RegisterDto input)
+        private async Task<IActionResult> Update(RegisterDto input)
         {
-            var dataExit = _dataContext.Users.FirstOrDefaultAsync(user => user.Id == input.Id).Result;
+            var dataExit = await _dataContext.Users.FindAsync(input.Id);
             dataExit.FullName = input.FullName;
             dataExit.Role = input.Role;
             dataExit.LastModificationTime = DateTime.Now;
 
-            _dataContext.Users.UpdateRange(dataExit);
+            _dataContext.Users.Update(dataExit);
             await _dataContext.SaveChangesAsync();
 
             return CustomResult(dataExit);
@@ -74,6 +74,7 @@ namespace API.Controllers
         {
             var data = await (from u in _dataContext.Users
                               where u.IsDelete == 0
+                              orderby u.CreationTime descending
                               select new UserDto
                               {
                                   Id = u.Id,
@@ -87,14 +88,31 @@ namespace API.Controllers
             return CustomResult(data);
         }
 
-        [HttpDelete("Delete")]
+        /*[HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dataExit = _dataContext.Users.FirstOrDefaultAsync(e => e.Id == id && e.IsDelete == 0).Result;
+            var dataExit = await _dataContext.Users.FirstOrDefaultAsync(e => e.Id == id && e.IsDelete == 0);
 
             _dataContext.Users.Remove(dataExit);
             await _dataContext.SaveChangesAsync();
             return CustomResult(dataExit);
+        }*/
+
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var dataExits = await _dataContext.Users.FindAsync(id);
+
+            if (dataExits != null && dataExits.IsDelete == Status.No)
+            {
+                dataExits.IsDelete = Status.Yes;
+                dataExits.LastModificationTime = DateTime.Now;
+                _dataContext.Entry(dataExits).State = EntityState.Modified;
+                await _dataContext.SaveChangesAsync();
+                return CustomResult(dataExits);
+            }
+
+            return NotFound();
         }
     }
 }

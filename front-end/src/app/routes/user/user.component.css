@@ -1,16 +1,11 @@
-.row {
-    background-color: white;
-  }
-  
-  .row.selected {
-    background-color: yellow;
-  }
-
-  ::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.ng-star-inserted
-  {
+  ::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.ng-star-inserted {
     display: block !important;
   }
 
-  ::ng-deep .ng-star-inserted>.ant-pagination-total-text.ng-star-inserted{
+  ::ng-deep .ng-star-inserted>.ant-pagination-total-text.ng-star-inserted {
     width: 82%;
+  }
+
+  ::ng-deep .ant-input-group-addon.ng-star-inserted {
+    width: 89px;
   }

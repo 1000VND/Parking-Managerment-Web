@@ -1,5 +1,5 @@
 export class CreateEditUserDto {
-    id: number | undefined | null;
+    id: number | undefined;
     userName: string = '';
     passWord: string = '';
     fullName: string = '';
