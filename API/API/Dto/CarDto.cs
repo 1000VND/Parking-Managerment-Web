@@ -12,14 +12,13 @@ namespace API.Dto
         public DateTime? LastModificationTime { get; set; }
         public Status IsDelete { get; set; }
 
-        public string ImageCarIn { get; set; }
-        public string ImageCarOut { get; set; }
         public string LicensePlateIn { get; set; }
         public string LicensePlateOut { get; set; }
-        public DateTime? CarInTime { get; set; }
-        public DateTime? CarOutTime { get; set; }
-        public string TypeCustomer { get; set; }
-        public int CardId { get; set; }
-        public Status? IsCarParking { get; set; }
+        public DateTime? CarTimeIn { get; set; }
+        public DateTime? CarTimeOut { get; set; }
+        public string ImgCarIn { get; set; }
+        public string ImgCarOut { get; set; }
+        public int TypeCard { get; set; }
+        public int IsCarParking { get; set; }
     }
 }

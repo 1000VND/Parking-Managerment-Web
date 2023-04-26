@@ -53,7 +53,7 @@ namespace API.Controllers
             _dataContext.Users.Add(user);
             await _dataContext.SaveChangesAsync();
 
-            return CustomResult(user);
+            return CustomResult("Add success!");
         }
 
         private async Task<IActionResult> Update(RegisterDto input)
@@ -66,7 +66,7 @@ namespace API.Controllers
             _dataContext.Users.Update(dataExit);
             await _dataContext.SaveChangesAsync();
 
-            return CustomResult(dataExit);
+            return CustomResult("Update success!");
         }
 
         [HttpGet("GetAll")]
@@ -88,17 +88,7 @@ namespace API.Controllers
             return CustomResult(data);
         }
 
-        /*[HttpDelete("Delete")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var dataExit = await _dataContext.Users.FirstOrDefaultAsync(e => e.Id == id && e.IsDelete == 0);
-
-            _dataContext.Users.Remove(dataExit);
-            await _dataContext.SaveChangesAsync();
-            return CustomResult(dataExit);
-        }*/
-
-        [HttpPost("Delete")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var dataExits = await _dataContext.Users.FindAsync(id);
