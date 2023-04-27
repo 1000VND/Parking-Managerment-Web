@@ -6,7 +6,7 @@ import { DataFormatService } from 'src/app/services/data-format.service';
 import * as Tesseract from 'tesseract.js';
 import { LoadingComponent } from '../common/loading/loading.component';
 // import { firebase } from '@firebase/app';
-import '@firebase/storage';
+
 
 @Component({
   selector: 'home',
