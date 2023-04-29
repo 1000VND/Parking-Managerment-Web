@@ -5,6 +5,8 @@ import { Observable, Subject } from 'rxjs';
 import { DataFormatService } from 'src/app/services/data-format.service';
 import * as Tesseract from 'tesseract.js';
 import { LoadingComponent } from '../common/loading/loading.component';
+// import { firebase } from '@firebase/app';
+
 
 @Component({
   selector: 'home',
@@ -60,6 +62,7 @@ export class HomeComponent implements OnInit {
   cappicture() {
     this.trigger.next();
     this.imga = this.webcamImage!.imageAsDataUrl;
+    console.log(this.imga);
     this.convertImage();
   }
 

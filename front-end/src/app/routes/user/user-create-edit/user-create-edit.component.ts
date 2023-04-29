@@ -54,7 +54,7 @@ export class UserCreateEditComponent implements OnInit {
       this.modalSave.emit(null);
     })).subscribe((res) => {
       if (res.statusCode == 200){
-        this.toastr.success('Add user success!');
+        this.toastr.success(res.message);
       }
     })
     if (this.form.valid) {

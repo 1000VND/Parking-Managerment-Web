@@ -7,91 +7,89 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    public class UserController : BaseApiController
+    public class PromotionController : BaseApiController
     {
         private readonly DataContext _dataContext;
 
-        public UserController
+        public PromotionController
             (
                 DataContext dataContext
             )
         {
             _dataContext = dataContext;
         }
-
         [HttpPost("CreateOrEdit")]
-        public async Task<IActionResult> CreateOrEdit(RegisterDto input)
+        public async Task<IActionResult> CreateOrEdit(PromotionDto input)
         {
             if (input.Id == null) return await Create(input);
             else return await Update(input);
         }
 
-        private async Task<IActionResult> Create(RegisterDto input)
+        private async Task<IActionResult> Create(PromotionDto input)
         {
-            var checkExist = await _dataContext.Users.FirstOrDefaultAsync(user => user.UserName == input.UserName.ToLower() && user.IsDelete == 0);
+            var checkExist = await _dataContext.Promotions.FirstOrDefaultAsync(promotion => promotion.PromotionName == input.PromotionName.ToLower() && promotion.IsDelete == 0);
 
-            if (checkExist != null) return CustomResult("Username is taken", System.Net.HttpStatusCode.BadRequest);
+            if (checkExist != null) return CustomResult("Promotion Name is taken", System.Net.HttpStatusCode.BadRequest);
 
-            var hmac = new HMACSHA512();
-
-            var user = new User
+            var promotion = new Promotion
             {
-                UserName = input.UserName.ToLower(),
-                PassWordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(input.PassWord)),
-                PassWordSalt = hmac.Key,
-                FullName = input.FullName,
+                PromotionName = input.PromotionName.ToLower(),
+                FromDate = input.FromDate,
+                ToDate = input.ToDate,
+                DisCount = input.DisCount,
+                Point = input.Point,
                 IsDelete = Status.No,
-                Role = input.Role,
                 CreationTime = DateTime.Now
             };
-            _dataContext.Users.Add(user);
+            _dataContext.Promotions.Add(promotion);
             await _dataContext.SaveChangesAsync();
 
             return CustomResult("Add success!");
         }
 
-        private async Task<IActionResult> Update(RegisterDto input)
+        private async Task<IActionResult> Update(PromotionDto input)
         {
-            var dataExit = await _dataContext.Users.FindAsync(input.Id);
-            dataExit.FullName = input.FullName;
-            dataExit.Role = input.Role;
+            var dataExit = await _dataContext.Promotions.FindAsync(input.Id);
+            dataExit.PromotionName = input.PromotionName;
+            dataExit.FromDate = input.FromDate;
+            dataExit.ToDate = input.ToDate;
+            dataExit.DisCount = input.DisCount;
+            dataExit.Point = input.Point;
             dataExit.LastModificationTime = DateTime.Now;
 
-            _dataContext.Users.Update(dataExit);
+            _dataContext.Promotions.Update(dataExit);
             await _dataContext.SaveChangesAsync();
 
             return CustomResult("Update success!");
         }
-
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllUser()
+        public async Task<IActionResult> GetAllPromotion()
         {
-            var data = await (from u in _dataContext.Users
+            var data = await (from u in _dataContext.Promotions
                               where u.IsDelete == 0
                               orderby u.CreationTime descending
-                              select new UserDto
+                              select new PromotionDto
                               {
                                   Id = u.Id,
-                                  UserName = u.UserName,
-                                  FullName = u.FullName,
-                                  Role = u.Role,
+                                  PromotionName = u.PromotionName,
                                   CreationTime = u.CreationTime,
+                                  FromDate =u.FromDate,
+                                  ToDate =u.ToDate,
+                                  DisCount=u.DisCount,
+                                  Point=u.Point,
                                   LastModificationTime = u.LastModificationTime
                               }).ToListAsync();
 
             return CustomResult(data);
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dataExits = await _dataContext.Users.FindAsync(id);
+            var dataExits = await _dataContext.Promotions.FindAsync(id);
 
             if (dataExits != null && dataExits.IsDelete == Status.No)
             {
@@ -104,5 +102,6 @@ namespace API.Controllers
 
             return NotFound();
         }
+
     }
 }

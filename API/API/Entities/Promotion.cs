@@ -7,21 +7,17 @@ using System.Threading.Tasks;
 
 namespace API.Entities
 {
-    public class Car
+    public class Promotion
     {
         [Key]
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? LastModificationTime { get; set; }
         public Status IsDelete { get; set; }
-
-        public string LicensePlateIn { get; set; }
-        public string LicensePlateOut { get; set; }
-        public DateTime? CarTimeIn { get; set; }
-        public DateTime? CarTimeOut { get; set; }
-        public string ImgCarIn { get; set; }
-        public string ImgCarOut { get; set; }
-        public int TypeCard { get; set; }
-        public Status? IsCarParking { get; set; }
+        public string PromotionName { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public int DisCount { get; set; }
+        public int Point { get; set; }
     }
 }
