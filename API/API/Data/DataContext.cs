@@ -17,5 +17,6 @@ namespace API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<TicketMonthly> TicketMonthlys { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
     }
 }
