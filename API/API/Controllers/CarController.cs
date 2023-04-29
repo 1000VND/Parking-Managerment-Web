@@ -9,19 +9,38 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
+using Microsoft.Extensions.Options;
+using API.Helpers;
+using CloudinaryDotNet;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
     public class CarController : BaseApiController
     {
         private readonly DataContext _dataContext;
+        private readonly Cloudinary _cloudinary;
 
         public CarController(
-            DataContext dataContext
+            DataContext dataContext,
+            IOptions<CloudinarySettings> options
             )
         {
             _dataContext = dataContext;
+            var acc = new Account
+                (
+                    options.Value.CloundName,
+                    options.Value.ApiKey,
+                    options.Value.ApiSecret
+
+                );
+            _cloudinary = new Cloudinary(acc);
         }
+
+        /*public Task<IActionResult> AddImageLicensePlate(IFormFile file)
+        {
+            var upLoadResult = new Im
+        }*/
 
         /*[HttpPost("CarIn")]
         public async Task<IActionResult> TakeCar([FromBody]CarDto input)
