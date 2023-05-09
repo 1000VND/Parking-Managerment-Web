@@ -1,5 +1,6 @@
 ﻿using API.Data;
 using API.Dto;
+using API.Dto.Promotion;
 using API.Entities;
 using API.Enum;
 using Microsoft.AspNetCore.Mvc;
@@ -23,24 +24,24 @@ namespace API.Controllers
             _dataContext = dataContext;
         }
         [HttpPost("CreateOrEdit")]
-        public async Task<IActionResult> CreateOrEdit(PromotionDto input)
+        public async Task<IActionResult> CreateOrEdit(CreateEditPromotionDto input)
         {
             if (input.Id == null) return await Create(input);
             else return await Update(input);
         }
 
-        private async Task<IActionResult> Create(PromotionDto input)
+        private async Task<IActionResult> Create(CreateEditPromotionDto input)
         {
-            var checkExist = await _dataContext.Promotions.FirstOrDefaultAsync(promotion => promotion.PromotionName == input.PromotionName.ToLower() && promotion.IsDelete == 0);
+            var checkExist = await _dataContext.Promotions.FirstOrDefaultAsync(promotion => promotion.PromotionName == input.PromotionName && promotion.IsDelete == 0);
 
             if (checkExist != null) return CustomResult("Promotion Name is taken", System.Net.HttpStatusCode.BadRequest);
 
             var promotion = new Promotion
             {
-                PromotionName = input.PromotionName.ToLower(),
+                PromotionName = input.PromotionName,
                 FromDate = input.FromDate,
                 ToDate = input.ToDate,
-                DisCount = input.DisCount,
+                Discount = input.Discount,
                 Point = input.Point,
                 IsDelete = Status.No,
                 CreationTime = DateTime.Now
@@ -51,13 +52,13 @@ namespace API.Controllers
             return CustomResult("Add success!");
         }
 
-        private async Task<IActionResult> Update(PromotionDto input)
+        private async Task<IActionResult> Update(CreateEditPromotionDto input)
         {
             var dataExit = await _dataContext.Promotions.FindAsync(input.Id);
             dataExit.PromotionName = input.PromotionName;
             dataExit.FromDate = input.FromDate;
             dataExit.ToDate = input.ToDate;
-            dataExit.DisCount = input.DisCount;
+            dataExit.Discount = input.Discount;
             dataExit.Point = input.Point;
             dataExit.LastModificationTime = DateTime.Now;
 
@@ -72,14 +73,14 @@ namespace API.Controllers
             var data = await (from u in _dataContext.Promotions
                               where u.IsDelete == 0
                               orderby u.CreationTime descending
-                              select new PromotionDto
+                              select new GetAllPromotionDto
                               {
                                   Id = u.Id,
                                   PromotionName = u.PromotionName,
                                   CreationTime = u.CreationTime,
                                   FromDate =u.FromDate,
                                   ToDate =u.ToDate,
-                                  DisCount=u.DisCount,
+                                  Discount = u.Discount,
                                   Point=u.Point,
                                   LastModificationTime = u.LastModificationTime
                               }).ToListAsync();
@@ -100,7 +101,7 @@ namespace API.Controllers
                 return CustomResult(dataExits);
             }
 
-            return NotFound();
+            return CustomResult("Promotion not exits", System.Net.HttpStatusCode.NotFound);
         }
 
     }

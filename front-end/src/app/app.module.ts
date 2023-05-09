@@ -15,7 +15,6 @@ import { HomeComponent } from './routes/home/home.component';
 import { NavBarComponent } from './routes/layout/nav-bar/nav-bar.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { CarComponent } from './routes/car/car.component';
 import { WebcamModule } from 'ngx-webcam';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { TicketMonthlyComponent } from './routes/ticket-monthly/ticket-monthly.component';
@@ -24,6 +23,8 @@ import { NgOptimizedImage } from '@angular/common';
 import { NgZorroAntdModule } from './ng-zorro-antd/ng-zorro-antd/ng-zorro-antd.module';
 import { UserComponent } from './routes/user/user.component';
 import { UserCreateEditComponent } from './routes/user/user-create-edit/user-create-edit.component';
+import { PromotionComponent } from './routes/promotion/promotion.component';
+import { PromotionCreateEditComponent } from './routes/promotion/promotion-create-edit/promotion-create-edit.component';
 
 @NgModule({
   declarations: [
@@ -32,11 +33,12 @@ import { UserCreateEditComponent } from './routes/user/user-create-edit/user-cre
     LoginComponent,
     HomeComponent,
     NavBarComponent,
-    CarComponent,
     UserComponent,
     TicketMonthlyComponent,
     TicketMonthlyComponent,
-    UserCreateEditComponent
+    UserCreateEditComponent,
+    PromotionComponent,
+    PromotionCreateEditComponent
   ],
   imports: [
     BrowserModule,

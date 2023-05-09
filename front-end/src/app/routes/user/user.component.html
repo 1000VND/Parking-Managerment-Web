@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr class="rowData" *ngFor="let data of virtualTable.data;">
+        <tr class="rowData" *ngFor="let data of virtualTable.data;let i = index" [class.selected]="i === selectedRowIndex" (click)="onChangeSelectRow(i)">
             <ng-container>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.lastModificationTime | date: 'dd/MM/yyyy HH:mm'}}</td>

@@ -26,12 +26,5 @@ export class LoginService {
       }));
     }
   }
-
-  registerUser(user: UserDto) {
-    return this.http.post(this.baseUrl + 'register', user).pipe(catchError((err) => {
-      this.toastr.error(err.error.message);
-      return of(err);
-    }));
-  }
 }
 

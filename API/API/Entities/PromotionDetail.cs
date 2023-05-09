@@ -8,18 +8,15 @@ using System.Threading.Tasks;
 
 namespace API.Entities
 {
-    [Table("Promotions")]
-    public class Promotion
+    [Table("PromotionDetails")]
+    public class PromotionDetail
     {
         [Key]
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? LastModificationTime { get; set; }
         public Status IsDelete { get; set; }
-        public string PromotionName { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
-        public int Discount { get; set; }
-        public int Point { get; set; }
+        public int PromotionId { get; set; }
+        public int UserId { get; set; }
     }
 }

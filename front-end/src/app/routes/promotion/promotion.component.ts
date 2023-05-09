@@ -1,29 +1,27 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Login } from 'src/app/models/login.model';
-import { UserDto } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
-import { ToastrService } from 'ngx-toastr';
+import { PromotionService } from 'src/app/services/promotion.service';
 import { LoadingComponent } from '../common/loading/loading.component';
+import { UntypedFormBuilder } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 @Component({
-  selector: 'user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  selector: 'app-promotion',
+  templateUrl: './promotion.component.html',
+  styleUrls: ['./promotion.component.css']
 })
-export class UserComponent implements OnInit {
+export class PromotionComponent implements OnInit {
   @ViewChild(LoadingComponent, { static: false }) loading!: LoadingComponent;
-  editCache: { [key: string]: { edit: boolean; data: Login } } = {};
+
   listData: any[] = [];
-  isVisible = false;
-  isOkLoading = false;
-  selectedData: any;
-  addUser: UserDto = new UserDto();
+  plate: string = '';
   selectedRowIndex = -1;
+  selectedItem: any;
 
   constructor(
-    private _service: UserService,
-    private _toast: ToastrService,
+    private _service: PromotionService,
+    private _toastr: ToastrService,
     private renderer: Renderer2
   ) { }
 
@@ -32,21 +30,20 @@ export class UserComponent implements OnInit {
   }
 
   getAllData() {
-    this.listData = [];
-    this._service.getAllUser().subscribe((res) => {
+    this._service.getAllPromotion().subscribe(res => {
       this.listData = res.data;
-    });
+    })
   }
 
-  deleteUser(id: number) {
+  deletePromotion(id: number) {
     this.loading.loading(true);
-    this._service.deleteUser(id)
+    this._service.deletePromotion(id)
       .pipe(
         finalize(() => {
           this.loading.loading(false);
         })).subscribe((res) => {
           if (res.statusCode == 200) {
-            this._toast.success('Delete success');
+            this._toastr.success('Delete success');
           }
           this.listData = this.listData.filter((user) => user.id !== id);
         });
@@ -55,12 +52,15 @@ export class UserComponent implements OnInit {
   onChangeSelectRow(index: number) {
     if (index === this.selectedRowIndex) {
       this.selectedRowIndex = -1;
+      this.selectedItem = null;
     } else {
       const previousRowElement = document.querySelector('.selected');
       if (previousRowElement) {
         this.renderer.removeClass(previousRowElement, 'selected');
       }
       this.selectedRowIndex = index;
+      this.selectedItem = this.listData[index];
+      console.log(this.selectedItem)
     }
 
     const rowElements = document.querySelectorAll('tr[nz-tr]');
@@ -72,4 +72,5 @@ export class UserComponent implements OnInit {
       }
     });
   }
+
 }

@@ -8,6 +8,7 @@ namespace API.Dto
 {
     public class CarDto
     {
+        public int Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? LastModificationTime { get; set; }
         public Status IsDelete { get; set; }

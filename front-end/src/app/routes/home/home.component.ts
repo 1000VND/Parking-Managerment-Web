@@ -1,10 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebcamImage, WebcamInitError, WebcamMirrorProperties, WebcamUtil } from 'ngx-webcam';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, finalize } from 'rxjs';
 import { DataFormatService } from 'src/app/services/data-format.service';
 import * as Tesseract from 'tesseract.js';
 import { LoadingComponent } from '../common/loading/loading.component';
+import { CarService } from 'src/app/services/car.service';
+import { CarInput } from 'src/app/models/Car/car-input.model';
+import { ToastrService } from 'ngx-toastr';
+import { CarOutDto } from 'src/app/models/Car/car-out-dto.model';
+
 
 @Component({
   selector: 'home',
@@ -12,24 +17,39 @@ import { LoadingComponent } from '../common/loading/loading.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  @ViewChild(LoadingComponent, {static: false}) loading! : LoadingComponent;
+  @ViewChild(LoadingComponent, { static: false }) loading!: LoadingComponent;
   isCollapsed = false;
   isCameraExist = true;
-  showWebcam = true;
-  webcamImage!: WebcamImage | undefined;
-  trigger: Subject<void> = new Subject<void>();
-  nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
+  showWebcamIn = true;
+  showWebcamOut = true;
+  webcamImageIn!: WebcamImage | undefined;
+  webcamImageOut!: WebcamImage | undefined;
+  triggerIn: Subject<void> = new Subject<void>();
+  triggerOut: Subject<void> = new Subject<void>();
+  nextWebcamIn: Subject<boolean | string> = new Subject<boolean | string>();
+  nextWebcamOut: Subject<boolean | string> = new Subject<boolean | string>();
   flippedImage: any;
-  imga: string | undefined = '/assets/error.png';
-  resultImage: string | undefined;
+  imageIn: string = '/src/assets/error.png';
+  imageOut: string = '/src/assets/error.png';
+  resultImageIn!: string;
+  resultImageOut: string | undefined;
   maGuixe: string | undefined;
   isScan: boolean = true;
   isLoading: boolean = true;
   listData: any;
+  timeIn: string | undefined;
+  timeOut: string | undefined;
+  timeOut1: string | undefined;
+  totalTime!: string;
+  carInput: CarInput = new CarInput();
+  typeCard!: string;
+  carOutDto: CarOutDto = new CarOutDto();
 
   constructor(
     private _dataformat: DataFormatService,
     private router: Router,
+    private _service: CarService,
+    private _toastr: ToastrService,
   ) {
   }
 
@@ -41,48 +61,91 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  submitForm() {
-    this.router.navigateByUrl("login");
+  handleImageIn(webcamImage: WebcamImage) {
+    this.webcamImageIn = webcamImage;
   }
 
-  handleImage(webcamImage: WebcamImage) {
-    this.webcamImage = webcamImage;
+  handleImageOut(webcamImage: WebcamImage) {
+    this.webcamImageOut = webcamImage;
   }
 
-  get triggerObservable(): Observable<void> {
-    return this.trigger.asObservable();
+  triggerObservableIn(): Observable<void> {
+    return this.triggerIn.asObservable();
   }
 
-  get nextWebcamObservable(): Observable<boolean | string> {
-    return this.nextWebcam.asObservable();
+  triggerObservableOut(): Observable<void> {
+    return this.triggerOut.asObservable();
   }
 
-  cappicture() {
-    this.trigger.next();
-    this.imga = this.webcamImage!.imageAsDataUrl;
-    console.log(this.imga);
-    this.convertImage();
+  nextWebcamObservableIn(): Observable<boolean | string> {
+    return this.nextWebcamIn.asObservable();
   }
 
-
-  changeWWebcam(directionOrDeviceId: boolean | string) {
-    this.nextWebcam.next(directionOrDeviceId);
+  nextWebcamObservableOut(): Observable<boolean | string> {
+    return this.nextWebcamOut.asObservable();
   }
 
-  convertImage() {
+  capPictureIn() {
+    this.triggerIn.next();
+    this.imageIn = this.webcamImageIn!.imageAsDataUrl;
+    this.convertImageIn();
+  }
+
+  capPictureOut() {
+    this.triggerOut.next();
+    this.imageOut = this.webcamImageOut!.imageAsDataUrl;
+    this.convertImageOut();
+
+  }
+
+  convertImageIn() {
     this.loading.loading(true);
-    this.resultImage = ''
+    this.resultImageIn = ''
     this.isScan = true;
-    Tesseract.recognize(this.imga!, 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImage = "Chưa nhận diện được biển số!"
+        this.resultImageIn = "Chưa nhận diện được biển số!"
         this.isScan = false;
         this.loading.loading(false);
         return
       }
-      this.resultImage = noSpecialCharacters;
-      this.loading.loading(false);
+      else {
+        this.resultImageIn = noSpecialCharacters;
+        this.loading.loading(false);
+        this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
+          this.typeCard = res.message;
+        });
+      }
+    });
+  }
+
+  convertImageOut() {
+    this.loading.loading(true);
+    this.resultImageOut = ''
+    this.isScan = true;
+    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
+      const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
+      if (!(noSpecialCharacters.length == 8)) {
+        this.resultImageOut = "Chưa nhận diện được biển số!"
+        this.isScan = false;
+        this.loading.loading(false);
+        return
+      } else {
+        this.resultImageOut = noSpecialCharacters;
+        this._service.checkLicensePlate(this.resultImageOut).pipe(finalize(() => {
+          this.loading.loading(false);
+        })).subscribe((res) => {
+          this.carOutDto = res.data;
+          this.timeOut = this._dataformat.dateTimeFormat(this.carOutDto.carTimeIn);
+          this.timeOut1 = this._dataformat.dateTimeFormat(Date.now());
+          const timeIn = new Date(this.carOutDto.carTimeIn);
+          const timeOut = new Date();
+          const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
+          const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
+          this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
+        })
+      }
     });
   }
 
@@ -98,7 +161,40 @@ export class HomeComponent implements OnInit {
     return this.maGuixe;
   }
 
-  inputCar() {
-    this.makeid();
+  takeCar() {
+    this.loading.loading(true);
+    let data = Object.assign(new CarInput, {
+      licensePlateIn: this.resultImageIn,
+      imgCarIn: this.imageIn,
+      typeCard: this.typeCard.toString() == 'Khách hàng vãng lai' ? 0 : 1
+    });
+    this._service.takeCar(data).pipe(finalize(() => {
+      this.loading.loading(false);
+    })).subscribe((res) => {
+      if (res.statusCode == 200) {
+        this._toastr.success('Take car succcess');
+        this.timeIn = this._dataformat.dateTimeFormat(Date.now());
+      }
+    });
   }
+
+  carOut() {
+    this.loading.loading(true);
+    const data = Object.assign(new CarOutDto, {
+      id: this.carOutDto.id,
+      licensePlateOut: this.resultImageOut,
+      imgCarOut: this.imageOut
+    })
+    this._service.carOut(data).pipe((finalize(() => {
+      this.loading.loading(false);
+    }))).subscribe((res) => {
+      if (res.statusCode == 200)
+        this._toastr.success("Xuất xe thành công")
+    })
+  }
+
+  private delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 }
