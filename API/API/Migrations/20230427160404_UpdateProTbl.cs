@@ -12,7 +12,7 @@ namespace API.Migrations
                 table: "Promotions");
 
             migrationBuilder.AddColumn<int>(
-                name: "DisCount",
+                name: "Discount",
                 table: "Promotions",
                 type: "int",
                 nullable: false,
@@ -43,7 +43,7 @@ namespace API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DisCount",
+                name: "Discount",
                 table: "Promotions");
 
             migrationBuilder.DropColumn(

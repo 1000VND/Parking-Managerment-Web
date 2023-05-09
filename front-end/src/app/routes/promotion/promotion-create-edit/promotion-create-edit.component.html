@@ -1,0 +1,55 @@
+<parking-loading></parking-loading>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Add Promotion'" (nzOnCancel)="handleCancel()" (nzOnOk)="save()"
+    [nzOkLoading]="isOkLoading">
+    <div *nzModalContent>
+        <form nz-form [formGroup]="form" (ngSubmit)="save()">
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid promotion name!">
+                    <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
+                        <input type="text" nz-input formControlName="promotionName" id="promotionName" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid from date!">
+                    <nz-input-group nzAddOnBefore="From Date">
+                        <nz-space>
+                            <nz-date-picker [nzMode]="'date'" formControlName="fromDate" id="fromDate"></nz-date-picker>
+                        </nz-space>
+                    </nz-input-group>
+                </nz-form-control>
+
+                <nz-form-control class="ml-4" nzErrorTip="The input is not valid to date!">
+                    <nz-input-group nzAddOnBefore="To Date">
+                        <nz-space>
+                            <nz-date-picker [nzMode]="'date'" formControlName="toDate" id="toDate"></nz-date-picker>
+                        </nz-space>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid discount!">
+                    <nz-input-group nzAddOnBefore="Discount">
+                        <div class="input-number-container">
+                            <nz-input-number formControlName="discount" id="discount">
+                            </nz-input-number>
+                        </div>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid point!">
+                    <nz-input-group nzAddOnBefore="Point">
+                        <div class="input-number-container">
+                            <nz-input-number formControlName="point" id="point">
+                            </nz-input-number>
+                        </div>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-modal>

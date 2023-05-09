@@ -20,7 +20,7 @@ export class UserCreateEditComponent implements OnInit {
     { label: 'Admin', value: 1 },
     { label: 'User', value: 0 }
   ];
-  userDto!: CreateEditUserDto | null;
+  userDto: CreateEditUserDto = new CreateEditUserDto();
   form!: FormGroup;
 
   constructor(
@@ -71,7 +71,7 @@ export class UserCreateEditComponent implements OnInit {
 
   show(userDto?: CreateEditUserDto ) {
     this.form.reset();
-    this.userDto = null;
+    // this.userDto = null;
     if (userDto) {
       //this.form.controls['passWord'].setValidators(null);
       this.form.patchValue(userDto);

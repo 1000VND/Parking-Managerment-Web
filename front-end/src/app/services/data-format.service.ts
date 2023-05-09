@@ -6,14 +6,12 @@ import * as moment from 'moment';
 })
 export class DataFormatService {
 
-  constructor() { }
-
   dateFormat(val: string | moment.Moment | Date) {
-    return val ? moment(val).format('DD/MM/YYYY') : '';
+    return val ? moment(val).format('DD-MM-YYYY') : '';
   }
 
   dateTimeFormat(val: any) {
-    return val ? moment(val).format('DD/MM/YYYY HH:mm') : '';
+    return val ? moment(val).format('DD-MM-YYYY HH:mm') : '';
   }
 
   phoneNumberValidate(phoneNumber: string) {

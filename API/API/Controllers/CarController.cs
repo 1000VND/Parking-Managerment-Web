@@ -1,90 +1,86 @@
 ﻿using API.Data;
-using API.Dto;
 using API.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Net.Http;
-using Microsoft.Extensions.Options;
-using API.Helpers;
-using CloudinaryDotNet;
-using Microsoft.AspNetCore.Http;
+using API.Dto.CarMangement;
+using API.Entities;
+using API.Dto;
 
 namespace API.Controllers
 {
     public class CarController : BaseApiController
     {
         private readonly DataContext _dataContext;
-        private readonly Cloudinary _cloudinary;
 
         public CarController(
-            DataContext dataContext,
-            IOptions<CloudinarySettings> options
+            DataContext dataContext
             )
         {
             _dataContext = dataContext;
-            var acc = new Account
-                (
-                    options.Value.CloundName,
-                    options.Value.ApiKey,
-                    options.Value.ApiSecret
-
-                );
-            _cloudinary = new Cloudinary(acc);
         }
 
-        /*public Task<IActionResult> AddImageLicensePlate(IFormFile file)
+        [HttpPost("CarIn")]
+        public async Task<IActionResult> TakeCar(TakeCarInput input)
         {
-            var upLoadResult = new Im
-        }*/
-
-        /*[HttpPost("CarIn")]
-        public async Task<IActionResult> TakeCar([FromBody]CarDto input)
-        {
-            //check vé xe có đăng ký vé tháng không
-            var checkTicket = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(pl => pl.LicensePlate == input.LicensePlateIn);
-            var car = new CarDto
+            var car = new Car
             {
                 CreationTime = DateTime.Now,
                 IsDelete = Status.No,
                 LicensePlateIn = input.LicensePlateIn,
                 CarTimeIn = DateTime.Now,
                 ImgCarIn = input.ImgCarIn,
-                TypeCard = checkTicket != null ? (int)Status.No : (int)Status.Yes, // Yes: Vé tháng, No: Vé ngày
+                TypeCard = input.TypeCard, // 1: Vé tháng, 0: Vé ngày
                 IsCarParking = (int)CarStatus.CarIn
             };
-            return null;
+
+            _dataContext.Cars.Add(car);
+            await _dataContext.SaveChangesAsync();
+
+            return CustomResult(car);
         }
 
-        [HttpGet("CarOut")]
-        public async Task<IActionResult> GetCar(string lp)
-        {
-            var carExist = await _dataContext.Cars.FirstOrDefaultAsync(car => car.LicensePlateIn == lp);
-            return null;
-        }*/
 
-        [HttpPost("ShortenImage")]
-        public async Task<IActionResult> ShortenImage(string input)
+        [HttpPost("CheckTypeCustomer")]
+        public async Task<IActionResult> CheckCar(string plate)
         {
-            byte[] imageBytes;
-
-            try
+            plate = plate?.Trim();
+            if (string.IsNullOrEmpty(plate))
             {
-                imageBytes = Convert.FromBase64String(input);
-            }
-            catch (FormatException)
-            {
-                return BadRequest("Invalid base64 string input");
+                return CustomResult("Chưa nhập biển số xe");
             }
 
-            // Perform image processing logic on imageBytes here
-
-            return CustomResult(imageBytes); // or return processed image data
+            var checkTicket = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(pl => pl.LicensePlate == plate);
+            return CustomResult(checkTicket != null ? "Khách hàng tháng" : "Khách hàng vãng lai");
         }
 
+        [HttpPost("CarOut")]
+        public async Task<IActionResult> GetCar(CarDto input)
+        {
+            var carExist = await _dataContext.Cars.FirstOrDefaultAsync(car => car.Id == input.Id && car.IsDelete == 0);
+            if (carExist != null)
+            {
+                carExist.LastModificationTime = DateTime.Now;
+                carExist.LicensePlateOut = input.LicensePlateOut;
+                carExist.CarTimeOut = DateTime.Now;
+                carExist.IsCarParking = Status.Yes;
+                carExist.ImgCarOut = input.ImgCarOut;
+
+                _dataContext.Update(carExist);
+                await _dataContext.SaveChangesAsync();
+            }
+            return CustomResult(carExist);
+        }
+
+        [HttpGet("CheckLPCarOut")]
+        public async Task<IActionResult> CheckLicensePlate(string plate)
+        {
+            var carsLists =  _dataContext.Cars.OrderByDescending(x => x.CarTimeIn);
+            var carExits = await carsLists.FirstOrDefaultAsync(e => e.LicensePlateIn == plate && e.IsCarParking == 0);
+            return CustomResult(carExits);
+        }
     }
+
 }

@@ -33,7 +33,7 @@ export class UserService {
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.delete(this.baseUrl + 'Delete/' + id).pipe(catchError((err) => {
+    return this.http.delete(this.baseUrl + `${id}`).pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
     }));

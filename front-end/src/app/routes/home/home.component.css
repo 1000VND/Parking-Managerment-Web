@@ -5,7 +5,7 @@
     width: 50%;
 } */
 
-::ng-deep .mirror.ng-star-inserted>.webcam-wrapper>.mirrored {
+ ::ng-deep .webcam-wrapper>.mirrored {
     transform: scaleX(1) !important;
 }
 
