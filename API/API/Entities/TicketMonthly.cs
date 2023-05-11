@@ -26,7 +26,5 @@ namespace API.Entities
         public Status? Gender { get; set; }
         public int CustomerPoint { get; set; }
         public DateTime? LastRegisterDate { get; set; }
-        public int? PromotionId { get; set; }
-
     }
 }

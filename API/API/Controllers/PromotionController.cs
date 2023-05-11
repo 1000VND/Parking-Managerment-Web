@@ -1,6 +1,7 @@
 ﻿using API.Data;
 using API.Dto;
 using API.Dto.Promotion;
+using API.Dto.TicketMonthly;
 using API.Entities;
 using API.Enum;
 using Microsoft.AspNetCore.Mvc;
@@ -67,25 +68,40 @@ namespace API.Controllers
 
             return CustomResult("Update success!");
         }
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAllPromotion()
+        [HttpPost("GetAll")]
+        public async Task<IActionResult> GetAllPromotion(SearchPromotionDto input)
         {
-            var data = await (from u in _dataContext.Promotions
-                              where u.IsDelete == 0
-                              orderby u.CreationTime descending
-                              select new GetAllPromotionDto
-                              {
-                                  Id = u.Id,
-                                  PromotionName = u.PromotionName,
-                                  CreationTime = u.CreationTime,
-                                  FromDate =u.FromDate,
-                                  ToDate =u.ToDate,
-                                  Discount = u.Discount,
-                                  Point=u.Point,
-                                  LastModificationTime = u.LastModificationTime
-                              }).ToListAsync();
+            try
+            {
+                var data = await (from p in _dataContext.Promotions
+                                  join pd in _dataContext.PromotionDetails on p.Id equals pd.PromotionId into ProDetailJoined
+                                  from ljPd in ProDetailJoined.DefaultIfEmpty()
+                                  join tm in _dataContext.TicketMonthlys on ljPd.UserId equals tm.Id into tiketJoined
+                                  from ljTm in tiketJoined.DefaultIfEmpty()
+                                  where ((string.IsNullOrWhiteSpace(input.PromotionName) || input.PromotionName.Contains(p.PromotionName)) &&
+                                       (string.IsNullOrWhiteSpace(input.LicensePlate) || input.LicensePlate.Contains(ljTm.LicensePlate)) &&
+                                       ((!input.FromDate.HasValue || input.FromDate.Value.Date <= p.FromDate.Value.Date) &&
+                                       (!input.ToDate.HasValue || input.ToDate.Value.Date >= p.ToDate.Value.Date)))
+                                  && p.IsDelete == 0
+                                  orderby p.CreationTime descending
+                                  select new GetAllPromotionDto
+                                  {
+                                      Id = p.Id,
+                                      PromotionName = p.PromotionName,
+                                      CreationTime = p.CreationTime,
+                                      FromDate = p.FromDate.Value,
+                                      ToDate = p.ToDate.Value,
+                                      Discount = p.Discount,
+                                      Point = p.Point,
+                                      LastModificationTime = p.LastModificationTime
+                                  }).ToListAsync();
 
-            return CustomResult(data);
+                return CustomResult(data);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(ex);
+            }
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -102,6 +118,24 @@ namespace API.Controllers
             }
 
             return CustomResult("Promotion not exits", System.Net.HttpStatusCode.NotFound);
+        }
+
+        [HttpGet("PromotionDetail")]
+        public async Task<IActionResult> GetPromotionDetail(int id)
+        {
+            var promotion = await (from p in _dataContext.Promotions
+                                   join pd in _dataContext.PromotionDetails on p.Id equals pd.PromotionId into pdJoined
+                                   from pdj in pdJoined.DefaultIfEmpty()
+                                   join tm in _dataContext.TicketMonthlys on pdj.UserId equals tm.Id
+                                   where p.Id == id && p.IsDelete == 0
+                                   select new 
+                                   {
+                                       Id = p.Id,
+                                       CustomerName = tm.CustomerName,
+                                       PhoneNumber = tm.PhoneNumber,
+                                       LicensePlate = tm.LicensePlate
+                                   }).ToListAsync();
+            return CustomResult(promotion);
         }
 
     }
