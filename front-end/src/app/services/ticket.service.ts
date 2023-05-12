@@ -1,9 +1,9 @@
+import { CreateEditTicketMonthly } from './../models/TicketMonthly/create-edit.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from 'src/environment/environment';
-import { CreateEditTicketMonthly } from '../models/TicketMonthly/create-edit.model';
 
 @Injectable({
   providedIn: 'root'
