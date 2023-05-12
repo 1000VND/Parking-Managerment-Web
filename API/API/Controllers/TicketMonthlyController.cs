@@ -32,7 +32,7 @@ namespace API.Controllers
             else return await Update(input);
         }
 
-        private async Task<IActionResult> Create(TicketMonthlyInput input)
+        private async Task<IActionResult> Create( TicketMonthlyInput input)
         {
             var ticketMonthly = new TicketMonthly
             {
@@ -52,7 +52,7 @@ namespace API.Controllers
 
             return CustomResult("Add success!");
         }
-        private async Task<IActionResult> Update(TicketMonthlyInput input)
+        private async Task<IActionResult> Update( TicketMonthlyInput input)
         {
             var dataExit = await _dataContext.TicketMonthlys.FindAsync(input.Id);
             dataExit.PhoneNumber = input.PhoneNumber;
@@ -84,7 +84,7 @@ namespace API.Controllers
                                   Gender = t.Gender,
                                   CustomerPoint = t.CustomerPoint,
                                   LastRegisterDate = t.LastRegisterDate,
-                                  CreationTime = DateTime.Now
+                                  CreationTime = t.CreationTime
                               }).ToListAsync();
 
             return CustomResult(data);
