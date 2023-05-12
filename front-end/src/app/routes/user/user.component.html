@@ -7,7 +7,7 @@
     </button>
 </div>
 
-<nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30]
+<nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30]
     [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items

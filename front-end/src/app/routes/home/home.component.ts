@@ -29,8 +29,8 @@ export class HomeComponent implements OnInit {
   nextWebcamIn: Subject<boolean | string> = new Subject<boolean | string>();
   nextWebcamOut: Subject<boolean | string> = new Subject<boolean | string>();
   flippedImage: any;
-  imageIn: string = '/src/assets/error.png';
-  imageOut: string = '/src/assets/error.png';
+  imageIn: string = 'assets/error.png';
+  imageOut: string = 'assets/error.png';
   resultImageIn!: string;
   resultImageOut: string | undefined;
   maGuixe: string | undefined;
@@ -54,6 +54,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.carOutDto.imgCarIn = 'assets/error.png';
     WebcamUtil.getAvailableVideoInputs().then(
       (mediaDevices: MediaDeviceInfo[]) => {
         this.isCameraExist = mediaDevices && mediaDevices.length > 0;
@@ -102,7 +103,7 @@ export class HomeComponent implements OnInit {
     this.loading.loading(true);
     this.resultImageIn = ''
     this.isScan = true;
-    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize(this.imageIn, 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       if (!(noSpecialCharacters.length == 8)) {
         this.resultImageIn = "Chưa nhận diện được biển số!"
@@ -124,7 +125,7 @@ export class HomeComponent implements OnInit {
     this.loading.loading(true);
     this.resultImageOut = ''
     this.isScan = true;
-    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize(this.imageOut, 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       if (!(noSpecialCharacters.length == 8)) {
         this.resultImageOut = "Chưa nhận diện được biển số!"

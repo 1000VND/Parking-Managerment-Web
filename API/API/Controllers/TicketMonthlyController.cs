@@ -45,7 +45,6 @@ namespace API.Controllers
                 Gender = input.Gender,
                 CustomerPoint = input.CustomerPoint,
                 LastRegisterDate = input.LastRegisterDate,
-                PromotionId = input.PromotionId,
                 CreationTime = DateTime.Now
             };
             _dataContext.TicketMonthlys.Add(ticketMonthly);
@@ -85,7 +84,6 @@ namespace API.Controllers
                                   Gender = t.Gender,
                                   CustomerPoint = t.CustomerPoint,
                                   LastRegisterDate = t.LastRegisterDate,
-                                  PromotionId = t.PromotionId,
                                   CreationTime = DateTime.Now
                               }).ToListAsync();
 
