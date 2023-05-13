@@ -24,6 +24,8 @@ namespace API.Controllers
         {
             _dataContext = dataContext;
         }
+
+        #region -- Thêm sửa chương trình khuyến mãi
         [HttpPost("CreateOrEdit")]
         public async Task<IActionResult> CreateOrEdit(CreateEditPromotionDto input)
         {
@@ -33,13 +35,13 @@ namespace API.Controllers
 
         private async Task<IActionResult> Create(CreateEditPromotionDto input)
         {
-            var checkExist = await _dataContext.Promotions.FirstOrDefaultAsync(promotion => promotion.PromotionName == input.PromotionName && promotion.IsDelete == 0);
+            var checkExist = await _dataContext.Promotions.FirstOrDefaultAsync(promotion => promotion.PromotionName == input.PromotionName.Trim() && promotion.IsDelete == 0);
 
-            if (checkExist != null) return CustomResult("Promotion Name is taken", System.Net.HttpStatusCode.BadRequest);
+            if (checkExist != null) return CustomResult("Promotion name is taken", System.Net.HttpStatusCode.BadRequest);
 
             var promotion = new Promotion
             {
-                PromotionName = input.PromotionName,
+                PromotionName = input.PromotionName.Trim(),
                 FromDate = input.FromDate,
                 ToDate = input.ToDate,
                 Discount = input.Discount,
@@ -68,6 +70,9 @@ namespace API.Controllers
 
             return CustomResult("Update success!");
         }
+        #endregion
+
+        #region -- Tìm kiếm chương trình khuyến mãi
         [HttpPost("GetAll")]
         public async Task<IActionResult> GetAllPromotion(SearchPromotionDto input)
         {
@@ -103,6 +108,9 @@ namespace API.Controllers
                 return CustomResult(ex);
             }
         }
+        #endregion
+
+        #region -- Xóa chương trình khuyến mãi
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -119,7 +127,9 @@ namespace API.Controllers
 
             return CustomResult("Promotion not exits", System.Net.HttpStatusCode.NotFound);
         }
+        #endregion
 
+        #region -- Lấy dữ liệu chi tiết của chương trình khuyến mãi
         [HttpGet("PromotionDetail")]
         public async Task<IActionResult> GetPromotionDetail(int id)
         {
@@ -127,16 +137,72 @@ namespace API.Controllers
                                    join pd in _dataContext.PromotionDetails on p.Id equals pd.PromotionId into pdJoined
                                    from pdj in pdJoined.DefaultIfEmpty()
                                    join tm in _dataContext.TicketMonthlys on pdj.UserId equals tm.Id
-                                   where p.Id == id && p.IsDelete == 0
+                                   where p.Id == id && pdj.IsDelete == 0
                                    select new 
                                    {
-                                       Id = p.Id,
+                                       Id = pdj.Id,
                                        CustomerName = tm.CustomerName,
                                        PhoneNumber = tm.PhoneNumber,
                                        LicensePlate = tm.LicensePlate
                                    }).ToListAsync();
             return CustomResult(promotion);
         }
+        #endregion
 
+        #region -- Thêm sửa thông tin chi tiết của chương trình khuyến mãi
+        [HttpPost("CreateEditPromoDetail")]
+        public async Task<IActionResult> CreateEditDetail(PromotionDetailInputDto input)
+        {
+            if (input.Id == null) return await CreateDetail(input);
+            else return await UpdateDetail(input);
+        }
+
+        private async Task<IActionResult> CreateDetail(PromotionDetailInputDto input)
+        {
+            var promotionDetail = new PromotionDetail
+            {
+                PromotionId = input.PromotionId,
+                UserId = input.UserId,
+                IsDelete = Status.No,
+                CreationTime = DateTime.Now
+            };
+            _dataContext.PromotionDetails.Add(promotionDetail);
+            await _dataContext.SaveChangesAsync();
+
+            return CustomResult("Add success!");
+        }
+
+        private async Task<IActionResult> UpdateDetail(PromotionDetailInputDto input)
+        {
+            var dataExit = await _dataContext.PromotionDetails.FindAsync(input.Id);
+            dataExit.PromotionId = input.PromotionId;
+            dataExit.UserId = input.UserId;
+            dataExit.LastModificationTime = DateTime.Now;
+
+            _dataContext.PromotionDetails.Update(dataExit);
+            await _dataContext.SaveChangesAsync();
+
+            return CustomResult("Update success!");
+        }
+        #endregion
+
+        #region -- Xóa thông tin chi tiết chương trình khuyến mãi
+        [HttpDelete("DeletePromotionDetail")]
+        public async Task<IActionResult> DeletePromotionDetail(int id)
+        {
+            var dataExits = await _dataContext.PromotionDetails.FindAsync(id);
+
+            if (dataExits != null && dataExits.IsDelete == Status.No)
+            {
+                dataExits.IsDelete = Status.Yes;
+                dataExits.LastModificationTime = DateTime.Now;
+                _dataContext.Entry(dataExits).State = EntityState.Modified;
+                await _dataContext.SaveChangesAsync();
+                return CustomResult(dataExits);
+            }
+
+            return CustomResult("Promotion not exits", System.Net.HttpStatusCode.NotFound);
+        }
+        #endregion
     }
 }

@@ -25,6 +25,7 @@ import { UserComponent } from './routes/user/user.component';
 import { UserCreateEditComponent } from './routes/user/user-create-edit/user-create-edit.component';
 import { PromotionComponent } from './routes/promotion/promotion.component';
 import { PromotionCreateEditComponent } from './routes/promotion/promotion-create-edit/promotion-create-edit.component';
+import { PromotionDetailCreateEditComponent } from './routes/promotion/promotion-detail-create-edit/promotion-detail-create-edit.component';
 
 @NgModule({
   declarations: [
@@ -35,10 +36,10 @@ import { PromotionCreateEditComponent } from './routes/promotion/promotion-creat
     NavBarComponent,
     UserComponent,
     TicketMonthlyComponent,
-    TicketMonthlyComponent,
     UserCreateEditComponent,
     PromotionComponent,
-    PromotionCreateEditComponent
+    PromotionCreateEditComponent,
+    PromotionDetailCreateEditComponent
   ],
   imports: [
     BrowserModule,

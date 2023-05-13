@@ -49,11 +49,11 @@ namespace API.Controllers
             plate = plate?.Trim();
             if (string.IsNullOrEmpty(plate))
             {
-                return CustomResult("Chưa nhập biển số xe");
+                return CustomResult("No license plate entered!");
             }
 
             var checkTicket = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(pl => pl.LicensePlate == plate);
-            return CustomResult(checkTicket != null ? "Khách hàng tháng" : "Khách hàng vãng lai");
+            return CustomResult(checkTicket != null ? "Monthly customer" : "Current customers");
         }
 
         [HttpPost("CarOut")]

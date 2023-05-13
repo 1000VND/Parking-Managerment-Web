@@ -1,96 +1,105 @@
 <parking-loading></parking-loading>
 
-<div>
-    <h5>Search</h5>
-    <div nz-row nzJustify="start">
-        <div nz-col nzSpan="6">
-            <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
-                <input type="text" nz-input [(ngModel)]="searchInput.promotionName" />
-            </nz-input-group>
-        </div>
-
-        <div nz-col nzSpan="3" class="ml-2">
-            <nz-input-group nzRequired nzAddOnBefore="License Plate">
-                <input type="text" nz-input [(ngModel)]="searchInput.licensePlate" />
-            </nz-input-group>
-        </div>
-
-        <div nz-col nzSpan="6" class="d-flex ml-2">
-            <nz-input-group nzAddOnBefore="From Date">
-                <nz-space>
-                    <nz-date-picker [(ngModel)]="searchInput.fromDate" [nzMode]="'date'" id="fromDate"></nz-date-picker>
-                </nz-space>
-            </nz-input-group>
-
-            <nz-input-group class="ml-2" nzAddOnBefore="To Date">
-                <nz-space>
-                    <nz-date-picker [(ngModel)]="searchInput.toDate" [nzMode]="'date'" id="toDate"></nz-date-picker>
-                </nz-space>
-            </nz-input-group>
-        </div>
-
-        <div class="search" nz-col nzSpan="8" class="ml-2">
-            <div nz-row nzJustify="end">
-                <button class="mr-3" nz-button nzType="primary" nzGhost (click)="search()">
-                    <i class="fa-solid fa-magnifying-glass mr-2"></i>
-                    Search
-                </button>
-            </div>
-        </div>
+<h5>Search</h5>
+<div nz-row nzJustify="start">
+    <div nz-col nzSpan="6">
+        <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
+            <input type="text" nz-input [(ngModel)]="searchInput.promotionName" />
+        </nz-input-group>
     </div>
-    <div class="mt-2" style="height: 35vh;">
-        <div class="d-flex justify-content-end">
-            <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
-                <i class="fa-solid fa-user-plus mr-2"></i>
-                Add
+
+    <div nz-col nzSpan="3" class="ml-2">
+        <nz-input-group nzRequired nzAddOnBefore="License Plate">
+            <input type="text" nz-input [(ngModel)]="searchInput.licensePlate" />
+        </nz-input-group>
+    </div>
+
+    <div nz-col nzSpan="6" class="d-flex ml-2">
+        <nz-input-group nzAddOnBefore="From Date">
+            <nz-space>
+                <nz-date-picker [(ngModel)]="searchInput.fromDate" [nzMode]="'date'" id="fromDate"></nz-date-picker>
+            </nz-space>
+        </nz-input-group>
+
+        <nz-input-group class="ml-2" nzAddOnBefore="To Date">
+            <nz-space>
+                <nz-date-picker [(ngModel)]="searchInput.toDate" [nzMode]="'date'" id="toDate"></nz-date-picker>
+            </nz-space>
+        </nz-input-group>
+    </div>
+
+    <div class="search" nz-col nzSpan="8" class="ml-2">
+        <div nz-row nzJustify="end">
+            <button class="mr-3" nz-button nzType="primary" nzGhost (click)="search()">
+                <i class="fa-solid fa-magnifying-glass mr-2"></i>
+                Search
             </button>
         </div>
-        <nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable nzTitle="Danh sách chương trình khuyến mãi" [nzBordered]="true" [nzSize]="'small'"
-            [nzData]="listData" [nzPageSize]="5" [nzShowTotal]="rangeTemplate">
-            <ng-template #rangeTemplate let-range="range" let-total>
-                {{ range[0] }}-{{ range[1] }} of {{ total }} items
-            </ng-template>
-            <thead>
-                <tr>
-                    <th nzAlign="center">Creation Time</th>
-                    <th nzAlign="center">LastModification Time</th>
-                    <th nzAlign="center">Promotion Name</th>
-                    <th nzAlign="center">From date</th>
-                    <th nzAlign="center">To date</th>
-                    <th nzAlign="center">Discount</th>
-                    <th nzAlign="center">Point</th>
-                    <th nzAlign="center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="rowData" *ngFor="let data of virtualTable.data"
-                    [class.selected]="data.id === selectedRowIndex" (click)="onChangeSelectRow(data.id)">
-                    <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
-                    <td nzAlign="center" [nzDisabled]="true">{{ data.lastModificationTime | date: 'dd/MM/yyyy HH:mm'}}
-                    </td>
-                    <td>{{ data.promotionName }}</td>
-                    <td>{{ data.fromDate | date: 'dd/MM/yyyy'}}</td>
-                    <td>{{ data.toDate | date: 'dd/MM/yyyy'}}</td>
-                    <td>{{ data.discount + ' %'}}</td>
-                    <td>{{ data.point }}</td>
-                    <td nzAlign="center" >
-                        <button class="mr-3" nz-button nzType="default" (click)="createModal.show(data)" (click)="$event.stopPropagation()">
-                            <i class="fa-regular fa-pen-to-square mr-1"></i>
-                            Edit
-                        </button>
-                        <button nz-button nzType="default" nzDanger (click)="deletePromotion(data.id!)" (click)="$event.stopPropagation()">
-                            <i class="fa-solid fa-trash-can mr-1"></i>
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-                <promotion-create-edit #createModal (modalSave)="search()"></promotion-create-edit>
-            </tbody>
-        </nz-table>
     </div>
-    <nz-table [nzScroll]="{x:'none',y:'35vh'}" style="margin-top: 65px;" #virtualTable2 nzTitle="Thông tin chương trình khuyến mãi" [nzBordered]="true"
-        [nzSize]="'small'" [nzData]="dataSubTale" [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30]
-        [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
+</div>
+<div class="mt-2" style="height: 35vh;">
+    <div class="d-flex justify-content-end">
+        <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
+            <i class="fa-solid fa-user-plus mr-2"></i>
+            Add
+        </button>
+    </div>
+    <nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable nzTitle="Promotion List"
+        [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5" [nzShowTotal]="rangeTemplate">
+        <ng-template #rangeTemplate let-range="range" let-total>
+            {{ range[0] }}-{{ range[1] }} of {{ total }} items
+        </ng-template>
+        <thead>
+            <tr>
+                <th nzAlign="center">Creation Time</th>
+                <th nzAlign="center">LastModification Time</th>
+                <th nzAlign="center">Promotion Name</th>
+                <th nzAlign="center">From date</th>
+                <th nzAlign="center">To date</th>
+                <th nzAlign="center">Discount</th>
+                <th nzAlign="center">Point</th>
+                <th nzAlign="center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="rowData" *ngFor="let data of virtualTable.data" [class.selected]="data.id === selectedRowIndex"
+                (click)="onChangeSelectRow(data.id)">
+                <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td nzAlign="center" [nzDisabled]="true">{{ data.lastModificationTime | date: 'dd/MM/yyyy HH:mm'}}
+                </td>
+                <td>{{ data.promotionName }}</td>
+                <td>{{ data.fromDate | date: 'dd/MM/yyyy'}}</td>
+                <td>{{ data.toDate | date: 'dd/MM/yyyy'}}</td>
+                <td>{{ data.discount + ' %'}}</td>
+                <td>{{ data.point }}</td>
+                <td nzAlign="center">
+                    <button class="mr-3" nz-button nzType="default" (click)="createModal.show(data)"
+                        (click)="$event.stopPropagation()">
+                        <i class="fa-regular fa-pen-to-square mr-1"></i>
+                        Edit
+                    </button>
+                    <button nz-button nzType="default" nzDanger (click)="deletePromotion(data.id!)"
+                        (click)="$event.stopPropagation()">
+                        <i class="fa-solid fa-trash-can mr-1"></i>
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            <promotion-create-edit #createModal (modalSave)="search()"></promotion-create-edit>
+        </tbody>
+    </nz-table>
+</div>
+
+<div class="mt-2" style="height: 35vh;">
+    <div class="d-flex justify-content-end">
+        <button [disabled]="this.selectedItem.id != null ? false : true" class="mr-3 mt-3" nz-button nzType="primary" (click)="createDetailModal.show(this.selectedItem)">
+            <i class="fa-solid fa-user-plus mr-2"></i>
+            Add
+        </button>
+    </div>
+    <nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable2
+        nzTitle="Promotion Detail List" [nzBordered]="true" [nzSize]="'small'" [nzData]="dataSubTale"
+        [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
         <ng-template #rangeTemplate let-range="range" let-total>
             {{ range[0] }}-{{ range[1] }} of {{ total }} items
         </ng-template>
@@ -103,24 +112,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="rowData" *ngFor="let data of virtualTable2.data;">
+            <tr class="rowData" *ngFor="let data1 of virtualTable2.data;">
                 <ng-container>
-                    <td>{{ data.customerName }}</td>
-                    <td>{{ data.phoneNumber }}</td>
-                    <td>{{ data.licensePlate }}</td>
+                    <td>{{ data1.customerName }}</td>
+                    <td>{{ data1.phoneNumber }}</td>
+                    <td>{{ data1.licensePlate }}</td>
                     <td nzAlign="center">
-                        <button class="mr-3" nz-button nzType="default" (click)="createModal.show(data)">
-                            <i class="fa-regular fa-pen-to-square mr-1"></i>
-                            Edit
-                        </button>
-                        <button nz-button nzType="default" nzDanger (click)="deletePromotion(data.id!)">
+                        <button nz-button nzType="default" nzDanger (click)="deletePromotionDetail(data1.id!)">
                             <i class="fa-solid fa-trash-can mr-1"></i>
                             Delete
                         </button>
                     </td>
                 </ng-container>
             </tr>
-            <promotion-create-edit #createModal (modalSave)="search()"></promotion-create-edit>
+            <promotion-detail-create-edit #createDetailModal (modalSave)="search()"></promotion-detail-create-edit>
         </tbody>
     </nz-table>
 </div>

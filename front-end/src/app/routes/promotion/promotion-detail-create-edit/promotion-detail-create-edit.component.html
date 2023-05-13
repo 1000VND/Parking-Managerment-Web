@@ -1,0 +1,29 @@
+<parking-loading></parking-loading>
+<nz-modal [(nzVisible)]="isVisible"
+  [nzTitle]="promotionDetailDto.id == null ? 'Add Promotion Detail' : 'Edit Promotion Detail'" (nzOnCancel)="cancel()"
+  (nzOnOk)="save()" [nzOkLoading]="isOkLoading">
+  <div *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="save()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="The input is not valid promotion name!">
+          <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
+            <input [(ngModel)]="promotion.label" type="text" nz-input formControlName="promotionName"
+              id="promotionName" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="The input is not valid user!">
+          <nz-input-group nzAddOnBefore="License Plate">
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a user" formControlName="user" id="user"
+              style="width: 100%;">
+              <nz-option *ngFor="let dataUser of userList" [nzValue]="dataUser.value"
+                [nzLabel]="dataUser.label"></nz-option>
+            </nz-select>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-modal>

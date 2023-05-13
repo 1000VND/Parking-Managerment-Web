@@ -17,17 +17,7 @@ export class PromotionCreateEditComponent implements OnInit {
   form!: FormGroup;
   isVisible = false;
   isOkLoading = false;
-  options = [
-    { label: 'Admin', value: 1 },
-    { label: 'User', value: 0 }
-  ];
   promotionDto: GetAllDataPromotionDto = new GetAllDataPromotionDto();
-
-  discount = 0;
-  formatterPercent = (value: number): string => `${value} %`;
-  parserPercent = (value: string): string => value.replace(' %', '');
-  formatterDollar = (value: number): string => `$ ${value}`;
-  parserDollar = (value: string): string => value.replace('$ ', '');
 
   constructor(
     private _service: PromotionService,
@@ -46,13 +36,12 @@ export class PromotionCreateEditComponent implements OnInit {
     })
   }
 
-  handleCancel() {
+  cancel() {
     this.isVisible = false;
     this.modalClose.emit(null)
   }
 
   save() {
-    // this.validateForm(this.form);
     if (this.form.valid) {
       this.isOkLoading = true;
       this._service.createOrEdit(this.form.value).pipe(finalize(() => {

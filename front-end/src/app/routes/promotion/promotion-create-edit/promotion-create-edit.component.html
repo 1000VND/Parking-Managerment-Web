@@ -1,5 +1,5 @@
 <parking-loading></parking-loading>
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Add Promotion'" (nzOnCancel)="handleCancel()" (nzOnOk)="save()"
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="promotionDto.id == null ? 'Add Promotion' : 'Edit Promotion'" (nzOnCancel)="cancel()" (nzOnOk)="save()"
     [nzOkLoading]="isOkLoading">
     <div *nzModalContent>
         <form nz-form [formGroup]="form" (ngSubmit)="save()">

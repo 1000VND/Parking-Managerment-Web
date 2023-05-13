@@ -22,6 +22,7 @@ export class PromotionComponent implements OnInit {
   selectedItem: GetAllDataPromotionDto = new GetAllDataPromotionDto();
   searchInput: PromotionDtoInput = new PromotionDtoInput();
   dataSubTale: any[] = [];
+  isDisable: boolean = false;
 
   constructor(
     private _service: PromotionService,
@@ -65,7 +66,6 @@ export class PromotionComponent implements OnInit {
       }
       this.selectedRowIndex = index;
       this.selectedItem = this.listData.find(e => e.id == index);
-      console.log(this.selectedItem)
     }
 
     const rowElements = document.querySelectorAll('tr[nz-tr]');
@@ -80,11 +80,24 @@ export class PromotionComponent implements OnInit {
   }
 
   getPromotionDetail() {
-    this.loading.loading(true);
+    if (this.selectedRowIndex == -1) return;
     this._service.getPromotionDetail(this.selectedItem.id).pipe(finalize(() => {
-      this.loading.loading(false);
     })).subscribe(res => {
       this.dataSubTale = [...res.data];
     })
+  }
+
+  deletePromotionDetail(id: number) {
+    this.loading.loading(true);
+    this._service.deletePromotionDetail(id)
+      .pipe(
+        finalize(() => {
+          this.loading.loading(false);
+        })).subscribe((res) => {
+          if (res.statusCode == 200) {
+            this._toastr.success('Delete success');
+          }
+          this.listData = this.listData.filter((user) => user.id !== id);
+        });
   }
 }

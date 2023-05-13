@@ -1,203 +1,147 @@
 <parking-loading></parking-loading>
 <div class="d-flex ">
-    <div class="d-flex flex-column">
-        <span>XE VÀO</span>
-        <div class="d-flex flex-row p-2">
-            <div class="mt-1">
-                <div *ngIf="isCameraExist; else noCameraExist" class="camera">
-                    <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableIn()"
-                        (imageCapture)="handleImageIn($event)" *ngIf="showWebcamIn"
-                        [switchCamera]="nextWebcamObservableIn()">
-                    </webcam>
-                </div>
+    <nz-card nzTitle="QUẢN LÝ XE VÀO">
+        <div class="d-flex flex-column">
+            <div class="d-flex flex-row p-2">
+                <div>
+                    <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+                        <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableIn()"
+                            (imageCapture)="handleImageIn($event)" *ngIf="showWebcamIn"
+                            [switchCamera]="nextWebcamObservableIn()">
+                        </webcam>
+                    </div>
 
-                <ng-template #noCameraExist>
-                    Camera Device not Available
-                </ng-template>
-            </div>
-            <div class="ml-2">
-                <img width="450" height="337" [src]="imageIn" >
-            </div>
-            <!-- <div class="ml-2" style="border: 1px solid; width: 100%;">
-            <div class="ml-1">
-                <div class="title">
-                    <h1>Thông tin bãi gửi xe</h1>
+                    <ng-template #noCameraExist>
+                        Camera Device not Available
+                    </ng-template>
                 </div>
-
-                <div>
-                    <h3>Xe trong bãi 3/Còn trống: 996 </h3>
-                </div>
-                <div>
-                    <h3>Thống kê trong ngày</h3>
-                </div>
-                <div>
-                    <span>Xe vào trong ngày</span>
-                </div>
-                <div>
-                    <span>Xe ra trong ngày</span>
-
-                </div>
-                <div>
-                    <span>Vé tháng Vào: 4, Ra 5</span>
-                </div>
-                <div>
-                    <span>Vé ngày Vào: 4, Ra 5</span>
+                <div class="ml-2">
+                    <img width="450" height="337" [src]="imageIn">
                 </div>
             </div>
-           
-        </div> -->
-
-            <!-- <h2 *ngIf="isScan">Biển số xe vào: <mark style="color: green; background-color: white;">{{ resultImage
-                    }}</mark>
-            </h2>
-            <h2 *ngIf="!isScan">Biển số xe vào: <mark>{{ resultImage }}</mark> </h2>
-            <h5>Mã gửi xe: {{ maGuixe }} </h5>
-            <div nz-row>
-                <div nz-col class="gutter-row" [nzSpan]="6">
-                    <button nz-button nzType="default" (click)="cappicture()">
-                        <i class="fa-solid fa-arrow-right mr-2"></i>
-                        Lấy biển số xe vào
-                    </button>
-                </div>
-
-                <div nz-col class="gutter-row" [nzSpan]="6">
-                    <button nz-button nzType="default" (click)="cappicture()">
-                        <i class="fa-solid fa-arrow-left mr-2"></i>
-                        Lấy biển số xe ra
-                    </button>
-                </div>
-
-                <div nz-col class="gutter-row" [nzSpan]="6">
-                    <button nz-button nzType="default" (click)="inputCar()">
-                        <i class="fa-solid fa-rotate mr-1"></i>
-                        Lấy mã
-                    </button>
-                </div>
-            </div> -->
-        </div>
-        <div class="d-flex flex-row">
-            <div class="ml-2 mr-2">
-            <!-- <div class="ml-2 mr-2" style="border: 1px solid; width: 100%;"> -->
-                <div>
-                    <span style="font-size: 50px;">
-                        Thông tin xe vào
-                    </span>
-                </div>
-
-                <div>
-                    <span *ngIf="isScan">Biển số xe:
-                        <mark style="color: green; background-color: white;"> {{ resultImageIn }}</mark>
-                    </span>
-
-                    <span *ngIf="!isScan">Biển số xe: <mark style="font-size: 22px;">{{ resultImageIn }}</mark>
-                    </span>
-                </div>
-
-                <div>
-                    <span>
-                        Loại khách hàng: {{typeCard}}
-                    </span>
-                </div>
-
-                <div>
-                    <span id="clock">
-                        Thời gian vào: {{timeIn}}
-                    </span>
-                </div>
-
-                <div>
-                    <button nz-button nzType="primary" (click)="capPictureIn()">
-                        Chụp
-                    </button>
-                    <button class="ml-2" nz-button nzType="primary" (click)="takeCar()">
-                        Nhập xe
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="d-flex flex-column">
-        <span>XE RA</span>
-        <div class="d-flex flex-row p-2">
-            <div class="mt-1">
-                <div *ngIf="isCameraExist; else noCameraExist" class="camera">
-                    <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableOut()"
-                        (imageCapture)="handleImageOut($event)" *ngIf="showWebcamOut"
-                        [switchCamera]="nextWebcamObservableOut()">
-                    </webcam>
-                </div>
-
-                <ng-template #noCameraExist>
-                    Camera Device not Available
-                </ng-template>
-            </div>
-            <div class="ml-2">
-                <img width="450" height="337" [src]="carOutDto.imgCarIn">
-            </div>
-        </div>
-        <div class="d-flex flex-row">
-            <div class="ml-2 mr-2">
-            <!-- <div class="ml-2 mr-2" style="border: 1px solid; width: 100%;"> -->
-                <div>
-                    <h1>
-                        Thông tin xe ra
-                    </h1>
-                </div>
-
-                <div>
-                    <span *ngIf="isScan">Biển số xe:
-                        <mark style="color: green; background-color: white;"> {{ resultImageOut }}</mark>
-                    </span>
-
-                    <span *ngIf="!isScan">Biển số xe: <mark style="font-size: 22px;">{{ resultImageOut }}</mark>
-                    </span>
-                </div>
-
-                <div>
-                    <span>
-                        Loại khách hàng: {{carOutDto.typeCard != null ? (carOutDto.typeCard == 1 ? 'Khách hàng tháng' :
-                        'Khách hàng vãng lai') : ''}}
-                    </span>
-                </div>
-
-                <div>
-                    <span>
-                        Thời gian vào: {{timeOut}}
-                    </span>
-                </div>
-
-                <div>
-                    <span>
-                        Thời gian ra: {{timeOut1}}
-                    </span>
-                </div>
-
-                <div>
-                    <span>
-                        Thời gian gửi: {{totalTime}} 
-                    </span>
-                </div>
-
-                <div>
-                    <span>
-                        Phí gửi xe : 20.000 VND
-                    </span>
-                </div>
-
-                <div class="d-flex justify-content-start">
+            <div class="d-flex flex-row">
+                <div class="ml-2 mr-2">
                     <div>
-                        <button nz-button nzType="primary" (click)="capPictureOut()">
-                            Chụp
-                        </button>
+                        <h1>
+                            Thông tin xe vào
+                        </h1>
                     </div>
-                    <div class="ml-2">
-                        <button nz-button nzType="primary" (click)="carOut()">
-                            Xuất xe
-                        </button>
+
+                    <div>
+                        <span *ngIf="isScan">Biển số xe:
+                            <mark style="color: green; background-color: white;"> {{ resultImageIn }}</mark>
+                        </span>
+
+                        <span *ngIf="!isScan">Biển số xe: <mark>{{ resultImageIn }}</mark>
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>
+                            Loại khách hàng: {{typeCard}}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span id="clock">
+                            Thời gian vào: {{timeIn}}
+                        </span>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+        <div style="height: 110px;" class="d-flex align-items-end">
+            <button nz-button nzType="primary" (click)="capPictureIn()">
+                Chụp
+            </button>
+            <button class="ml-2" nz-button nzType="primary" (click)="takeCar()">
+                Nhập xe
+            </button>
+        </div>
+    </nz-card>
+
+    <nz-card class="ml-5" nzTitle="QUẢN LÝ XE RA">
+        <div class="d-flex flex-column">
+            <div class="d-flex flex-row p-2">
+                <div>
+                    <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+                        <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableOut()"
+                            (imageCapture)="handleImageOut($event)" *ngIf="showWebcamOut"
+                            [switchCamera]="nextWebcamObservableOut()">
+                        </webcam>
+                    </div>
+
+                    <ng-template #noCameraExist>
+                        Camera Device not Available
+                    </ng-template>
+                </div>
+                <div class="ml-2">
+                    <img width="450" height="337" [src]="carOutDto.imgCarIn">
+                </div>
+            </div>
+            <div class="d-flex flex-row">
+                <div class="ml-2 mr-2">
+                    <div>
+                        <h1>
+                            Thông tin xe ra
+                        </h1>
+                    </div>
+
+                    <div>
+                        <span *ngIf="isScan">Biển số xe:
+                            <mark style="color: green; background-color: white;"> {{ resultImageOut }}</mark>
+                        </span>
+
+                        <span *ngIf="!isScan">Biển số xe: <mark>{{ resultImageOut }}</mark>
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>
+                            Loại khách hàng: {{carOutDto.typeCard != null ? (carOutDto.typeCard == 1 ? 'Khách hàng tháng' :'Khách hàng vãng lai') : ''}}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>
+                            Thời gian vào: {{timeOut}}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>
+                            Thời gian ra: {{timeOut1}}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>
+                            Thời gian gửi: {{totalTime}}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>
+                            Phí gửi xe : 20.000 VND
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <div>
+                            <button nz-button nzType="primary" (click)="capPictureOut()">
+                                Chụp
+                            </button>
+                        </div>
+                        <div class="ml-2">
+                            <button nz-button nzType="primary" (click)="carOut()">
+                                Xuất xe
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </nz-card>
 </div>

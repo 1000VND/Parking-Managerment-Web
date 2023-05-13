@@ -12,12 +12,22 @@ namespace API.Migrations
                 table: "TicketMonthlys",
                 type: "int",
                 nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "LastRegisterDate",
+                table: "TicketMonthlys",
+                type: "datetime2",
+                nullable: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
                 name: "PromotionId",
+                table: "TicketMonthlys");
+
+            migrationBuilder.DropColumn(
+                name: "LastRegisterDate",
                 table: "TicketMonthlys");
         }
     }

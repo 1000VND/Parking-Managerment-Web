@@ -96,27 +96,35 @@ export class HomeComponent implements OnInit {
     this.triggerOut.next();
     this.imageOut = this.webcamImageOut!.imageAsDataUrl;
     this.convertImageOut();
-
   }
 
   convertImageIn() {
     this.loading.loading(true);
     this.resultImageIn = ''
     this.isScan = true;
-    Tesseract.recognize(this.imageIn, 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
+      const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImageIn = "Chưa nhận diện được biển số!"
+        this.resultImageIn = "The number plate is not recognized!"
         this.isScan = false;
         this.loading.loading(false);
         return
       }
       else {
-        this.resultImageIn = noSpecialCharacters;
-        this.loading.loading(false);
-        this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
-          this.typeCard = res.message;
-        });
+        if (checkPlate) {
+          this.resultImageIn = noSpecialCharacters;
+          this.loading.loading(false);
+          this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
+            this.typeCard = res.message;
+          });
+        }
+        else {
+          this.resultImageIn = "Invalid license plate!"
+          this.isScan = false;
+          this.loading.loading(false);
+          return
+        }
       }
     });
   }
@@ -127,25 +135,34 @@ export class HomeComponent implements OnInit {
     this.isScan = true;
     Tesseract.recognize(this.imageOut, 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
+      const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImageOut = "Chưa nhận diện được biển số!"
+        this.resultImageOut = "The number plate is not recognized!"
         this.isScan = false;
         this.loading.loading(false);
         return
       } else {
-        this.resultImageOut = noSpecialCharacters;
-        this._service.checkLicensePlate(this.resultImageOut).pipe(finalize(() => {
+        if (checkPlate) {
+          this.resultImageOut = noSpecialCharacters;
+          this._service.checkLicensePlate(this.resultImageOut).pipe(finalize(() => {
+            this.loading.loading(false);
+          })).subscribe((res) => {
+            this.carOutDto = res.data;
+            this.timeOut = this._dataformat.dateTimeFormat(this.carOutDto.carTimeIn);
+            this.timeOut1 = this._dataformat.dateTimeFormat(Date.now());
+            const timeIn = new Date(this.carOutDto.carTimeIn);
+            const timeOut = new Date();
+            const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
+            const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
+            this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
+          })
+        }
+        else {
+          this.resultImageIn = "Invalid license plate!"
+          this.isScan = false;
           this.loading.loading(false);
-        })).subscribe((res) => {
-          this.carOutDto = res.data;
-          this.timeOut = this._dataformat.dateTimeFormat(this.carOutDto.carTimeIn);
-          this.timeOut1 = this._dataformat.dateTimeFormat(Date.now());
-          const timeIn = new Date(this.carOutDto.carTimeIn);
-          const timeOut = new Date();
-          const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
-          const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
-          this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
-        })
+          return
+        }
       }
     });
   }
@@ -164,38 +181,46 @@ export class HomeComponent implements OnInit {
 
   takeCar() {
     this.loading.loading(true);
-    let data = Object.assign(new CarInput, {
-      licensePlateIn: this.resultImageIn,
-      imgCarIn: this.imageIn,
-      typeCard: this.typeCard.toString() == 'Khách hàng vãng lai' ? 0 : 1
-    });
-    this._service.takeCar(data).pipe(finalize(() => {
+    if (this.isScan) {
+      let data = Object.assign(new CarInput, {
+        licensePlateIn: this.resultImageIn,
+        imgCarIn: this.imageIn,
+        typeCard: this.typeCard.toString() == 'Khách hàng vãng lai' ? 0 : 1
+      });
+      this._service.takeCar(data).pipe(finalize(() => {
+        this.loading.loading(false);
+      })).subscribe((res) => {
+        if (res.statusCode == 200) {
+          this._toastr.success('Take car succcess');
+          this.timeIn = this._dataformat.dateTimeFormat(Date.now());
+        }
+      });
+    }
+    else {
       this.loading.loading(false);
-    })).subscribe((res) => {
-      if (res.statusCode == 200) {
-        this._toastr.success('Take car succcess');
-        this.timeIn = this._dataformat.dateTimeFormat(Date.now());
-      }
-    });
+      this._toastr.warning('Take car fail, No license plate!')
+    }
+
   }
 
   carOut() {
     this.loading.loading(true);
-    const data = Object.assign(new CarOutDto, {
-      id: this.carOutDto.id,
-      licensePlateOut: this.resultImageOut,
-      imgCarOut: this.imageOut
-    })
-    this._service.carOut(data).pipe((finalize(() => {
+    if (this.isScan) {
+      const data = Object.assign(new CarOutDto, {
+        id: this.carOutDto.id,
+        licensePlateOut: this.resultImageOut,
+        imgCarOut: this.imageOut
+      })
+      this._service.carOut(data).pipe((finalize(() => {
+        this.loading.loading(false);
+      }))).subscribe((res) => {
+        if (res.statusCode == 200)
+          this._toastr.success("Car export success")
+      })
+    }
+    else {
       this.loading.loading(false);
-    }))).subscribe((res) => {
-      if (res.statusCode == 200)
-        this._toastr.success("Xuất xe thành công")
-    })
+      this._toastr.warning('Car export fail, No license plate!')
+    }
   }
-
-  private delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
 }
