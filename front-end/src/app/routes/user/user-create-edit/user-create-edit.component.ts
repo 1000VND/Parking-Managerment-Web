@@ -53,7 +53,7 @@ export class UserCreateEditComponent implements OnInit {
       this.isOkLoading = false;
       this.modalSave.emit(null);
     })).subscribe((res) => {
-      if (res.statusCode == 200){
+      if (res.statusCode == 200) {
         this.toastr.success(res.message);
       }
     })
@@ -69,7 +69,7 @@ export class UserCreateEditComponent implements OnInit {
     }
   }
 
-  show(userDto?: CreateEditUserDto ) {
+  show(userDto?: CreateEditUserDto) {
     this.form.reset();
     // this.userDto = null;
     if (userDto) {
@@ -77,6 +77,7 @@ export class UserCreateEditComponent implements OnInit {
       this.form.patchValue(userDto);
       this.userDto = userDto;
     } else {
+      this.userDto = new CreateEditUserDto();
       this.form.controls['passWord'].setValidators(Validators.required);
     }
     this.isVisible = true;

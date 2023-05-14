@@ -3,7 +3,7 @@
     [nzOkLoading]="isOkLoading">
     <div *nzModalContent>
         <form nz-form [formGroup]="form" (ngSubmit)="save()">
-            <nz-form-item *ngIf="!userDto">
+            <nz-form-item *ngIf="userDto.id == null">
                 <nz-form-control nzErrorTip="The input is not valid user name!">
                     <nz-input-group nzAddOnBefore="User name">
                         <input type="text" nz-input formControlName="userName" id="userName" />
@@ -11,7 +11,7 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item *ngIf="!userDto">
+            <nz-form-item *ngIf="userDto.id == null">
                 <nz-form-control nzErrorTip="The input is not valid pass word!">
                     <nz-input-group nzAddOnBefore="Pass word">
                         <input type="password" nz-input formControlName="passWord" id="passWord" />

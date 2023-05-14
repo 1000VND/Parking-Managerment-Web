@@ -7,8 +7,8 @@
     </button>
 </div>
 
-<nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30]
-    [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
+<nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData"
+    [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>
@@ -23,7 +23,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr class="rowData" *ngFor="let data of virtualTable.data;let i = index" [class.selected]="i === selectedRowIndex" (click)="onChangeSelectRow(i)">
+        <tr class="rowData" *ngFor="let data of virtualTable.data;let i = index"
+            [class.selected]="i === selectedRowIndex" (click)="onChangeSelectRow(i)">
             <ng-container>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.lastModificationTime | date: 'dd/MM/yyyy HH:mm'}}</td>
@@ -31,11 +32,13 @@
                 <td>{{ data.fullName }}</td>
                 <td nzAlign="center">{{ data.role == 1 ? 'Admin' : 'User'}}</td>
                 <td nzAlign="center">
-                    <button class="mr-3" nz-button nzType="default" (click)="createModal.show(data)">
+                    <button class="mr-3" nz-button nzType="default" (click)="createModal.show(data)"
+                        (click)="$event.stopPropagation()">
                         <i class="fa-regular fa-pen-to-square mr-1"></i>
                         Edit
                     </button>
-                    <button nz-button nzType="default" nzDanger (click)="deleteUser(data.id!)">
+                    <button nz-button nzType="default" nzDanger (click)="deleteUser(data.id!)"
+                        (click)="$event.stopPropagation()">
                         <i class="fa-solid fa-trash-can mr-1"></i>
                         Delete
                     </button>

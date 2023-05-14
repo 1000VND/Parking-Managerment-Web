@@ -185,7 +185,7 @@ export class HomeComponent implements OnInit {
       let data = Object.assign(new CarInput, {
         licensePlateIn: this.resultImageIn,
         imgCarIn: this.imageIn,
-        typeCard: this.typeCard.toString() == 'Khách hàng vãng lai' ? 0 : 1
+        typeCard: this.typeCard.toString() == 'Current customers' ? 0 : 1
       });
       this._service.takeCar(data).pipe(finalize(() => {
         this.loading.loading(false);
@@ -200,7 +200,6 @@ export class HomeComponent implements OnInit {
       this.loading.loading(false);
       this._toastr.warning('Take car fail, No license plate!')
     }
-
   }
 
   carOut() {

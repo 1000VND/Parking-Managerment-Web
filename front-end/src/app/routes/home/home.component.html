@@ -1,6 +1,6 @@
 <parking-loading></parking-loading>
 <div class="d-flex ">
-    <nz-card nzTitle="QUẢN LÝ XE VÀO">
+    <nz-card nzTitle="VEHICLE MANAGEMENT IN THE PARKING LOT">
         <div class="d-flex flex-column">
             <div class="d-flex flex-row p-2">
                 <div>
@@ -20,49 +20,51 @@
                 </div>
             </div>
             <div class="d-flex flex-row">
-                <div class="ml-2 mr-2">
+                <div style="width: 450px;" class="ml-2 mr-2">
                     <div>
                         <h1>
-                            Thông tin xe vào
+                            Car information in
                         </h1>
                     </div>
 
                     <div>
-                        <span *ngIf="isScan">Biển số xe:
+                        <span *ngIf="isScan">License plate:
                             <mark style="color: green; background-color: white;"> {{ resultImageIn }}</mark>
                         </span>
 
-                        <span *ngIf="!isScan">Biển số xe: <mark>{{ resultImageIn }}</mark>
+                        <span *ngIf="!isScan">License plate: <mark>{{ resultImageIn }}</mark>
                         </span>
                     </div>
 
                     <div>
                         <span>
-                            Loại khách hàng: {{typeCard}}
+                            Customer type: {{typeCard}}
                         </span>
                     </div>
 
                     <div>
                         <span id="clock">
-                            Thời gian vào: {{timeIn}}
+                            Time in: {{timeIn}}
                         </span>
                     </div>
 
-                    
+
+                </div>
+                <div style="width: 450px;" class="d-flex justify-content-between">
+                    <button nz-button nzType="primary" (click)="capPictureIn()">
+                        <i class="fa-solid fa-camera mr-2"></i>
+                        Take a shot
+                    </button>
+                    <button class="ml-2" nz-button nzType="primary" (click)="takeCar()">
+                        <i class="fa-solid fa-arrow-right mr-2"></i>
+                        Take car
+                    </button>
                 </div>
             </div>
         </div>
-        <div style="height: 110px;" class="d-flex align-items-end">
-            <button nz-button nzType="primary" (click)="capPictureIn()">
-                Chụp
-            </button>
-            <button class="ml-2" nz-button nzType="primary" (click)="takeCar()">
-                Nhập xe
-            </button>
-        </div>
     </nz-card>
 
-    <nz-card class="ml-5" nzTitle="QUẢN LÝ XE RA">
+    <nz-card class="ml-5" nzTitle="MANAGE THE CAR OUT OF THE PARKING LOT">
         <div class="d-flex flex-column">
             <div class="d-flex flex-row p-2">
                 <div>
@@ -82,63 +84,65 @@
                 </div>
             </div>
             <div class="d-flex flex-row">
-                <div class="ml-2 mr-2">
+                <div style="width: 450px;" class="ml-2 mr-2">
                     <div>
                         <h1>
-                            Thông tin xe ra
+                            Car information out
                         </h1>
                     </div>
 
                     <div>
-                        <span *ngIf="isScan">Biển số xe:
+                        <span *ngIf="isScan">License plate:
                             <mark style="color: green; background-color: white;"> {{ resultImageOut }}</mark>
                         </span>
 
-                        <span *ngIf="!isScan">Biển số xe: <mark>{{ resultImageOut }}</mark>
+                        <span *ngIf="!isScan">License plate: <mark>{{ resultImageOut }}</mark>
                         </span>
                     </div>
 
                     <div>
                         <span>
-                            Loại khách hàng: {{carOutDto.typeCard != null ? (carOutDto.typeCard == 1 ? 'Khách hàng tháng' :'Khách hàng vãng lai') : ''}}
+                            Customer type: {{carOutDto.typeCard != null ? (carOutDto.typeCard == 1 ? 'Khách hàng tháng'
+                            :'Khách hàng vãng lai') : ''}}
                         </span>
                     </div>
 
                     <div>
                         <span>
-                            Thời gian vào: {{timeOut}}
+                            Time in: {{timeOut}}
                         </span>
                     </div>
 
                     <div>
                         <span>
-                            Thời gian ra: {{timeOut1}}
+                            Time out: {{timeOut1}}
                         </span>
                     </div>
 
                     <div>
                         <span>
-                            Thời gian gửi: {{totalTime}}
+                            Time total: {{totalTime}}
                         </span>
                     </div>
 
                     <div>
                         <span>
-                            Phí gửi xe : 20.000 VND
+                            Parking fee: 20.000 VND
                         </span>
                     </div>
-
-                    <div class="d-flex justify-content-start">
-                        <div>
-                            <button nz-button nzType="primary" (click)="capPictureOut()">
-                                Chụp
-                            </button>
-                        </div>
-                        <div class="ml-2">
-                            <button nz-button nzType="primary" (click)="carOut()">
-                                Xuất xe
-                            </button>
-                        </div>
+                </div>
+                <div style="width: 450px;" class="d-flex justify-content-between">
+                    <div>
+                        <button nz-button nzType="primary" (click)="capPictureOut()">
+                            <i class="fa-solid fa-camera mr-2"></i>
+                            Take a shot
+                        </button>
+                    </div>
+                    <div class="ml-2">
+                        <button nz-button nzType="primary" (click)="carOut()">
+                            <i class="fa-solid fa-arrow-left mr-2"></i>
+                            Export car
+                        </button>
                     </div>
                 </div>
             </div>
