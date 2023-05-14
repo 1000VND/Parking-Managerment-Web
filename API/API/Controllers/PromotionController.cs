@@ -83,7 +83,7 @@ namespace API.Controllers
                                   from ljPd in ProDetailJoined.DefaultIfEmpty()
                                   join tm in _dataContext.TicketMonthlys on ljPd.UserId equals tm.Id into tiketJoined
                                   from ljTm in tiketJoined.DefaultIfEmpty()
-                                  where ((string.IsNullOrWhiteSpace(input.PromotionName) || input.PromotionName.Contains(p.PromotionName)) &&
+                                  where ((string.IsNullOrWhiteSpace(input.PromotionName) || input.PromotionName == p.PromotionName) &&
                                        (string.IsNullOrWhiteSpace(input.LicensePlate) || input.LicensePlate.Contains(ljTm.LicensePlate)) &&
                                        ((!input.FromDate.HasValue || input.FromDate.Value.Date <= p.FromDate.Value.Date) &&
                                        (!input.ToDate.HasValue || input.ToDate.Value.Date >= p.ToDate.Value.Date)))

@@ -45,21 +45,23 @@ export class UserCreateEditComponent implements OnInit {
   }
 
   save(): void {
-    //this.form.controls['passWord'].setValue(this.userDto?.passWord);
-    this.isOkLoading = true;
-    this.validateForm(this.form);
-    this._service.createOrEdit(this.form.value).pipe(finalize(() => {
-      this.isVisible = false;
-      this.isOkLoading = false;
-      this.modalSave.emit(null);
-    })).subscribe((res) => {
-      if (res.statusCode == 200) {
-        this.toastr.success(res.message);
-      }
-    })
-    if (this.form.valid) {
+
+
+    if (this.form.valid ) {
+      this.isOkLoading = true;
+      this.validateForm(this.form);
+      this._service.createOrEdit(this.form.value).pipe(finalize(() => {
+        this.isVisible = false;
+        this.isOkLoading = false;
+        this.modalSave.emit(null);
+      })).subscribe((res) => {
+        if (res.statusCode == 200) {
+          this.toastr.success(res.message);
+        }
+      })
     }
     else {
+      this.toastr.error('You have not entered enough information!')
       Object.values(this.form.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();

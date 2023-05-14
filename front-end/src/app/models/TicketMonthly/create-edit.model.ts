@@ -8,5 +8,4 @@ export class CreateEditTicketMonthly{
   birthday!: Date;
   gender!: boolean;
   lastRegisterDate!: number;
-  customerPoint!: number;
 }

@@ -102,7 +102,7 @@ export class HomeComponent implements OnInit {
     this.loading.loading(true);
     this.resultImageIn = ''
     this.isScan = true;
-    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize(this.imageIn, 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
@@ -114,6 +114,8 @@ export class HomeComponent implements OnInit {
       else {
         if (checkPlate) {
           this.resultImageIn = noSpecialCharacters;
+          this.timeIn = this._dataformat.dateTimeFormat(Date.now());
+
           this.loading.loading(false);
           this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
             this.typeCard = res.message;
@@ -180,46 +182,94 @@ export class HomeComponent implements OnInit {
   }
 
   takeCar() {
-    this.loading.loading(true);
-    if (this.isScan) {
-      let data = Object.assign(new CarInput, {
-        licensePlateIn: this.resultImageIn,
-        imgCarIn: this.imageIn,
-        typeCard: this.typeCard.toString() == 'Current customers' ? 0 : 1
-      });
-      this._service.takeCar(data).pipe(finalize(() => {
+    if (this.validateIn()) {
+      this.loading.loading(true);
+      console.log(this.resultImageIn);
+      if (this.isScan) {
+        let data = Object.assign(new CarInput, {
+          licensePlateIn: this.resultImageIn,
+          imgCarIn: this.imageIn,
+          typeCard: this.typeCard.toString() == 'Current customers' ? 0 : 1
+        });
+        this._service.takeCar(data).pipe(finalize(() => {
+          this.loading.loading(false);
+          this.refreshCarIn()
+
+        })).subscribe((res) => {
+          if (res.statusCode == 200) {
+            this._toastr.success('Take car succcess');
+          }
+        });
+      }
+      else {
         this.loading.loading(false);
-      })).subscribe((res) => {
-        if (res.statusCode == 200) {
-          this._toastr.success('Take car succcess');
-          this.timeIn = this._dataformat.dateTimeFormat(Date.now());
-        }
-      });
+        this._toastr.warning('Take car fail, No license plate!')
+      }
     }
-    else {
-      this.loading.loading(false);
-      this._toastr.warning('Take car fail, No license plate!')
-    }
+
   }
 
   carOut() {
-    this.loading.loading(true);
-    if (this.isScan) {
-      const data = Object.assign(new CarOutDto, {
-        id: this.carOutDto.id,
-        licensePlateOut: this.resultImageOut,
-        imgCarOut: this.imageOut
-      })
-      this._service.carOut(data).pipe((finalize(() => {
+    if(this.validateOut()){
+      this.loading.loading(true);
+      if (this.isScan) {
+        const data = Object.assign(new CarOutDto, {
+          id: this.carOutDto.id,
+          licensePlateOut: this.resultImageOut,
+          imgCarOut: this.imageOut
+        })
+        this._service.carOut(data).pipe((finalize(() => {
+          this.loading.loading(false);
+          this.refreshCarOut()
+        }))).subscribe((res) => {
+          if (res.statusCode == 200)
+            this._toastr.success("Car export success")
+        })
+      }
+      else {
         this.loading.loading(false);
-      }))).subscribe((res) => {
-        if (res.statusCode == 200)
-          this._toastr.success("Car export success")
-      })
+        this._toastr.warning('Car export fail, No license plate!')
+      }
     }
-    else {
-      this.loading.loading(false);
-      this._toastr.warning('Car export fail, No license plate!')
+
+  }
+
+  refreshCarIn() {
+    this.resultImageIn = '';
+    this.typeCard = '';
+    this.timeIn = '';
+    this.imageIn = 'assets/error.png'
+  }
+
+  refreshCarOut() {
+    this.resultImageOut = '';
+    this.typeCard = '';
+    this.timeOut = '';
+    this.timeOut1 = '';
+    this.totalTime = '';
+    this.imageOut = 'assets/error.png'
+  }
+
+  validateIn() {
+    if ((this.resultImageIn == '' || this.resultImageIn == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
+    (this.timeIn == '' || this.timeIn == undefined) &&(this.imageIn=='assets/error.png'||this.imageIn==undefined)
+    ) {
+      this._toastr.error('Not enough information has been entered!');
+      return
     }
+    return true;
+  }
+
+  validateOut(){
+    if((this.resultImageOut == '' || this.resultImageOut == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
+    (this.timeOut == '' || this.timeOut == undefined) &&(this.timeOut1==''||this.timeOut1==undefined)&&
+    (this.totalTime == '' || this.totalTime == undefined) &&(this.imageOut=='assets/error.png'||this.imageOut==undefined)
+    )
+    {
+      this._toastr.error('Not enough information has been entered!');
+      return
+    }
+    return true;
   }
 }
+
