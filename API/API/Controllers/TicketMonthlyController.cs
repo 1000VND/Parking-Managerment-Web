@@ -34,23 +34,49 @@ namespace API.Controllers
 
         private async Task<IActionResult> Create( TicketMonthlyInput input)
         {
-            var ticketMonthly = new TicketMonthly
+            var checkExist = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(ticket => ticket.LicensePlate == input.LicensePlate ) ;
+            
+            if (checkExist == null )
             {
-                LicensePlate = input.LicensePlate,
-                PhoneNumber = input.PhoneNumber,
-                CustomerName = input.CustomerName,
-                CustomerAddress = input.CustomerAddress,
-                CustomerImgage = input.CustomerImgage,
-                Birthday = input.Birthday,
-                Gender = input.Gender,
-                CustomerPoint = input.CustomerPoint,
-                LastRegisterDate = input.LastRegisterDate,
-                CreationTime = DateTime.Now
-            };
-            _dataContext.TicketMonthlys.Add(ticketMonthly);
-            await _dataContext.SaveChangesAsync();
+                var ticketMonthly = new TicketMonthly
+                {
+                    LicensePlate = input.LicensePlate,
+                    PhoneNumber = input.PhoneNumber,
+                    CustomerName = input.CustomerName,
+                    CustomerAddress = input.CustomerAddress,
+                    CustomerImgage = input.CustomerImgage,
+                    Birthday = input.Birthday,
+                    Gender = input.Gender,
+                    LastRegisterDate = input.LastRegisterDate,
+                    CustomerPoint = (input.LastRegisterDate.Month - input.CreationTime.Month) * 10,
+                    CreationTime = DateTime.Now
+                };
 
-            return CustomResult("Add success!");
+                _dataContext.TicketMonthlys.Add(ticketMonthly);
+                await _dataContext.SaveChangesAsync();
+                return CustomResult("Add success!");
+            }
+            if(checkExist != null && checkExist.IsDelete == 0)
+            {
+                var ticketMonthly = new TicketMonthly
+                {
+                    LicensePlate = input.LicensePlate,
+                    PhoneNumber = input.PhoneNumber,
+                    CustomerName = input.CustomerName,
+                    CustomerAddress = input.CustomerAddress,
+                    CustomerImgage = input.CustomerImgage,
+                    Birthday = input.Birthday,
+                    Gender = input.Gender,
+                    LastRegisterDate = input.LastRegisterDate,
+                    CustomerPoint = checkExist.CustomerPoint + (input.LastRegisterDate.Month - input.CreationTime.Month) * 10,
+                    CreationTime = DateTime.Now
+                };
+
+                _dataContext.TicketMonthlys.Add(ticketMonthly);
+                await _dataContext.SaveChangesAsync();
+                return CustomResult("Add success!");
+            }
+            else return CustomResult("Add fail!");
         }
         private async Task<IActionResult> Update( TicketMonthlyInput input)
         {
@@ -59,6 +85,7 @@ namespace API.Controllers
             dataExit.CustomerAddress = input.CustomerAddress;
             dataExit.CustomerImgage = input.CustomerImgage;
             dataExit.LastModificationTime = DateTime.Now;
+            dataExit.LastRegisterDate = input.LastRegisterDate;
 
             _dataContext.TicketMonthlys.Update(dataExit);
             await _dataContext.SaveChangesAsync();
@@ -83,7 +110,7 @@ namespace API.Controllers
                                   Birthday = t.Birthday,
                                   Gender = t.Gender,
                                   CustomerPoint = t.CustomerPoint,
-                                  LastRegisterDate = t.LastRegisterDate,
+                                  LastRegisterDate = (DateTime)t.LastRegisterDate,
                                   CreationTime = t.CreationTime
                               }).ToListAsync();
 

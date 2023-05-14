@@ -8,7 +8,7 @@ namespace API.Dto.TicketMonthly
 {
     public class TicketMonthlyDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? LastModificationTime { get; set; }
 
@@ -20,8 +20,8 @@ namespace API.Dto.TicketMonthly
         public DateTime? Birthday { get; set; }
         public Status? Gender { get; set; }
         public int CustomerPoint { get; set; }
-        public DateTime? LastRegisterDate { get; set; }
-        public int? PromotionId { get; set; }
+        public DateTime LastRegisterDate { get; set; }
+
 
     }
 }

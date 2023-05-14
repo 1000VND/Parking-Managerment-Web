@@ -8,10 +8,9 @@ namespace API.Dto.TicketMonthly
 {
     public class TicketMonthlyInput
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public DateTime CreationTime { get; set; }
         public DateTime? LastModificationTime { get; set; }
-
         public string LicensePlate { get; set; }
         public string PhoneNumber { get; set; }
         public string CustomerName { get; set; }
@@ -20,8 +19,7 @@ namespace API.Dto.TicketMonthly
         public DateTime? Birthday { get; set; }
         public Status? Gender { get; set; }
         public int CustomerPoint { get; set; }
-        public DateTime? LastRegisterDate { get; set; }
-        public int? PromotionId { get; set; }
+        public DateTime LastRegisterDate { get; set; }
 
     }
 }

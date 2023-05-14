@@ -1,0 +1,82 @@
+<parking-loading></parking-loading>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Add Ticket'" (nzOnCancel)="handleCancel()" (nzOnOk)="save()"
+    [nzOkLoading]="isOkLoading">
+    <div *nzModalContent>
+        <form nz-form [formGroup]="form" (ngSubmit)="save()">
+            <nz-form-item >
+                <nz-form-control nzErrorTip="The input is not valid license plate!">
+                    <nz-input-group nzAddOnBefore="License plate">
+                        <input type="text" nz-input formControlName="licensePlate" id="licensePlate" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item >
+                <nz-form-control nzErrorTip="The input is not valid license plate image!">
+                    <nz-input-group nzAddOnBefore="Customer image">
+                        <input type="text" nz-input formControlName="customerImage" id="customerImage" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item >
+                <nz-form-control nzErrorTip="The input is not valid customer name!">
+                    <nz-input-group nzAddOnBefore="Customer name">
+                        <input type="text" nz-input formControlName="customerName" id="customerName" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid phone number!">
+                    <nz-input-group nzAddOnBefore="Phone number">
+                        <input type="text" nz-input formControlName="phoneNumber" id="phoneNumber" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-control nzErrorTip="The input is not valid customer address!">
+                  <nz-input-group nzAddOnBefore="Customer address">
+                      <input type="text" nz-input formControlName="customerAddress" id="customerAddress" />
+                  </nz-input-group>
+              </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-control nzErrorTip="The input is not valid birth day!">
+                <nz-input-group nzAddOnBefore="Birth day">
+                    <input type="date" nz-input formControlName="birthDay" id="birthDay" />
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control nzErrorTip="The input is not valid last register rate!">
+              <nz-input-group nzAddOnBefore="Last register date">
+                  <input type="number" nz-input formControlName="lastRegisterDate" id="lastRegisterDate" />
+              </nz-input-group>
+          </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="The input is not valid customer point!">
+            <nz-input-group nzAddOnBefore="Customer point">
+                <input type="text" nz-input formControlName="customerPoint" id="customerPoint" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid gender!">
+                    <nz-input-group nzAddOnBefore="Gender">
+                        <nz-select formControlName="gender" id="gender" style="width: 100%;">
+                            <nz-option *ngFor="let option of options" [nzValue]="option.value"
+                                [nzLabel]="option.label"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+</nz-modal>

@@ -5,6 +5,7 @@ export class GetAllDataTicketMonthlyDto{
   isDelete!: boolean;
 
   licensePlate!: string;
+  customerImage!: string;
   customerName!: string;
   phoneNumber!: string;
   customerAddress!: string;
