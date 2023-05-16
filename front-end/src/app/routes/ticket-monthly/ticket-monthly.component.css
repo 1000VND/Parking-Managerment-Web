@@ -23,6 +23,29 @@ tr>th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep .ant-table-tbody.ng-star-inserted > tr.rowData.ant-table-row.ng-star-inserted:hover > td {
+::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
+}
+
+tr.is-parking-two {
+  background-color: yellow;
+}
+
+.information-customer {
+  width: 100%;
+  margin-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+::ng-deep.ant-modal {
+  width: 1200px !important;
+}
+
+nz-date-picker {
+  width: 100%;
+}
+
+::ng-deep.webcam-wrapper>.mirrored {
+  transform: scaleX(1) !important;
 }

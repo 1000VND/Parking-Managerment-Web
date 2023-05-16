@@ -21,20 +21,34 @@ export class TicketService {
     return this.http.get(this.baseUrl + 'GetAll').pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
-    }))
-}
-createOrEdit(data: CreateEditTicketMonthly): Observable<any> {
-  return this.http.post(this.baseUrl + 'CreateOrEdit', data).pipe(catchError((err) => {
-    this.toastr.error(err.error.message);
-    return of(err);
-  }));
-}
+    }));
+  }
+  createOrEdit(data: CreateEditTicketMonthly): Observable<any> {
+    return this.http.post(this.baseUrl + 'CreateOrEdit', data).pipe(catchError((err) => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }));
+  }
 
-deleteTicketMonthly(id: number): Observable<any> {
-  return this.http.delete(this.baseUrl + `${id}`).pipe(catchError((err) => {
-    this.toastr.error(err.error.message);
-    return of(err);
-  }));
-}
+  deleteTicketMonthly(id: number): Observable<any> {
+    return this.http.delete(this.baseUrl + `${id}`).pipe(catchError((err) => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }));
+  }
+
+  checkRegister(plate: string): Observable<any> {
+    return this.http.get(this.baseUrl + 'CheckRegister?plate=' + plate).pipe(catchError((err) => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }));
+  }
+
+  getPlate(): Observable<any> {
+    return this.http.get(this.baseUrl + "GetCarExits").pipe(catchError(err => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }))
+  }
 }
 

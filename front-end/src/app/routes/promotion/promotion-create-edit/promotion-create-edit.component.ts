@@ -32,7 +32,6 @@ export class PromotionCreateEditComponent implements OnInit {
       fromDate: [null, Validators.required],
       toDate: [null, Validators.required],
       discount: [null, Validators.required],
-      point: [null, Validators.required],
     })
   }
 

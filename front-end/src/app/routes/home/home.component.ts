@@ -254,7 +254,7 @@ export class HomeComponent implements OnInit {
     if ((this.resultImageIn == '' || this.resultImageIn == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
     (this.timeIn == '' || this.timeIn == undefined) &&(this.imageIn=='assets/error.png'||this.imageIn==undefined)
     ) {
-      this._toastr.error('Not enough information has been entered!');
+      this._toastr.warning('Not enough information has been entered!');
       return
     }
     return true;
@@ -266,7 +266,7 @@ export class HomeComponent implements OnInit {
     (this.totalTime == '' || this.totalTime == undefined) &&(this.imageOut=='assets/error.png'||this.imageOut==undefined)
     )
     {
-      this._toastr.error('Not enough information has been entered!');
+      this._toastr.warning('Not enough information has been entered!');
       return
     }
     return true;

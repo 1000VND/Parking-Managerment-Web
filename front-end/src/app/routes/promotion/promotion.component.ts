@@ -37,7 +37,7 @@ export class PromotionComponent implements OnInit {
   search() {
     this._service.getAllPromotion(this.searchInput).pipe(finalize(() => {
     })).subscribe(res => {
-      this.listData = res.data;
+      this.listData = res.data ?? [];
     })
   }
 

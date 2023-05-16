@@ -60,5 +60,20 @@ export class PromotionService {
       return of(err);
     }));
   }
+
+  findPromotionById(id: number): Observable<any> {
+    return this.http.get(this.baseUrl + "GetDataById?id=" + id).pipe(catchError(err => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }))
+  }
+
+  findPromotionByDay(): Observable<any> {
+    return this.http.get(this.baseUrl + "GetPromotionByNow").pipe(catchError(err => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }))
+  }
+
 }
 

@@ -5,4 +5,5 @@ export class CreateEditPromotion{
     toDate!: Date;
     discount!: number;
     point!: number;
+    customerType!: number;
 }

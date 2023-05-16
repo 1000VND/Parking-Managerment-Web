@@ -14,17 +14,13 @@
             <nz-form-item>
                 <nz-form-control nzErrorTip="The input is not valid from date!">
                     <nz-input-group nzAddOnBefore="From Date">
-                        <nz-space>
-                            <nz-date-picker [nzMode]="'date'" formControlName="fromDate" id="fromDate"></nz-date-picker>
-                        </nz-space>
+                        <nz-date-picker [nzMode]="'date'" formControlName="fromDate" id="fromDate"></nz-date-picker>
                     </nz-input-group>
                 </nz-form-control>
 
                 <nz-form-control class="ml-4" nzErrorTip="The input is not valid to date!">
                     <nz-input-group nzAddOnBefore="To Date">
-                        <nz-space>
-                            <nz-date-picker [nzMode]="'date'" formControlName="toDate" id="toDate"></nz-date-picker>
-                        </nz-space>
+                        <nz-date-picker [nzMode]="'date'" formControlName="toDate" id="toDate"></nz-date-picker>
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
@@ -34,17 +30,6 @@
                     <nz-input-group nzAddOnBefore="Discount">
                         <div class="input-number-container">
                             <nz-input-number formControlName="discount" id="discount">
-                            </nz-input-number>
-                        </div>
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item>
-                <nz-form-control nzErrorTip="The input is not valid point!">
-                    <nz-input-group nzAddOnBefore="Point">
-                        <div class="input-number-container">
-                            <nz-input-number formControlName="point" id="point">
                             </nz-input-number>
                         </div>
                     </nz-input-group>

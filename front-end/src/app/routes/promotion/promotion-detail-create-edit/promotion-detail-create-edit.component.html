@@ -4,10 +4,10 @@
   (nzOnOk)="save()" [nzOkLoading]="isOkLoading">
   <div *nzModalContent>
     <form nz-form [formGroup]="form" (ngSubmit)="save()">
-      <nz-form-item>
+      <nz-form-item >
         <nz-form-control nzErrorTip="The input is not valid promotion name!">
-          <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
-            <input [(ngModel)]="promotion.label" type="text" nz-input formControlName="promotionName"
+          <nz-input-group nzDisabled nzRequired nzAddOnBefore="Promotion Name">
+            <input [disabled]="true" [(ngModel)]="promotion.label" type="text" nz-input formControlName="promotionName"
               id="promotionName" />
           </nz-input-group>
         </nz-form-control>

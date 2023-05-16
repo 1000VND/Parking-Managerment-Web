@@ -33,7 +33,7 @@ export class UserCreateEditComponent implements OnInit {
     this.form = this.fb.group({
       id: [null],
       userName: [null, Validators.required],
-      passWord: [null, Validators.required],
+      passWord: [null],
       fullName: [null, Validators.required],
       role: [null, Validators.required],
     })
@@ -45,9 +45,7 @@ export class UserCreateEditComponent implements OnInit {
   }
 
   save(): void {
-
-
-    if (this.form.valid ) {
+    if (this.form.valid) {
       this.isOkLoading = true;
       this.validateForm(this.form);
       this._service.createOrEdit(this.form.value).pipe(finalize(() => {

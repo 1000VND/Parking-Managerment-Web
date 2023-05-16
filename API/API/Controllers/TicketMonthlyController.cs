@@ -32,58 +32,67 @@ namespace API.Controllers
             else return await Update(input);
         }
 
-        private async Task<IActionResult> Create( TicketMonthlyInput input)
+        private async Task<IActionResult> Create(TicketMonthlyInput input)
         {
-            var checkExist = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(ticket => ticket.LicensePlate == input.LicensePlate ) ;
-            
-            if (checkExist == null )
+            var checkExits = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(ticket => ticket.LicensePlate == input.LicensePlate);
+
+            var checkExits1 = await _dataContext.TicketMonthlys.AsNoTracking()
+                                     .Where(ticket => ticket.LicensePlate == input.LicensePlate && (int)ticket.IsDelete == 1)
+                                     .OrderByDescending(e => e.LastRegisterDate).Select(t => t).FirstOrDefaultAsync();
+
+            int numOfMonths = (input.LastRegisterDate.Year - DateTime.Now.Year) * 12 + (input.LastRegisterDate.Month - DateTime.Now.Month);
+
+            var promotion = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == input.PromotionId);
+
+            if (checkExits == null)
             {
+                //Khách hàng chưa đăng ký vé tháng lần nào
                 var ticketMonthly = new TicketMonthly
                 {
                     LicensePlate = input.LicensePlate,
                     PhoneNumber = input.PhoneNumber,
                     CustomerName = input.CustomerName,
                     CustomerAddress = input.CustomerAddress,
-                    CustomerImgage = input.CustomerImgage,
+                    CustomerImgage = input.CustomerImage,
                     Birthday = input.Birthday,
                     Gender = input.Gender,
                     LastRegisterDate = input.LastRegisterDate,
-                    CustomerPoint = (input.LastRegisterDate.Month - input.CreationTime.Month) * 10,
-                    CreationTime = DateTime.Now
+                    CreationTime = DateTime.Now,
+                    Cost = input.Cost
                 };
 
                 _dataContext.TicketMonthlys.Add(ticketMonthly);
                 await _dataContext.SaveChangesAsync();
                 return CustomResult("Add success!");
             }
-            if(checkExist != null && checkExist.IsDelete == 0)
+            else
             {
+                //Khách hàng đã đăng ký vé tháng ít nhất 1 lần
                 var ticketMonthly = new TicketMonthly
                 {
                     LicensePlate = input.LicensePlate,
                     PhoneNumber = input.PhoneNumber,
                     CustomerName = input.CustomerName,
                     CustomerAddress = input.CustomerAddress,
-                    CustomerImgage = input.CustomerImgage,
+                    CustomerImgage = input.CustomerImage,
                     Birthday = input.Birthday,
                     Gender = input.Gender,
                     LastRegisterDate = input.LastRegisterDate,
-                    CustomerPoint = checkExist.CustomerPoint + (input.LastRegisterDate.Month - input.CreationTime.Month) * 10,
-                    CreationTime = DateTime.Now
+                    CreationTime = DateTime.Now,
+                    Cost = input.Cost * numOfMonths
                 };
-
                 _dataContext.TicketMonthlys.Add(ticketMonthly);
                 await _dataContext.SaveChangesAsync();
                 return CustomResult("Add success!");
             }
-            else return CustomResult("Add fail!");
+            return CustomResult("Add fail!");
         }
-        private async Task<IActionResult> Update( TicketMonthlyInput input)
+        private async Task<IActionResult> Update(TicketMonthlyInput input)
         {
             var dataExit = await _dataContext.TicketMonthlys.FindAsync(input.Id);
             dataExit.PhoneNumber = input.PhoneNumber;
             dataExit.CustomerAddress = input.CustomerAddress;
-            dataExit.CustomerImgage = input.CustomerImgage;
+            dataExit.CustomerImgage = input.CustomerImage;
             dataExit.LastModificationTime = DateTime.Now;
             dataExit.LastRegisterDate = input.LastRegisterDate;
 
@@ -109,7 +118,6 @@ namespace API.Controllers
                                   CustomerImgage = t.CustomerImgage,
                                   Birthday = t.Birthday,
                                   Gender = t.Gender,
-                                  CustomerPoint = t.CustomerPoint,
                                   LastRegisterDate = (DateTime)t.LastRegisterDate,
                                   CreationTime = t.CreationTime
                               }).ToListAsync();
@@ -133,5 +141,44 @@ namespace API.Controllers
 
             return NotFound();
         }
+
+        #region -- Kiểm tra khách hàng đã đăng ký bao giờ chưa
+        [HttpGet("CheckRegister")]
+        public async Task<IActionResult> CheckRegisterTicket(string plate)
+        {
+            var checkExits = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(ticket => ticket.LicensePlate == plate);
+            var checkExits1 = await _dataContext.TicketMonthlys.AsNoTracking()
+                                     .Where(ticket => ticket.LicensePlate == plate && (int)ticket.IsDelete == 1)
+                                     .OrderByDescending(e => e.LastRegisterDate).Select(t => t).FirstOrDefaultAsync();
+            var checkExits2 = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(e => e.LicensePlate == plate && e.IsDelete == 0);
+            if (checkExits != null)
+            {
+                if (checkExits2 != null)
+                {
+                    return CustomResult("Not yet expired, the monthly ticket cannot be registered", System.Net.HttpStatusCode.BadRequest);
+                }
+                return CustomResult(checkExits1);
+            }
+            else
+            {
+                return CustomResult("New customer");
+            }
+
+        }
+        #endregion
+
+        #region -- lấy biển số xe
+        [HttpGet("GetCarExits")]
+        public async Task<IActionResult> GetCarExits()
+        {
+            var checkExits = await (from t in _dataContext.TicketMonthlys.AsNoTracking().Where(ticket => (int)ticket.IsDelete == 1)
+                                    group t.LicensePlate by t.LicensePlate into g
+                                    select new
+                                    {
+                                        LicensePlate = g.Key
+                                    }).ToListAsync();
+            return CustomResult(checkExits);
+        }
+        #endregion
     }
 }

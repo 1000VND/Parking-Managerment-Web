@@ -22,7 +22,7 @@ export class PromotionDetailCreateEditComponent implements OnInit {
   isVisible = false;
   isOkLoading = false;
   promotion: { label: string, value: number } = { label: '', value: 0 };
-  userList: { label: string, value: number }[] = [];
+  userList: { label: string, value: string }[] = [];
   promotionDetailDto: CreateEditPromotionDetail = new CreateEditPromotionDetail();
 
 
@@ -38,6 +38,7 @@ export class PromotionDetailCreateEditComponent implements OnInit {
       id: [null],
       promotionName: [null, Validators.required],
       user: [null, Validators.required],
+      status: [null, Validators.required],
     })
 
   }
@@ -77,13 +78,13 @@ export class PromotionDetailCreateEditComponent implements OnInit {
   getUser() {
     this.userList = [];
     this.loading.loading(true);
-    this._tiketService.getAllTicket().pipe(finalize(() => {
+    this._tiketService.getPlate().pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe(res => {
       res.data.map((e: any) => {
         this.userList.push({
           label: e.licensePlate,
-          value: e.id,
+          value: e.licensePlate,
         });
       });
     })

@@ -37,3 +37,7 @@ tr>th {
   border-bottom: 1px solid;
   border-bottom-color: black;
 }
+
+::ng-deep.ng-star-inserted.ant-pagination-total-text.ng-star-inserted {
+  width: 155vh;
+}

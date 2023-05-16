@@ -47,6 +47,4 @@ export class TicketMonthlyComponent {
           this.listData = this.listData.filter((user) => user.id !== id);
         });
   }
-
-
 }

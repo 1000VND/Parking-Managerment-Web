@@ -23,7 +23,9 @@ namespace API.Entities
         public string CustomerImgage { get; set; }
         public DateTime? Birthday { get; set; }
         public Status? Gender { get; set; }
-        public int CustomerPoint { get; set; }
+        public int? PromotionId { get; set; }
         public DateTime LastRegisterDate { get; set; }
+        [Column(TypeName = "decimal(15, 0)")]
+        public decimal Cost { get; set; }
     }
 }

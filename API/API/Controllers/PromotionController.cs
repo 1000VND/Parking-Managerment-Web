@@ -45,9 +45,8 @@ namespace API.Controllers
                 FromDate = input.FromDate,
                 ToDate = input.ToDate,
                 Discount = input.Discount,
-                Point = input.Point,
                 IsDelete = Status.No,
-                CreationTime = DateTime.Now
+                CreationTime = DateTime.Now,
             };
             _dataContext.Promotions.Add(promotion);
             await _dataContext.SaveChangesAsync();
@@ -62,7 +61,6 @@ namespace API.Controllers
             dataExit.FromDate = input.FromDate;
             dataExit.ToDate = input.ToDate;
             dataExit.Discount = input.Discount;
-            dataExit.Point = input.Point;
             dataExit.LastModificationTime = DateTime.Now;
 
             _dataContext.Promotions.Update(dataExit);
@@ -97,7 +95,6 @@ namespace API.Controllers
                                       FromDate = p.FromDate.Value,
                                       ToDate = p.ToDate.Value,
                                       Discount = p.Discount,
-                                      Point = p.Point,
                                       LastModificationTime = p.LastModificationTime
                                   }).ToListAsync();
 
@@ -107,6 +104,36 @@ namespace API.Controllers
             {
                 return CustomResult(ex);
             }
+        }
+        #endregion
+
+        #region -- Lấy dữ liệu chương trình khuyến mãi dựa ngày hiện tại
+        [HttpGet("GetPromotionByNow")]
+        public async Task<IActionResult> FindPromotionByDate()
+        {
+            var checkExits = await _dataContext.Promotions.AsNoTracking()
+                .Where(e => e.IsDelete == 0 && 
+                DateTime.Now.Date >= e.FromDate.Value.Date && DateTime.Now.Date <= e.ToDate.Value.Date).ToListAsync();
+
+            if (checkExits != null)
+            {
+                return CustomResult(checkExits);
+            }
+            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+        }
+        #endregion
+
+        #region -- Lấy dữ liệu chương trình khuyến mãi dựa vào Id
+        [HttpGet("GetDataById")]
+        public async Task<IActionResult> FindPromotion(int id)
+        {
+            var checkExits = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == id);
+
+            if (checkExits != null)
+            {
+                return CustomResult(checkExits);
+            }
+            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
         #endregion
 
@@ -143,7 +170,8 @@ namespace API.Controllers
                                        Id = pdj.Id,
                                        CustomerName = tm.CustomerName,
                                        PhoneNumber = tm.PhoneNumber,
-                                       LicensePlate = tm.LicensePlate
+                                       LicensePlate = tm.LicensePlate,
+                                       Status = pdj.Status
                                    }).ToListAsync();
             return CustomResult(promotion);
         }
@@ -177,6 +205,7 @@ namespace API.Controllers
             var dataExit = await _dataContext.PromotionDetails.FindAsync(input.Id);
             dataExit.PromotionId = input.PromotionId;
             dataExit.UserId = input.UserId;
+            dataExit.Status = input.Status;
             dataExit.LastModificationTime = DateTime.Now;
 
             _dataContext.PromotionDetails.Update(dataExit);

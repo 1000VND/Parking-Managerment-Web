@@ -9,4 +9,5 @@ export class GetAllDataPromotionDto{
     toDate!: Date;
     discount!: number;
     point!: number;
+    customerType!: number;
 }

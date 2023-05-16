@@ -1,82 +1,119 @@
 <parking-loading></parking-loading>
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Add Ticket'" (nzOnCancel)="handleCancel()" (nzOnOk)="save()"
-    [nzOkLoading]="isOkLoading">
-    <div *nzModalContent>
-        <form nz-form [formGroup]="form" (ngSubmit)="save()">
-            <nz-form-item >
-                <nz-form-control nzErrorTip="The input is not valid license plate!">
-                    <nz-input-group nzAddOnBefore="License plate">
-                        <input type="text" nz-input formControlName="licensePlate" id="licensePlate" />
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
+<nz-modal class="ticket-modal" [(nzVisible)]="isVisible"
+    [nzTitle]="ticketMonthlyDto.id == null ? 'Add Ticket' : 'Information detail ticket'" (nzOnCancel)="handleCancel()"
+    (nzOnOk)="save()" [nzOkLoading]="isOkLoading">
+    <div *nzModalContent class="d-flex">
+        <div *ngIf="ticketMonthlyDto.id == null" class="camera">
+            <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+                <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableIn()"
+                    (imageCapture)="handleImageIn($event)" *ngIf="showWebcamIn"
+                    [switchCamera]="nextWebcamObservableIn()">
+                </webcam>
+            </div>
 
-            <nz-form-item >
-                <nz-form-control nzErrorTip="The input is not valid license plate image!">
-                    <nz-input-group nzAddOnBefore="Customer image">
-                        <input type="text" nz-input formControlName="customerImage" id="customerImage" />
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
+            <ng-template #noCameraExist>
+                Camera Device not Available
+            </ng-template>
+            <div style="width: 450px;" class="d-flex justify-content-between">
+                <button nz-button nzType="primary" (click)="capPictureIn()">
+                    <i class="fa-solid fa-camera mr-2"></i>
+                    Take a shot
+                </button>
 
-            <nz-form-item >
-                <nz-form-control nzErrorTip="The input is not valid customer name!">
-                    <nz-input-group nzAddOnBefore="Customer name">
-                        <input type="text" nz-input formControlName="customerName" id="customerName" />
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
+                <button style="background-color: #1abc9c;color: black;" nz-button nzType="primary" (click)="count()">
+                    <i class="fa-solid fa-calculator mr-2"></i>
+                    Prepare the bill
+                </button>
+            </div>
+        </div>
+        <div *ngIf="ticketMonthlyDto.id != null">
+            <div class="ml-2">
+                <img width="450" height="337" [src]="imageIn">
+            </div>
+        </div>
+        <div class="information-customer">
+            <form nz-form [formGroup]="form" (ngSubmit)="save()">
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="The input is not valid license plate!">
+                        <nz-input-group nzAddOnBefore="License plate">
+                            <input [(ngModel)]="resultImageIn" type="text" nz-input formControlName="licensePlate"
+                                id="licensePlate" />
+                        </nz-input-group>
+                    </nz-form-control>
 
-            <nz-form-item>
-                <nz-form-control nzErrorTip="The input is not valid phone number!">
-                    <nz-input-group nzAddOnBefore="Phone number">
-                        <input type="text" nz-input formControlName="phoneNumber" id="phoneNumber" />
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
+                    <nz-form-control class="ml-3" nzErrorTip="The input is not valid customer name!">
+                        <nz-input-group nzAddOnBefore="Customer name">
+                            <input type="text" nz-input formControlName="customerName" id="customerName" />
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
 
-            <nz-form-item>
-              <nz-form-control nzErrorTip="The input is not valid customer address!">
-                  <nz-input-group nzAddOnBefore="Customer address">
-                      <input type="text" nz-input formControlName="customerAddress" id="customerAddress" />
-                  </nz-input-group>
-              </nz-form-control>
-          </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="The input is not valid phone number!">
+                        <nz-input-group nzAddOnBefore="Phone number">
+                            <input type="text" nz-input formControlName="phoneNumber" id="phoneNumber" />
+                        </nz-input-group>
+                    </nz-form-control>
 
-          <nz-form-item>
-            <nz-form-control nzErrorTip="The input is not valid birth day!">
-                <nz-input-group nzAddOnBefore="Birth day">
-                    <input type="date" nz-input formControlName="birthDay" id="birthDay" />
-                </nz-input-group>
-            </nz-form-control>
-        </nz-form-item>
+                    <nz-form-control class="ml-3" nzErrorTip="The input is not valid customer address!">
+                        <nz-input-group nzAddOnBefore="Customer address">
+                            <input type="text" nz-input formControlName="customerAddress" id="customerAddress" />
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
 
-        <nz-form-item>
-          <nz-form-control nzErrorTip="The input is not valid last register rate!">
-              <nz-input-group nzAddOnBefore="Last register date">
-                  <input type="number" nz-input formControlName="lastRegisterDate" id="lastRegisterDate" />
-              </nz-input-group>
-          </nz-form-control>
-      </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="The input is not valid birth day!">
+                        <nz-input-group nzAddOnBefore="Birth Day">
+                            <nz-date-picker [nzMode]="'date'" formControlName="birthDay" id="birthDay"></nz-date-picker>
+                        </nz-input-group>
+                    </nz-form-control>
 
-      <nz-form-item>
-        <nz-form-control nzErrorTip="The input is not valid customer point!">
-            <nz-input-group nzAddOnBefore="Customer point">
-                <input type="text" nz-input formControlName="customerPoint" id="customerPoint" />
-            </nz-input-group>
-        </nz-form-control>
-    </nz-form-item>
+                    <nz-form-control class="ml-3" nzErrorTip="The input is not valid gender!">
+                        <nz-input-group nzAddOnBefore="Gender">
+                            <nz-select formControlName="gender" id="gender" style="width: 100%;">
+                                <nz-option *ngFor="let option of options" [nzValue]="option.value"
+                                    [nzLabel]="option.label"></nz-option>
+                            </nz-select>
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
 
-            <nz-form-item>
-                <nz-form-control nzErrorTip="The input is not valid gender!">
-                    <nz-input-group nzAddOnBefore="Gender">
-                        <nz-select formControlName="gender" id="gender" style="width: 100%;">
-                            <nz-option *ngFor="let option of options" [nzValue]="option.value"
-                                [nzLabel]="option.label"></nz-option>
-                        </nz-select>
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
-        </form>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="The input is not valid last register date!">
+                        <nz-input-group nzAddOnBefore="Last Register Date">
+                            <nz-date-picker [nzDisabledDate]="disabledDate" [nzMode]="'month'"
+                                formControlName="lastRegisterDate" id="lastRegisterDate"></nz-date-picker>
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="The input is not valid voucher!">
+                        <nz-input-group nzAddOnBefore="Voucher">
+                            <nz-select [(ngModel)]="voucher" (ngModelChange)="onSelectChange($event)" formControlName="promotionId" id="promotionId" style="width: 100%;">
+                                <nz-option  *ngFor="let option of listPromoData"
+                                    [nzValue]="option.value" [nzLabel]="option.label">
+                                </nz-option>
+                            </nz-select>
+                        </nz-input-group>
+                    </nz-form-control>
+
+                    <nz-form-control class="ml-3" nzErrorTip="The input is not valid cost!">
+                        <nz-input-group nzAddOnBefore="Discount" >
+                            <input style="background-color: white; color: black;" [disabled]="true" [(ngModel)]="discount1" type="number" nz-input formControlName="discount" id="discount" />
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="The input is not valid cost!">
+                        <nz-input-group nzAddOnBefore="Cost">
+                            <input style="background-color: white; color: black;" [(ngModel)]="price" type="number" nz-input formControlName="cost" id="cost" />
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </div>
     </div>
 </nz-modal>
