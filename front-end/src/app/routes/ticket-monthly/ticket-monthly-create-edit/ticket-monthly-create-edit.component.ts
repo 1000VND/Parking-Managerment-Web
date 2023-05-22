@@ -45,7 +45,7 @@ export class TicketMonthlyCreateEditComponent {
   listPromoData: { label: string, value: number }[] = [];
   ticketDto: any;
   price: number = 0;
-  discount1: number = 0;
+  discount: number = 0;
   disableInput = true;
 
   constructor(
@@ -215,7 +215,7 @@ export class TicketMonthlyCreateEditComponent {
       this._promoService.findPromotionById(value).pipe(finalize(() => {
         this.loading.loading(false);
       })).subscribe(res => {
-        this.discount1 = res.data.discount;
+        this.discount = res.data.discount;
       })
     }
   }

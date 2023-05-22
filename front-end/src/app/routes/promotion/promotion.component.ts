@@ -35,6 +35,12 @@ export class PromotionComponent implements OnInit {
   }
 
   search() {
+    if ((this.searchInput.fromDate && !this.searchInput.toDate) || (!this.searchInput.fromDate && this.searchInput.toDate)){
+      return this._toastr.warning('You have not entered enough information!');
+    }
+    if (this.searchInput.fromDate > this.searchInput.toDate){
+      return this._toastr.warning('ToDate can not less than FromDate');
+    }
     this._service.getAllPromotion(this.searchInput).pipe(finalize(() => {
     })).subscribe(res => {
       this.listData = res.data ?? [];
