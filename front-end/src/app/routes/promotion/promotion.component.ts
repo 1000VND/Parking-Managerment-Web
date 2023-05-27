@@ -1,9 +1,7 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { PromotionService } from 'src/app/services/promotion.service';
 import { LoadingComponent } from '../common/loading/loading.component';
-import { UntypedFormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { PromotionDtoInput } from 'src/app/models/Promotion/promotion-dto-input';
 import { GetAllDataPromotionDto } from 'src/app/models/Promotion/get-all.model';
@@ -31,17 +29,22 @@ export class PromotionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     this.search();
   }
 
   search() {
-    if ((this.searchInput.fromDate && !this.searchInput.toDate) || (!this.searchInput.fromDate && this.searchInput.toDate)){
+    this.loading.loading(true);
+    if ((this.searchInput.fromDate && !this.searchInput.toDate) || (!this.searchInput.fromDate && this.searchInput.toDate)) {
       return this._toastr.warning('You have not entered enough information!');
     }
-    if (this.searchInput.fromDate > this.searchInput.toDate){
+    if (this.searchInput.fromDate > this.searchInput.toDate) {
       return this._toastr.warning('ToDate can not less than FromDate');
     }
     this._service.getAllPromotion(this.searchInput).pipe(finalize(() => {
+      this.loading.loading(false);
     })).subscribe(res => {
       this.listData = res.data ?? [];
     })

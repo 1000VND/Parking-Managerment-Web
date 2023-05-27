@@ -45,6 +45,29 @@ export class HomeComponent implements OnInit {
   typeCard!: string;
   carOutDto: CarOutDto = new CarOutDto();
 
+  data: any[] = [{
+    day: 'Monday',
+    oranges: 3,
+  }, {
+    day: 'Tuesday',
+    oranges: 2,
+  }, {
+    day: 'Wednesday',
+    oranges: 3,
+  }, {
+    day: 'Thursday',
+    oranges: 4,
+  }, {
+    day: 'Friday',
+    oranges: 6,
+  }, {
+    day: 'Saturday',
+    oranges: 11,
+  }, {
+    day: 'Sunday',
+    oranges: 4,
+  }];
+
   constructor(
     private _dataformat: DataFormatService,
     private router: Router,
@@ -210,7 +233,7 @@ export class HomeComponent implements OnInit {
   }
 
   carOut() {
-    if(this.validateOut()){
+    if (this.validateOut()) {
       this.loading.loading(true);
       if (this.isScan) {
         const data = Object.assign(new CarOutDto, {
@@ -251,8 +274,8 @@ export class HomeComponent implements OnInit {
   }
 
   validateIn() {
-    if ((this.resultImageIn == '' || this.resultImageIn == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
-    (this.timeIn == '' || this.timeIn == undefined) &&(this.imageIn=='assets/error.png'||this.imageIn==undefined)
+    if ((this.resultImageIn == '' || this.resultImageIn == undefined) && (this.typeCard == '' || this.typeCard == undefined) &&
+      (this.timeIn == '' || this.timeIn == undefined) && (this.imageIn == 'assets/error.png' || this.imageIn == undefined)
     ) {
       this._toastr.warning('Not enough information has been entered!');
       return
@@ -260,12 +283,11 @@ export class HomeComponent implements OnInit {
     return true;
   }
 
-  validateOut(){
-    if((this.resultImageOut == '' || this.resultImageOut == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
-    (this.timeOut == '' || this.timeOut == undefined) &&(this.timeOut1==''||this.timeOut1==undefined)&&
-    (this.totalTime == '' || this.totalTime == undefined) &&(this.imageOut=='assets/error.png'||this.imageOut==undefined)
-    )
-    {
+  validateOut() {
+    if ((this.resultImageOut == '' || this.resultImageOut == undefined) && (this.typeCard == '' || this.typeCard == undefined) &&
+      (this.timeOut == '' || this.timeOut == undefined) && (this.timeOut1 == '' || this.timeOut1 == undefined) &&
+      (this.totalTime == '' || this.totalTime == undefined) && (this.imageOut == 'assets/error.png' || this.imageOut == undefined)
+    ) {
       this._toastr.warning('Not enough information has been entered!');
       return
     }

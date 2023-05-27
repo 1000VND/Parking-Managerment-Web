@@ -1,5 +1,4 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Login } from 'src/app/models/login.model';
 import { UserDto } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +12,6 @@ import { finalize } from 'rxjs';
 })
 export class UserComponent implements OnInit {
   @ViewChild(LoadingComponent, { static: false }) loading!: LoadingComponent;
-  editCache: { [key: string]: { edit: boolean; data: Login } } = {};
   listData: any[] = [];
   isVisible = false;
   isOkLoading = false;
@@ -28,12 +26,18 @@ export class UserComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     this.getAllData();
   }
 
   getAllData() {
     this.listData = [];
-    this._service.getAllUser().subscribe((res) => {
+    this.loading.loading(true);
+    this._service.getAllUser().pipe(finalize(() => {
+      this.loading.loading(false);
+    })).subscribe((res) => {
       this.listData = res.data;
     });
   }

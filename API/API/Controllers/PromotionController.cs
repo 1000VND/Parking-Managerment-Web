@@ -106,14 +106,43 @@ namespace API.Controllers
         [HttpGet("GetPromotionByNow")]
         public async Task<IActionResult> FindPromotionByDate(string plate)
         {
-            var checkExits = await _dataContext.Promotions.AsNoTracking()
+            var getPromoNow = await _dataContext.Promotions.AsNoTracking()
                 .Where(e => e.IsDelete == 0 &&  
                 DateTime.Now.Date >= e.FromDate.Value.Date && DateTime.Now.Date <= e.ToDate.Value.Date).ToListAsync();
 
-            if (checkExits != null)
+            var checkCarExist = await _dataContext.TicketMonthlys.AsNoTracking().FirstOrDefaultAsync(e => e.LicensePlate == plate);
+            
+            if (checkCarExist != null)
             {
-                return CustomResult(checkExits);
+                var getPromoByPlate = await (from pd in _dataContext.PromotionDetails.Where(e => e.IsDelete == 0 && e.Status == 0)
+                                             join p in _dataContext.Promotions.Where(e => e.IsDelete == 0) on pd.PromotionId equals p.Id into pJoined
+                                             from lj in pJoined
+                                             join t in _dataContext.TicketMonthlys.Where(e => e.IsDelete == 0) on pd.UserId equals t.Id into tJoined
+                                             from ljt in tJoined
+                                             where (checkCarExist == null || (pd.UserId == checkCarExist.Id))
+                                             select new
+                                             {
+                                                 Id = lj.Id,
+                                                 PromotionName = lj.PromotionName
+                                             }).ToListAsync();
+                if (getPromoByPlate.Count != 0)
+                {
+                    return CustomResult(getPromoByPlate);
+                }
+                else
+                {
+                    if (getPromoNow != null)
+                    {
+                        return CustomResult(getPromoNow);
+                    }
+                }
+
             }
+            else
+            {
+                return CustomResult(checkCarExist);
+            }
+            
             return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
         #endregion
