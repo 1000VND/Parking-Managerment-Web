@@ -9,8 +9,17 @@
       </li>
 
       <li *ngIf="userSession == 0" nz-menu-item routerLink="/nav-bar/ticket-monthly" [nzMatchRouter]="true">
-        <span nz-icon nzType="file-add" nzTheme="outline"></span>
+        <span nz-icon nzType="idcard" nzTheme="outline"></span>
         <span>Ticket Monthly</span>
+      </li>
+
+      <li *ngIf="userSession == 0" nz-submenu nzTitle="Report" nzIcon="file-text">
+        <ul>
+          <li nz-menu-item routerLink="/nav-bar/report-car-loss" [nzMatchRouter]="true">
+            <span nz-icon nzType="file-text" nzTheme="outline"></span>
+            <span>Vehicle loss record</span>
+          </li>
+        </ul>
       </li>
 
       <li *ngIf="userSession == 1" nz-menu-item routerLink="/nav-bar/register" [nzMatchRouter]="true">

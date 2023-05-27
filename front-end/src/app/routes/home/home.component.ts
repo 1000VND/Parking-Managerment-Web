@@ -29,8 +29,8 @@ export class HomeComponent implements OnInit {
   nextWebcamIn: Subject<boolean | string> = new Subject<boolean | string>();
   nextWebcamOut: Subject<boolean | string> = new Subject<boolean | string>();
   flippedImage: any;
-  imageIn: string = '/src/assets/error.png';
-  imageOut: string = '/src/assets/error.png';
+  imageIn: string = 'assets/error.png';
+  imageOut: string = 'assets/error.png';
   resultImageIn!: string;
   resultImageOut: string | undefined;
   maGuixe: string | undefined;
@@ -54,6 +54,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.carOutDto.imgCarIn = 'assets/error.png';
     WebcamUtil.getAvailableVideoInputs().then(
       (mediaDevices: MediaDeviceInfo[]) => {
         this.isCameraExist = mediaDevices && mediaDevices.length > 0;
@@ -95,27 +96,37 @@ export class HomeComponent implements OnInit {
     this.triggerOut.next();
     this.imageOut = this.webcamImageOut!.imageAsDataUrl;
     this.convertImageOut();
-
   }
 
   convertImageIn() {
     this.loading.loading(true);
     this.resultImageIn = ''
     this.isScan = true;
-    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize(this.imageIn, 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
+      const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImageIn = "Chưa nhận diện được biển số!"
+        this.resultImageIn = "The number plate is not recognized!"
         this.isScan = false;
         this.loading.loading(false);
         return
       }
       else {
-        this.resultImageIn = noSpecialCharacters;
-        this.loading.loading(false);
-        this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
-          this.typeCard = res.message;
-        });
+        if (checkPlate) {
+          this.resultImageIn = noSpecialCharacters;
+          this.timeIn = this._dataformat.dateTimeFormat(Date.now());
+
+          this.loading.loading(false);
+          this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
+            this.typeCard = res.message;
+          });
+        }
+        else {
+          this.resultImageIn = "Invalid license plate!"
+          this.isScan = false;
+          this.loading.loading(false);
+          return
+        }
       }
     });
   }
@@ -124,27 +135,36 @@ export class HomeComponent implements OnInit {
     this.loading.loading(true);
     this.resultImageOut = ''
     this.isScan = true;
-    Tesseract.recognize('/assets/30g.jpg', 'eng').then(({ data: { text } }) => {
+    Tesseract.recognize(this.imageOut, 'eng').then(({ data: { text } }) => {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
+      const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImageOut = "Chưa nhận diện được biển số!"
+        this.resultImageOut = "The number plate is not recognized!"
         this.isScan = false;
         this.loading.loading(false);
         return
       } else {
-        this.resultImageOut = noSpecialCharacters;
-        this._service.checkLicensePlate(this.resultImageOut).pipe(finalize(() => {
+        if (checkPlate) {
+          this.resultImageOut = noSpecialCharacters;
+          this._service.checkLicensePlate(this.resultImageOut).pipe(finalize(() => {
+            this.loading.loading(false);
+          })).subscribe((res) => {
+            this.carOutDto = res.data;
+            this.timeOut = this._dataformat.dateTimeFormat(this.carOutDto.carTimeIn);
+            this.timeOut1 = this._dataformat.dateTimeFormat(Date.now());
+            const timeIn = new Date(this.carOutDto.carTimeIn);
+            const timeOut = new Date();
+            const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
+            const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
+            this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
+          })
+        }
+        else {
+          this.resultImageIn = "Invalid license plate!"
+          this.isScan = false;
           this.loading.loading(false);
-        })).subscribe((res) => {
-          this.carOutDto = res.data;
-          this.timeOut = this._dataformat.dateTimeFormat(this.carOutDto.carTimeIn);
-          this.timeOut1 = this._dataformat.dateTimeFormat(Date.now());
-          const timeIn = new Date(this.carOutDto.carTimeIn);
-          const timeOut = new Date();
-          const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
-          const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
-          this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
-        })
+          return
+        }
       }
     });
   }
@@ -162,39 +182,94 @@ export class HomeComponent implements OnInit {
   }
 
   takeCar() {
-    this.loading.loading(true);
-    let data = Object.assign(new CarInput, {
-      licensePlateIn: this.resultImageIn,
-      imgCarIn: this.imageIn,
-      typeCard: this.typeCard.toString() == 'Khách hàng vãng lai' ? 0 : 1
-    });
-    this._service.takeCar(data).pipe(finalize(() => {
-      this.loading.loading(false);
-    })).subscribe((res) => {
-      if (res.statusCode == 200) {
-        this._toastr.success('Take car succcess');
-        this.timeIn = this._dataformat.dateTimeFormat(Date.now());
+    if (this.validateIn()) {
+      this.loading.loading(true);
+      console.log(this.resultImageIn);
+      if (this.isScan) {
+        let data = Object.assign(new CarInput, {
+          licensePlateIn: this.resultImageIn,
+          imgCarIn: this.imageIn,
+          typeCard: this.typeCard.toString() == 'Current customers' ? 0 : 1
+        });
+        this._service.takeCar(data).pipe(finalize(() => {
+          this.loading.loading(false);
+          this.refreshCarIn()
+
+        })).subscribe((res) => {
+          if (res.statusCode == 200) {
+            this._toastr.success('Take car succcess');
+          }
+        });
       }
-    });
+      else {
+        this.loading.loading(false);
+        this._toastr.warning('Take car fail, No license plate!')
+      }
+    }
+
   }
 
   carOut() {
-    this.loading.loading(true);
-    const data = Object.assign(new CarOutDto, {
-      id: this.carOutDto.id,
-      licensePlateOut: this.resultImageOut,
-      imgCarOut: this.imageOut
-    })
-    this._service.carOut(data).pipe((finalize(() => {
-      this.loading.loading(false);
-    }))).subscribe((res) => {
-      if (res.statusCode == 200)
-        this._toastr.success("Xuất xe thành công")
-    })
+    if(this.validateOut()){
+      this.loading.loading(true);
+      if (this.isScan) {
+        const data = Object.assign(new CarOutDto, {
+          id: this.carOutDto.id,
+          licensePlateOut: this.resultImageOut,
+          imgCarOut: this.imageOut
+        })
+        this._service.carOut(data).pipe((finalize(() => {
+          this.loading.loading(false);
+          this.refreshCarOut()
+        }))).subscribe((res) => {
+          if (res.statusCode == 200)
+            this._toastr.success("Car export success")
+        })
+      }
+      else {
+        this.loading.loading(false);
+        this._toastr.warning('Car export fail, No license plate!')
+      }
+    }
+
   }
 
-  private delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  refreshCarIn() {
+    this.resultImageIn = '';
+    this.typeCard = '';
+    this.timeIn = '';
+    this.imageIn = 'assets/error.png'
   }
 
+  refreshCarOut() {
+    this.resultImageOut = '';
+    this.typeCard = '';
+    this.timeOut = '';
+    this.timeOut1 = '';
+    this.totalTime = '';
+    this.imageOut = 'assets/error.png'
+  }
+
+  validateIn() {
+    if ((this.resultImageIn == '' || this.resultImageIn == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
+    (this.timeIn == '' || this.timeIn == undefined) &&(this.imageIn=='assets/error.png'||this.imageIn==undefined)
+    ) {
+      this._toastr.warning('Not enough information has been entered!');
+      return
+    }
+    return true;
+  }
+
+  validateOut(){
+    if((this.resultImageOut == '' || this.resultImageOut == undefined) &&(this.typeCard==''||this.typeCard==undefined)&&
+    (this.timeOut == '' || this.timeOut == undefined) &&(this.timeOut1==''||this.timeOut1==undefined)&&
+    (this.totalTime == '' || this.totalTime == undefined) &&(this.imageOut=='assets/error.png'||this.imageOut==undefined)
+    )
+    {
+      this._toastr.warning('Not enough information has been entered!');
+      return
+    }
+    return true;
+  }
 }
+

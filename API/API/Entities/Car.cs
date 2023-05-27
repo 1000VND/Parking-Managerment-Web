@@ -11,6 +11,7 @@ namespace API.Entities
     [Table("Cars")]
     public class Car
     {
+
         [Key]
         public int Id { get; set; }
         public DateTime CreationTime { get; set; }
@@ -25,5 +26,8 @@ namespace API.Entities
         public string ImgCarOut { get; set; }
         public int TypeCard { get; set; }
         public Status? IsCarParking { get; set; }
+
+        [Column(TypeName = "decimal(15, 0)")]
+        public decimal Cost { get; set; }
     }
 }

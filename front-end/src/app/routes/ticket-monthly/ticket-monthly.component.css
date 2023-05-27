@@ -1,0 +1,51 @@
+.input-number-container nz-input-number {
+  width: 100%;
+}
+
+::ng-deep .ant-input-group-addon.ng-star-inserted {
+  background: #dcdcdc;
+  color: black;
+}
+
+::ng-deep .ant-table-row.ng-star-inserted {
+  border: 1px solid black;
+}
+
+:host ::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
+  display: block !important;
+}
+
+tr>th {
+  background-color: #dee9fc;
+}
+
+.selected {
+  background-color: #bde2ff !important;
+}
+
+::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
+  background: unset !important;
+}
+
+tr.is-parking-two {
+  background-color: yellow;
+}
+
+.information-customer {
+  width: 100%;
+  margin-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+::ng-deep.ant-modal {
+  width: 1200px !important;
+}
+
+nz-date-picker {
+  width: 100%;
+}
+
+::ng-deep.webcam-wrapper>.mirrored {
+  transform: scaleX(1) !important;
+}

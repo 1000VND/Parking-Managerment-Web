@@ -33,7 +33,7 @@ export class UserCreateEditComponent implements OnInit {
     this.form = this.fb.group({
       id: [null],
       userName: [null, Validators.required],
-      passWord: [null, Validators.required],
+      passWord: [null],
       fullName: [null, Validators.required],
       role: [null, Validators.required],
     })
@@ -45,21 +45,21 @@ export class UserCreateEditComponent implements OnInit {
   }
 
   save(): void {
-    //this.form.controls['passWord'].setValue(this.userDto?.passWord);
-    this.isOkLoading = true;
-    this.validateForm(this.form);
-    this._service.createOrEdit(this.form.value).pipe(finalize(() => {
-      this.isVisible = false;
-      this.isOkLoading = false;
-      this.modalSave.emit(null);
-    })).subscribe((res) => {
-      if (res.statusCode == 200){
-        this.toastr.success(res.message);
-      }
-    })
     if (this.form.valid) {
+      this.isOkLoading = true;
+      this.validateForm(this.form);
+      this._service.createOrEdit(this.form.value).pipe(finalize(() => {
+        this.isVisible = false;
+        this.isOkLoading = false;
+        this.modalSave.emit(null);
+      })).subscribe((res) => {
+        if (res.statusCode == 200) {
+          this.toastr.success(res.message);
+        }
+      })
     }
     else {
+      this.toastr.error('You have not entered enough information!')
       Object.values(this.form.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
@@ -69,7 +69,7 @@ export class UserCreateEditComponent implements OnInit {
     }
   }
 
-  show(userDto?: CreateEditUserDto ) {
+  show(userDto?: CreateEditUserDto) {
     this.form.reset();
     // this.userDto = null;
     if (userDto) {
@@ -77,6 +77,7 @@ export class UserCreateEditComponent implements OnInit {
       this.form.patchValue(userDto);
       this.userDto = userDto;
     } else {
+      this.userDto = new CreateEditUserDto();
       this.form.controls['passWord'].setValidators(Validators.required);
     }
     this.isVisible = true;

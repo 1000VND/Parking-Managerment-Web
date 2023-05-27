@@ -23,6 +23,25 @@ tr>th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep .ant-table-tbody.ng-star-inserted > tr.rowData.ant-table-row.ng-star-inserted:hover > td {
+::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
+}
+
+.search {
+  text-align: right;
+}
+
+::ng-deep .ant-table-title.ng-star-inserted {
+  font-weight: bold;
+  background: #b3d4fc;
+  border-bottom: 1px solid;
+  border-bottom-color: black;
+}
+
+::ng-deep.ng-star-inserted.ant-pagination-total-text.ng-star-inserted {
+  width: 155vh;
+}
+
+nz-date-picker {
+  width: 100%;
 }

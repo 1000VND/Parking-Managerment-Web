@@ -50,10 +50,11 @@ namespace API.Controllers
                 Role = input.Role,
                 CreationTime = DateTime.Now
             };
-            _dataContext.Users.Add(user);
+            var a = await _dataContext.Users.AddAsync(user);
+            //int b = a.Entity.Id;
             await _dataContext.SaveChangesAsync();
 
-            return CustomResult("Add success!");
+            return CustomResult(a.Entity.Id);
         }
 
         private async Task<IActionResult> Update(RegisterDto input)

@@ -18,5 +18,6 @@ namespace API.Entities
         public Status IsDelete { get; set; }
         public int PromotionId { get; set; }
         public int UserId { get; set; }
+        public int Status { get; set; }
     }
 }

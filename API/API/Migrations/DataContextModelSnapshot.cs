@@ -32,6 +32,9 @@ namespace API.Migrations
                     b.Property<DateTime?>("CarTimeOut")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(15,0)");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -77,7 +80,7 @@ namespace API.Migrations
                     b.Property<int>("Discount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FromDate")
+                    b.Property<DateTime?>("FromDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IsDelete")
@@ -86,13 +89,10 @@ namespace API.Migrations
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Point")
-                        .HasColumnType("int");
-
                     b.Property<string>("PromotionName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ToDate")
+                    b.Property<DateTime?>("ToDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -119,6 +119,9 @@ namespace API.Migrations
                     b.Property<int>("PromotionId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -137,6 +140,9 @@ namespace API.Migrations
                     b.Property<DateTime?>("Birthday")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(15,0)");
+
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -149,9 +155,6 @@ namespace API.Migrations
                     b.Property<string>("CustomerName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerPoint")
-                        .HasColumnType("int");
-
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
 
@@ -161,11 +164,17 @@ namespace API.Migrations
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("LastRegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LicensePlate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PromotionId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

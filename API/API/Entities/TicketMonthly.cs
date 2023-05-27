@@ -16,7 +16,6 @@ namespace API.Entities
         public DateTime CreationTime { get; set; }
         public DateTime? LastModificationTime { get; set; }
         public Status IsDelete { get; set; }
-
         public string LicensePlate { get; set; }
         public string PhoneNumber { get; set; }
         public string CustomerName { get; set; }
@@ -24,6 +23,9 @@ namespace API.Entities
         public string CustomerImgage { get; set; }
         public DateTime? Birthday { get; set; }
         public Status? Gender { get; set; }
-        public int CustomerPoint { get; set; }
+        public int? PromotionId { get; set; }
+        public DateTime LastRegisterDate { get; set; }
+        [Column(TypeName = "decimal(15, 0)")]
+        public decimal Cost { get; set; }
     }
 }
