@@ -1,33 +1,36 @@
 <parking-loading></parking-loading>
 <div class="login-bg">
-    <div class="container">
+    <div class="login-card">
         <h3 class="m-0"
-            style="text-align: center; font-weight: bold; text-transform: uppercase; color: #000; margin-bottom: 10px !important;">
+            style="font-size: 35px;text-align: center; font-weight: bold; text-transform: uppercase; color: #000; margin-bottom: 50px !important;">
             LOGIN
         </h3>
-        <form nz-form [formGroup]="validateForm" class="login-form">
-            <nz-form-item>
-                <nz-form-control nzErrorTip="Please input your user name!">
-                    <nz-input-group nzPrefixIcon="user">
-                        <input type="text" nz-input formControlName="userName" placeholder="Username" id="userName"/>
-                    </nz-input-group>
-                </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-                <nz-form-control nzErrorTip="Please input your pass word!">
-                    <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
-                        <input [type]="passwordVisible ? 'text' : 'PassWord'" nz-input formControlName="passWord" id="passWord"
-                            placeholder="Password" />
-                    </nz-input-group>
-                    <ng-template #suffixTemplate>
-                        <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                            (click)="passwordVisible = !passwordVisible"></span>
-                    </ng-template>
-                </nz-form-control>
-            </nz-form-item>
-            <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'"
-                (click)="submitForm()">Log
-                in</button>
+        <form nz-form [formGroup]="validateForm" class="login-form d-flex flex-column">
+            <div>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="Please input your user name!">
+                        <nz-input-group nzPrefixIcon="user">
+                            <input type="text" nz-input formControlName="userName" placeholder="Username"
+                                id="userName" />
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control nzErrorTip="Please input your pass word!">
+                        <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+                            <input [type]="passwordVisible ? 'text' : 'PassWord'" nz-input formControlName="passWord"
+                                id="passWord" placeholder="Password" />
+                        </nz-input-group>
+                        <ng-template #suffixTemplate>
+                            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                                (click)="passwordVisible = !passwordVisible"></span>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div class="mt-3 btn-login">
+                <button nz-button class="login-form-button" [nzType]="'primary'" (click)="submitForm()">Login</button>
+            </div>
         </form>
     </div>
 </div>

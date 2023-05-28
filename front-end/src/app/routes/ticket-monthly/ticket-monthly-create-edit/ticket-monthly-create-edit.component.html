@@ -36,7 +36,8 @@
                 <nz-form-item>
                     <nz-form-control nzErrorTip="The input is not valid license plate!">
                         <nz-input-group nzAddOnBefore="License plate">
-                            <input type="text" nz-input formControlName="licensePlate" id="licensePlate" />
+                            <input style="background-color: white; color: black;" type="text" nz-input
+                                formControlName="licensePlate" id="licensePlate" />
                         </nz-input-group>
                     </nz-form-control>
 
@@ -102,9 +103,8 @@
 
                     <nz-form-control class="ml-3" nzErrorTip="The input is not valid cost!">
                         <nz-input-group nzAddOnBefore="Discount">
-                            <input style="background-color: white; color: black;" [disabled]="true"
-                                [(ngModel)]="discount" type="number" nz-input formControlName="discount"
-                                id="discount" />
+                            <input style="background-color: white; color: black;" [(ngModel)]="discount" type="number"
+                                nz-input formControlName="discount" id="discount" />
                         </nz-input-group>
                     </nz-form-control>
                 </nz-form-item>

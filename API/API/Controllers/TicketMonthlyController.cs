@@ -34,58 +34,44 @@ namespace API.Controllers
 
         private async Task<IActionResult> Create(TicketMonthlyInput input)
         {
-            var checkExits = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(ticket => ticket.LicensePlate == input.LicensePlate);
-
             var checkExits1 = await _dataContext.TicketMonthlys.AsNoTracking()
                                      .Where(ticket => ticket.LicensePlate == input.LicensePlate && (int)ticket.IsDelete == 1)
                                      .OrderByDescending(e => e.LastRegisterDate).Select(t => t).FirstOrDefaultAsync();
 
             int numOfMonths = (input.LastRegisterDate.Year - DateTime.Now.Year) * 12 + (input.LastRegisterDate.Month - DateTime.Now.Month);
 
-            var promotion = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == input.PromotionId);
-
-            if (checkExits == null)
+            var ticketMonthly = new TicketMonthly
             {
-                //Khách hàng chưa đăng ký vé tháng lần nào
-                var ticketMonthly = new TicketMonthly
+                LicensePlate = input.LicensePlate,
+                PhoneNumber = input.PhoneNumber,
+                CustomerName = input.CustomerName,
+                CustomerAddress = input.CustomerAddress,
+                CustomerImgage = input.CustomerImage,
+                Birthday = input.Birthday,
+                Gender = input.Gender,
+                LastRegisterDate = input.LastRegisterDate,
+                CreationTime = DateTime.Now,
+                Cost = input.Cost * numOfMonths
+            };
+            var userIdnew = await _dataContext.TicketMonthlys.AddAsync(ticketMonthly);
+            await _dataContext.SaveChangesAsync();
+
+            if (input.PromotionId != 0)
+            {
+                var promoDetail = new PromotionDetail
                 {
-                    LicensePlate = input.LicensePlate,
-                    PhoneNumber = input.PhoneNumber,
-                    CustomerName = input.CustomerName,
-                    CustomerAddress = input.CustomerAddress,
-                    CustomerImgage = input.CustomerImage,
-                    Birthday = input.Birthday,
-                    Gender = input.Gender,
-                    LastRegisterDate = input.LastRegisterDate,
                     CreationTime = DateTime.Now,
-                    Cost = input.Cost
+                    IsDelete = Status.No,
+                    PromotionId = input.PromotionId,
+                    UserId = userIdnew.Entity.Id,
+                    Status = 1
                 };
 
-                await _dataContext.TicketMonthlys.AddAsync(ticketMonthly);
+                await _dataContext.PromotionDetails.AddAsync(promoDetail);
                 await _dataContext.SaveChangesAsync();
-                return CustomResult("Add success!");
             }
-            else
-            {
-                //Khách hàng đã đăng ký vé tháng ít nhất 1 lần
-                var ticketMonthly = new TicketMonthly
-                {
-                    LicensePlate = input.LicensePlate,
-                    PhoneNumber = input.PhoneNumber,
-                    CustomerName = input.CustomerName,
-                    CustomerAddress = input.CustomerAddress,
-                    CustomerImgage = input.CustomerImage,
-                    Birthday = input.Birthday,
-                    Gender = input.Gender,
-                    LastRegisterDate = input.LastRegisterDate,
-                    CreationTime = DateTime.Now,
-                    Cost = input.Cost * numOfMonths
-                };
-                _dataContext.TicketMonthlys.Add(ticketMonthly);
-                await _dataContext.SaveChangesAsync();
-                return CustomResult("Add success!");
-            }
-            return CustomResult("Add fail!");
+
+            return CustomResult("Add success!");
         }
         private async Task<IActionResult> Update(TicketMonthlyInput input)
         {

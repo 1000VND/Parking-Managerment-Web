@@ -29,8 +29,8 @@ export class HomeComponent implements OnInit {
   nextWebcamIn: Subject<boolean | string> = new Subject<boolean | string>();
   nextWebcamOut: Subject<boolean | string> = new Subject<boolean | string>();
   flippedImage: any;
-  imageIn: string = 'assets/error.png';
-  imageOut: string = 'assets/error.png';
+  imageIn: string = 'assets/cameranotfound.png';
+  imageOut: string = 'assets/cameranotfound.png';
   resultImageIn!: string;
   resultImageOut: string | undefined;
   maGuixe: string | undefined;
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.carOutDto.imgCarIn = 'assets/error.png';
+    this.carOutDto.imgCarIn = '/assets/cameranotfound.png';
     WebcamUtil.getAvailableVideoInputs().then(
       (mediaDevices: MediaDeviceInfo[]) => {
         this.isCameraExist = mediaDevices && mediaDevices.length > 0;
@@ -129,7 +129,7 @@ export class HomeComponent implements OnInit {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImageIn = "The number plate is not recognized!"
+        this._toastr.warning("Invalid license plate!");
         this.isScan = false;
         this.loading.loading(false);
         return
@@ -138,14 +138,14 @@ export class HomeComponent implements OnInit {
         if (checkPlate) {
           this.resultImageIn = noSpecialCharacters;
           this.timeIn = this._dataformat.dateTimeFormat(Date.now());
-
-          this.loading.loading(false);
-          this._service.checkTypeCustomer(this.resultImageIn).subscribe((res) => {
+          this._service.checkTypeCustomer(this.resultImageIn).pipe(finalize(() => {
+            this.loading.loading(false);
+          })).subscribe((res) => {
             this.typeCard = res.message;
           });
         }
         else {
-          this.resultImageIn = "Invalid license plate!"
+          this._toastr.warning("Invalid license plate!");
           this.isScan = false;
           this.loading.loading(false);
           return
@@ -162,7 +162,7 @@ export class HomeComponent implements OnInit {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.resultImageOut = "The number plate is not recognized!"
+        this._toastr.warning("Invalid license plate!");
         this.isScan = false;
         this.loading.loading(false);
         return
@@ -183,7 +183,7 @@ export class HomeComponent implements OnInit {
           })
         }
         else {
-          this.resultImageIn = "Invalid license plate!"
+          this._toastr.warning("Invalid license plate!");
           this.isScan = false;
           this.loading.loading(false);
           return
@@ -261,7 +261,7 @@ export class HomeComponent implements OnInit {
     this.resultImageIn = '';
     this.typeCard = '';
     this.timeIn = '';
-    this.imageIn = 'assets/error.png'
+    this.imageIn = '/assets/cameranotfound.png'
   }
 
   refreshCarOut() {
@@ -270,12 +270,12 @@ export class HomeComponent implements OnInit {
     this.timeOut = '';
     this.timeOut1 = '';
     this.totalTime = '';
-    this.imageOut = 'assets/error.png'
+    this.imageOut = '/assets/cameranotfound.png'
   }
 
   validateIn() {
     if ((this.resultImageIn == '' || this.resultImageIn == undefined) && (this.typeCard == '' || this.typeCard == undefined) &&
-      (this.timeIn == '' || this.timeIn == undefined) && (this.imageIn == 'assets/error.png' || this.imageIn == undefined)
+      (this.timeIn == '' || this.timeIn == undefined) && (this.imageIn == '/assets/cameranotfound.png' || this.imageIn == undefined)
     ) {
       this._toastr.warning('Not enough information has been entered!');
       return
@@ -286,7 +286,7 @@ export class HomeComponent implements OnInit {
   validateOut() {
     if ((this.resultImageOut == '' || this.resultImageOut == undefined) && (this.typeCard == '' || this.typeCard == undefined) &&
       (this.timeOut == '' || this.timeOut == undefined) && (this.timeOut1 == '' || this.timeOut1 == undefined) &&
-      (this.totalTime == '' || this.totalTime == undefined) && (this.imageOut == 'assets/error.png' || this.imageOut == undefined)
+      (this.totalTime == '' || this.totalTime == undefined) && (this.imageOut == '/assets/cameranotfound.png' || this.imageOut == undefined)
     ) {
       this._toastr.warning('Not enough information has been entered!');
       return

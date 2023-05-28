@@ -38,7 +38,7 @@ tr.is-parking-two {
   justify-content: flex-start;
 }
 
-::ng-deep.ant-modal {
+::ng-deep .ant-modal {
   width: 1200px !important;
 }
 

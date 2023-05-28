@@ -52,7 +52,7 @@ namespace API.Controllers
                 return CustomResult("No license plate entered!");
             }
 
-            var checkTicket = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(pl => pl.LicensePlate == plate);
+            var checkTicket = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(pl => pl.LicensePlate == plate && pl.IsDelete == 0);
             return CustomResult(checkTicket != null ? "Monthly customer" : "Current customers");
         }
 

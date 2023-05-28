@@ -151,13 +151,17 @@ namespace API.Controllers
         [HttpGet("GetDataById")]
         public async Task<IActionResult> FindPromotion(int id)
         {
-            var checkExits = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == id);
-
-            if (checkExits != null)
+            if (id != 0)
             {
-                return CustomResult(checkExits);
+                var checkExits = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == id);
+
+                if (checkExits != null)
+                {
+                    return CustomResult(checkExits);
+                }
+                return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
             }
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return CustomResult("Not Found");
         }
         #endregion
 

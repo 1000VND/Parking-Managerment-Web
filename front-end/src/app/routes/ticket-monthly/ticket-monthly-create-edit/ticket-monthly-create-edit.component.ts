@@ -41,7 +41,6 @@ export class TicketMonthlyCreateEditComponent {
   today = new Date()
   voucher: number = -1;
   disabledDate = (current: Date): boolean => differenceInCalendarDays(current, this.today) < 0;
-  promoInput: PromotionDtoInput = new PromotionDtoInput();
   listPromoData: { label: string, value: number }[] = [];
   ticketDto: any;
   price: number = 0;
@@ -59,7 +58,7 @@ export class TicketMonthlyCreateEditComponent {
   ngOnInit(): void {
     this.form = this.fb.group({
       id: [null],
-      licensePlate: [null, Validators.required],
+      licensePlate: [{ value: this.resultImageIn, disabled: true }, Validators.required],
       customerImage: [null, Validators.required],
       customerName: [null, Validators.required],
       phoneNumber: [null, Validators.required],
@@ -68,8 +67,8 @@ export class TicketMonthlyCreateEditComponent {
       gender: [null, Validators.required],
       lastRegisterDate: [null, Validators.required],
       promotionId: [null],
-      cost: [{ disabled: this.disableInput, value: "" }, Validators.required],
-      discount: [{ disabled: this.disableInput, value: 0 }]
+      cost: [{ disabled: true, value: this.price }, Validators.required],
+      discount: [{ disabled: true, value: 0 }]
     });
   }
 
@@ -82,8 +81,11 @@ export class TicketMonthlyCreateEditComponent {
     if (this.form.valid) {
       this.isOkLoading = true;
       this.ticketDto = Object.assign({}, this.form.value);
+      this.ticketDto.licensePlate = this.form.controls['licensePlate'].value;
+      this.ticketDto.cost = this.form.controls['cost'].value;
       this.validateForm(this.form);
       this._service.createOrEdit(this.ticketDto).pipe(finalize(() => {
+        this.refresh();
         this.isVisible = false;
         this.isOkLoading = false;
         this.modalSave.emit(null);
@@ -104,7 +106,15 @@ export class TicketMonthlyCreateEditComponent {
     }
   }
 
+  refresh() {
+    this.voucher = 0;
+    this.listPromoData = [];
+    this.discount = 0;
+    this.price = 0;
+  }
+
   show(dto?: GetAllDataTicketMonthlyDto) {
+    this.refresh();
     this.form.reset();
     if (dto) {
       this.btnOk = true
@@ -160,20 +170,19 @@ export class TicketMonthlyCreateEditComponent {
       else {
         if (checkPlate) {
           this.resultImageIn = noSpecialCharacters;
-          this.promoInput.licensePlate = this.resultImageIn;
-          this.form.controls['licensePlate'].patchValue(this.resultImageIn)
-          this.form.controls['promotionId'].patchValue(this.voucher);
+          this.form.controls['licensePlate'].setValue(this.resultImageIn)
+          this.form.controls['promotionId'].setValue(this.voucher);
           this._service.checkRegister(this.resultImageIn).pipe(finalize(() => {
             this._promoService.findPromotionByDay(this.resultImageIn).pipe(finalize(() => {
             })).subscribe(res => {
-              this.listPromoData.push({
-                value: res.id,
-                label: res.promotionName
-              });
-              // this.listPromoData = (res.data as any[]).map(e => ({
-              //   value: e.id,
-              //   label: e.promotionName,
-              // }));
+              if (res.data != null) {
+                this.listPromoData = (res.data as any[]).map(e => ({
+                  value: e.id,
+                  label: e.promotionName,
+                }));
+              } else {
+                this.listPromoData = [];
+              }
             });
             this.loading.loading(false);
           })).subscribe((res) => {
@@ -192,20 +201,15 @@ export class TicketMonthlyCreateEditComponent {
 
   count() {
     this.loading.loading(true);
-    const numMonth = this.form.value.lastRegisterDate.getMonth() == this.today.getMonth()
-      ? 1
-      : ((this.form.value.lastRegisterDate.getMonth() - this.today.getMonth()) + (12 * (this.form.value.lastRegisterDate.getFullYear() - this.today.getFullYear())));
     if (this.form.valid) {
-      if (this.voucher) {
-        this.loading.loading(false);
-        this.price = 500000 * numMonth * (100 - this.discount) * 0.01;
-      } else {
-        this.loading.loading(false);
-        this.price = 500000 * numMonth * (100 - this.discount) * 0.01;
-      }
+      const numMonth = this.form.value.lastRegisterDate.getMonth() == this.today.getMonth() ? 1 :
+        ((this.form.value.lastRegisterDate.getMonth() - this.today.getMonth()) + (12 * (this.form.value.lastRegisterDate.getFullYear() - this.today.getFullYear())) + 1);
+      this.loading.loading(false);
+      this.price = 500000 * numMonth * (100 - this.discount) * 0.01;
+
     }
     else {
-      this.toastr.warning('You have not entered enough information!')
+      this.loading.loading(false);
       Object.values(this.form.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
@@ -216,7 +220,7 @@ export class TicketMonthlyCreateEditComponent {
   }
 
   onSelectChange(value: any): void {
-    if (value != -1) {
+    if (value != 0) {
       this.loading.loading(true);
       this._promoService.findPromotionById(value).pipe(finalize(() => {
         this.loading.loading(false);
