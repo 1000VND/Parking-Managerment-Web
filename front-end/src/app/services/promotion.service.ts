@@ -68,8 +68,8 @@ export class PromotionService {
     }))
   }
 
-  findPromotionByDay(): Observable<any> {
-    return this.http.get(this.baseUrl + "GetPromotionByNow").pipe(catchError(err => {
+  findPromotionByDay(plate: string): Observable<any> {
+    return this.http.get(this.baseUrl + "GetPromotionByNow?plate=" + plate).pipe(catchError(err => {
       this.toastr.error(err.error.message);
       return of(err);
     }))

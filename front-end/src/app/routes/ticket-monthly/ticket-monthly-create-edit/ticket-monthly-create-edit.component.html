@@ -1,7 +1,7 @@
 <parking-loading></parking-loading>
 <nz-modal class="ticket-modal" [(nzVisible)]="isVisible"
-    [nzTitle]="ticketMonthlyDto.id == null ? 'Add Ticket' : 'Information detail ticket'" (nzOnCancel)="handleCancel()"
-    (nzOnOk)="save()" [nzOkLoading]="isOkLoading">
+    [nzTitle]="ticketMonthlyDto.id == null ? 'Add Ticket' : 'Information detail ticket'" [nzOkDisabled]="btnOk"
+    (nzOnCancel)="handleCancel()" (nzOnOk)="save()" [nzOkLoading]="isOkLoading">
     <div *nzModalContent class="d-flex">
         <div *ngIf="ticketMonthlyDto.id == null" class="camera">
             <div *ngIf="isCameraExist; else noCameraExist" class="camera">
@@ -36,8 +36,7 @@
                 <nz-form-item>
                     <nz-form-control nzErrorTip="The input is not valid license plate!">
                         <nz-input-group nzAddOnBefore="License plate">
-                            <input [(ngModel)]="resultImageIn" type="text" nz-input formControlName="licensePlate"
-                                id="licensePlate" />
+                            <input type="text" nz-input formControlName="licensePlate" id="licensePlate" />
                         </nz-input-group>
                     </nz-form-control>
 
@@ -88,28 +87,33 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item>
+                <nz-form-item *ngIf="ticketMonthlyDto.id == null">
                     <nz-form-control nzErrorTip="The input is not valid voucher!">
                         <nz-input-group nzAddOnBefore="Voucher">
-                            <nz-select [(ngModel)]="voucher" (ngModelChange)="onSelectChange($event)" formControlName="promotionId" id="promotionId" style="width: 100%;">
-                                <nz-option  *ngFor="let option of listPromoData"
-                                    [nzValue]="option.value" [nzLabel]="option.label">
+                            <nz-select [(ngModel)]="voucher" (ngModelChange)="onSelectChange($event)"
+                                formControlName="promotionId" id="promotionId" style="width: 100%;"
+                                [nzDisabled]="resultImageIn ? false : true">
+                                <nz-option *ngFor="let option of listPromoData" [nzValue]="option.value"
+                                    [nzLabel]="option.label">
                                 </nz-option>
                             </nz-select>
                         </nz-input-group>
                     </nz-form-control>
 
                     <nz-form-control class="ml-3" nzErrorTip="The input is not valid cost!">
-                        <nz-input-group nzAddOnBefore="Discount" >
-                            <input style="background-color: white; color: black;" [disabled]="true" [(ngModel)]="discount1" type="number" nz-input formControlName="discount" id="discount" />
+                        <nz-input-group nzAddOnBefore="Discount">
+                            <input style="background-color: white; color: black;" [disabled]="true"
+                                [(ngModel)]="discount" type="number" nz-input formControlName="discount"
+                                id="discount" />
                         </nz-input-group>
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item>
+                <nz-form-item *ngIf="ticketMonthlyDto.id == null">
                     <nz-form-control nzErrorTip="The input is not valid cost!">
                         <nz-input-group nzAddOnBefore="Cost">
-                            <input style="background-color: white; color: black;" [(ngModel)]="price" type="number" nz-input formControlName="cost" id="cost" />
+                            <input style="background-color: white; color: black;" [(ngModel)]="price" type="number"
+                                nz-input formControlName="cost" id="cost" />
                         </nz-input-group>
                     </nz-form-control>
                 </nz-form-item>

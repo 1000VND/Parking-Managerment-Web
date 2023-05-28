@@ -28,6 +28,7 @@ import { PromotionCreateEditComponent } from './routes/promotion/promotion-creat
 import { PromotionDetailCreateEditComponent } from './routes/promotion/promotion-detail-create-edit/promotion-detail-create-edit.component';
 import { ReportCarLossComponent } from './routes/report/report-car-loss/report-car-loss.component';
 import { TicketMonthlyCreateEditComponent } from './routes/ticket-monthly/ticket-monthly-create-edit/ticket-monthly-create-edit.component';
+import { DxChartModule } from 'devextreme-angular';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { TicketMonthlyCreateEditComponent } from './routes/ticket-monthly/ticket
     WebcamModule,
     NgOptimizedImage,
     NgZorroAntdModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    DxChartModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US }

@@ -61,7 +61,7 @@ namespace API.Controllers
                     Cost = input.Cost
                 };
 
-                _dataContext.TicketMonthlys.Add(ticketMonthly);
+                await _dataContext.TicketMonthlys.AddAsync(ticketMonthly);
                 await _dataContext.SaveChangesAsync();
                 return CustomResult("Add success!");
             }

@@ -45,8 +45,9 @@ export class TicketMonthlyCreateEditComponent {
   listPromoData: { label: string, value: number }[] = [];
   ticketDto: any;
   price: number = 0;
-  discount1: number = 0;
+  discount: number = 0;
   disableInput = true;
+  btnOk: boolean = false;
 
   constructor(
     private _service: TicketService,
@@ -63,7 +64,7 @@ export class TicketMonthlyCreateEditComponent {
       customerName: [null, Validators.required],
       phoneNumber: [null, Validators.required],
       customerAddress: [null, Validators.required],
-      birthDay: [null, Validators.required],
+      birthDay: [null,],
       gender: [null, Validators.required],
       lastRegisterDate: [null, Validators.required],
       promotionId: [null],
@@ -106,18 +107,13 @@ export class TicketMonthlyCreateEditComponent {
   show(dto?: GetAllDataTicketMonthlyDto) {
     this.form.reset();
     if (dto) {
+      this.btnOk = true
       this.form.patchValue(dto);
       this.ticketMonthlyDto = dto;
+      this.imageIn = this.ticketMonthlyDto.customerImgage;
     } else {
       this.ticketMonthlyDto = new GetAllDataTicketMonthlyDto();
-
-      this._promoService.findPromotionByDay().pipe(finalize(() => {
-      })).subscribe(res => {
-        this.listPromoData = (res.data as any[]).map(e => ({
-          value: e.id,
-          label: e.promotionName,
-        }));
-      });
+      this.btnOk = false
     }
     this.isVisible = true;
   }
@@ -156,7 +152,7 @@ export class TicketMonthlyCreateEditComponent {
       const noSpecialCharacters = text.replace(/[^a-zA-Z0-9]/g, '');
       const checkPlate = /^\d{2}[A-Za-z]\d*$/.test(noSpecialCharacters.toString());
       if (!(noSpecialCharacters.length == 8)) {
-        this.toastr.warning("The number plate is not recognized!");
+        this.toastr.warning("Invalid license plate!");
         this.isScan = false;
         this.loading.loading(false);
         return
@@ -164,16 +160,24 @@ export class TicketMonthlyCreateEditComponent {
       else {
         if (checkPlate) {
           this.resultImageIn = noSpecialCharacters;
-
           this.promoInput.licensePlate = this.resultImageIn;
-
-
+          this.form.controls['licensePlate'].patchValue(this.resultImageIn)
           this.form.controls['promotionId'].patchValue(this.voucher);
           this._service.checkRegister(this.resultImageIn).pipe(finalize(() => {
+            this._promoService.findPromotionByDay(this.resultImageIn).pipe(finalize(() => {
+            })).subscribe(res => {
+              this.listPromoData.push({
+                value: res.id,
+                label: res.promotionName
+              });
+              // this.listPromoData = (res.data as any[]).map(e => ({
+              //   value: e.id,
+              //   label: e.promotionName,
+              // }));
+            });
             this.loading.loading(false);
           })).subscribe((res) => {
             this.statusCar = res.message;
-            //this.form = res.data;
           });
         }
         else {
@@ -187,16 +191,18 @@ export class TicketMonthlyCreateEditComponent {
   }
 
   count() {
+    this.loading.loading(true);
+    const numMonth = this.form.value.lastRegisterDate.getMonth() == this.today.getMonth()
+      ? 1
+      : ((this.form.value.lastRegisterDate.getMonth() - this.today.getMonth()) + (12 * (this.form.value.lastRegisterDate.getFullYear() - this.today.getFullYear())));
     if (this.form.valid) {
-      const numMonth = this.form.value.lastRegisterDate.getMonth() == this.today.getMonth()
-        ? 1
-        : ((this.form.value.lastRegisterDate.getMonth() - this.today.getMonth()) + (12 * (this.form.value.lastRegisterDate.getFullYear() - this.today.getFullYear())));
-      this.loading.loading(true);
-      this._promoService.findPromotionById(this.form.value.promotionId).pipe(finalize(() => {
+      if (this.voucher) {
         this.loading.loading(false);
-      })).subscribe(res => {
-        this.price = 500000 * numMonth * (100 - res.data.discount) * 0.01;
-      })
+        this.price = 500000 * numMonth * (100 - this.discount) * 0.01;
+      } else {
+        this.loading.loading(false);
+        this.price = 500000 * numMonth * (100 - this.discount) * 0.01;
+      }
     }
     else {
       this.toastr.warning('You have not entered enough information!')
@@ -215,7 +221,7 @@ export class TicketMonthlyCreateEditComponent {
       this._promoService.findPromotionById(value).pipe(finalize(() => {
         this.loading.loading(false);
       })).subscribe(res => {
-        this.discount1 = res.data.discount;
+        this.discount = res.data.discount;
       })
     }
   }

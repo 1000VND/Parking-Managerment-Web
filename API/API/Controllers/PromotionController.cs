@@ -77,16 +77,11 @@ namespace API.Controllers
             try
             {
                 var data = await (from p in _dataContext.Promotions
-                                  join pd in _dataContext.PromotionDetails on p.Id equals pd.PromotionId into ProDetailJoined
-                                  from ljPd in ProDetailJoined.DefaultIfEmpty()
-                                  join tm in _dataContext.TicketMonthlys on ljPd.UserId equals tm.Id into tiketJoined
-                                  from ljTm in tiketJoined.DefaultIfEmpty()
                                   where ((string.IsNullOrWhiteSpace(input.PromotionName) || input.PromotionName == p.PromotionName) &&
-                                       (string.IsNullOrWhiteSpace(input.LicensePlate) || input.LicensePlate.Contains(ljTm.LicensePlate)) &&
                                        ((!input.FromDate.HasValue || input.FromDate.Value.Date <= p.FromDate.Value.Date) &&
                                        (!input.ToDate.HasValue || input.ToDate.Value.Date >= p.ToDate.Value.Date)))
                                   && p.IsDelete == 0
-                                  orderby p.CreationTime descending
+                                  orderby p.ToDate descending, p.FromDate descending
                                   select new GetAllPromotionDto
                                   {
                                       Id = p.Id,
@@ -109,16 +104,45 @@ namespace API.Controllers
 
         #region -- Lấy dữ liệu chương trình khuyến mãi dựa ngày hiện tại
         [HttpGet("GetPromotionByNow")]
-        public async Task<IActionResult> FindPromotionByDate()
+        public async Task<IActionResult> FindPromotionByDate(string plate)
         {
-            var checkExits = await _dataContext.Promotions.AsNoTracking()
-                .Where(e => e.IsDelete == 0 && 
+            var getPromoNow = await _dataContext.Promotions.AsNoTracking()
+                .Where(e => e.IsDelete == 0 &&  
                 DateTime.Now.Date >= e.FromDate.Value.Date && DateTime.Now.Date <= e.ToDate.Value.Date).ToListAsync();
 
-            if (checkExits != null)
+            var checkCarExist = await _dataContext.TicketMonthlys.AsNoTracking().FirstOrDefaultAsync(e => e.LicensePlate == plate);
+            
+            if (checkCarExist != null)
             {
-                return CustomResult(checkExits);
+                var getPromoByPlate = await (from pd in _dataContext.PromotionDetails.Where(e => e.IsDelete == 0 && e.Status == 0)
+                                             join p in _dataContext.Promotions.Where(e => e.IsDelete == 0) on pd.PromotionId equals p.Id into pJoined
+                                             from lj in pJoined
+                                             join t in _dataContext.TicketMonthlys.Where(e => e.IsDelete == 0) on pd.UserId equals t.Id into tJoined
+                                             from ljt in tJoined
+                                             where (checkCarExist == null || (pd.UserId == checkCarExist.Id))
+                                             select new
+                                             {
+                                                 Id = lj.Id,
+                                                 PromotionName = lj.PromotionName
+                                             }).ToListAsync();
+                if (getPromoByPlate.Count != 0)
+                {
+                    return CustomResult(getPromoByPlate);
+                }
+                else
+                {
+                    if (getPromoNow != null)
+                    {
+                        return CustomResult(getPromoNow);
+                    }
+                }
+
             }
+            else
+            {
+                return CustomResult(checkCarExist);
+            }
+            
             return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
         #endregion
@@ -181,37 +205,19 @@ namespace API.Controllers
         [HttpPost("CreateEditPromoDetail")]
         public async Task<IActionResult> CreateEditDetail(PromotionDetailInputDto input)
         {
-            if (input.Id == null) return await CreateDetail(input);
-            else return await UpdateDetail(input);
-        }
-
-        private async Task<IActionResult> CreateDetail(PromotionDetailInputDto input)
-        {
+            var checkPlate = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(e => e.LicensePlate == input.Plate);
             var promotionDetail = new PromotionDetail
             {
                 PromotionId = input.PromotionId,
-                UserId = input.UserId,
+                UserId = checkPlate.Id,
                 IsDelete = Status.No,
-                CreationTime = DateTime.Now
+                CreationTime = DateTime.Now,
+                Status = 0
             };
-            _dataContext.PromotionDetails.Add(promotionDetail);
+            await _dataContext.PromotionDetails.AddAsync(promotionDetail);
             await _dataContext.SaveChangesAsync();
 
             return CustomResult("Add success!");
-        }
-
-        private async Task<IActionResult> UpdateDetail(PromotionDetailInputDto input)
-        {
-            var dataExit = await _dataContext.PromotionDetails.FindAsync(input.Id);
-            dataExit.PromotionId = input.PromotionId;
-            dataExit.UserId = input.UserId;
-            dataExit.Status = input.Status;
-            dataExit.LastModificationTime = DateTime.Now;
-
-            _dataContext.PromotionDetails.Update(dataExit);
-            await _dataContext.SaveChangesAsync();
-
-            return CustomResult("Update success!");
         }
         #endregion
 

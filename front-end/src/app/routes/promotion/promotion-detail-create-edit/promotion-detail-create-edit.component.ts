@@ -38,7 +38,6 @@ export class PromotionDetailCreateEditComponent implements OnInit {
       id: [null],
       promotionName: [null, Validators.required],
       user: [null, Validators.required],
-      status: [null, Validators.required],
     })
 
   }
@@ -50,8 +49,7 @@ export class PromotionDetailCreateEditComponent implements OnInit {
 
   save() {
     this.promotionDetailDto.promotionId = this.promotion.value;
-    this.promotionDetailDto.userId = this.form.value.user;
-    console.log(this.promotionDetailDto);
+    this.promotionDetailDto.plate = this.form.value.user;
     if (this.form.valid) {
       this.isOkLoading = true;
       this._service.createEditPromotionDetail(this.promotionDetailDto).pipe(finalize(() => {
@@ -89,7 +87,6 @@ export class PromotionDetailCreateEditComponent implements OnInit {
       });
     })
   }
-
 
   show(data: GetAllDataPromotionDto) {
     this.getUser();
