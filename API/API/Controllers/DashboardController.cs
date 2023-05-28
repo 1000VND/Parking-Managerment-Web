@@ -1,4 +1,8 @@
-﻿using API.Data;
+﻿using Abp.Dapper.Repositories;
+using API.Data;
+using API.Dto.TicketMonthly;
+using API.Interfaces;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,13 +14,17 @@ namespace API.Controllers
     public class DashboardController : BaseApiController
     {
         private readonly DataContext _dataContext;
+        private readonly IDapperRepository _dapperRepository;
 
         public DashboardController
             (
-                DataContext dataContext
+                DataContext dataContext,
+                IDapperRepository dapperRepository
+
             )
         {
             _dataContext = dataContext;
+            _dapperRepository = dapperRepository;
         }
 
         [HttpPost("CountParkingAccessCar")]
@@ -49,19 +57,15 @@ namespace API.Controllers
             return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
 
-        [HttpPost("CountAllTicketMonthly")]
-        public async Task<IActionResult> CountAllTicketMonthly()
+        [HttpGet("CountAllTicketMonthly")]
+        public async Task<IActionResult> GetDataStored(int year)
         {
-            var checkExits = _dataContext.TicketMonthlys
-                .GroupBy(e => e.Id)
-                .Select(grp => grp.Count());
+            var dp = new DynamicParameters();
 
-            if (checkExits != null)
-            {
-                return CustomResult(checkExits.Count());
-            }
+            dp.Add("@year", year, System.Data.DbType.Int32);
+            var data = await Task.FromResult(_dapperRepository.GetAll<CountAllTicketMonthlyDto>("CountAllTicketMonthly", dp, commandType: System.Data.CommandType.StoredProcedure));
 
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return CustomResult(data);
         }
 
         [HttpPost("CountAllCarInventory")]
