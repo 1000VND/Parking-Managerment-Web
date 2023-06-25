@@ -34,13 +34,9 @@ namespace API.Controllers
 
         private async Task<IActionResult> Create(TicketMonthlyInput input)
         {
-            var checkExits1 = await _dataContext.TicketMonthlys.AsNoTracking()
-                                     .Where(ticket => ticket.LicensePlate == input.LicensePlate && (int)ticket.IsDelete == 1)
-                                     .OrderByDescending(e => e.LastRegisterDate).Select(t => t).FirstOrDefaultAsync();
-
             int numOfMonths = (input.LastRegisterDate.Year - DateTime.Now.Year) * 12 + (input.LastRegisterDate.Month - DateTime.Now.Month);
 
-            var ticketMonthly = new TicketMonthly
+            TicketMonthly ticketMonthly = new TicketMonthly
             {
                 LicensePlate = input.LicensePlate,
                 PhoneNumber = input.PhoneNumber,
@@ -114,17 +110,29 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dataExits = await _dataContext.TicketMonthlys.FindAsync(id);
+            var dataExist = await _dataContext.TicketMonthlys.FindAsync(id);
 
-            if (dataExits != null && dataExits.IsDelete == Status.No)
+            var dataExistPromotionDetail = await _dataContext.PromotionDetails.Where(e => e.UserId == id).ToListAsync();
+
+            if (dataExist != null && dataExist.IsDelete == Status.No)
             {
-                dataExits.IsDelete = Status.Yes;
-                dataExits.LastModificationTime = DateTime.Now;
-                _dataContext.Entry(dataExits).State = EntityState.Modified;
+                dataExist.IsDelete = Status.Yes;
+                dataExist.LastModificationTime = DateTime.Now;
+                _dataContext.Entry(dataExist).State = EntityState.Modified;
                 await _dataContext.SaveChangesAsync();
-                return CustomResult(dataExits);
-            }
 
+                if (dataExistPromotionDetail.Count != 0)
+                {
+                    foreach (var data in dataExistPromotionDetail)
+                    {
+                        data.IsDelete = Status.Yes;
+                        data.LastModificationTime = DateTime.Now;
+                        _dataContext.Entry(data).State = EntityState.Modified;
+                        await _dataContext.SaveChangesAsync();
+                    }
+                }
+                return CustomResult(dataExist);
+            }
             return NotFound();
         }
 
@@ -149,21 +157,23 @@ namespace API.Controllers
             {
                 return CustomResult("New customer");
             }
-
         }
         #endregion
 
         #region -- lấy biển số xe
         [HttpGet("GetCarExits")]
-        public async Task<IActionResult> GetCarExits()
+        public async Task<IActionResult> GetCarExits(int promotionId)
         {
-            var checkExits = await (from t in _dataContext.TicketMonthlys.AsNoTracking().Where(ticket => (int)ticket.IsDelete == 1)
+            var promotion = await _dataContext.PromotionDetails.AsNoTracking().FirstOrDefaultAsync(e => e.Id == promotionId);
+
+            var checkExist = await (from t in _dataContext.TicketMonthlys.AsNoTracking().Where(ticket => (int)ticket.IsDelete == 1)
+                                    //join p in _dataContext.Promotions.AsNoTracking().Where(e=>e.) 
                                     group t.LicensePlate by t.LicensePlate into g
                                     select new
                                     {
                                         LicensePlate = g.Key
                                     }).ToListAsync();
-            return CustomResult(checkExits);
+            return CustomResult(checkExist);
         }
         #endregion
     }

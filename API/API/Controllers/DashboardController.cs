@@ -1,9 +1,11 @@
 ﻿using Abp.Dapper.Repositories;
 using API.Data;
+using API.Dto.Dashboard;
 using API.Dto.TicketMonthly;
 using API.Interfaces;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,11 +60,10 @@ namespace API.Controllers
         }
 
         [HttpGet("CountAllTicketMonthly")]
-        public async Task<IActionResult> GetDataStored(int year)
+        public async Task<IActionResult> GetDataStored()
         {
             var dp = new DynamicParameters();
 
-            dp.Add("@year", year, System.Data.DbType.Int32);
             var data = await Task.FromResult(_dapperRepository.GetAll<CountAllTicketMonthlyDto>("CountAllTicketMonthly", dp, commandType: System.Data.CommandType.StoredProcedure));
 
             return CustomResult(data);
@@ -102,6 +103,36 @@ namespace API.Controllers
             }
 
             return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+        }
+
+        [HttpGet("RateMaleFemale")]
+        public async Task<IActionResult> PercentMaleFemale()
+        {
+            int countMale = await _dataContext.TicketMonthlys.AsNoTracking()
+                .Where(e => e.Gender == Enum.Status.Yes && e.CreationTime.Year == DateTime.Now.Year)
+                .CountAsync();
+
+            int countFemale = await _dataContext.TicketMonthlys.AsNoTracking()
+                .Where(e => e.Gender == Enum.Status.No && e.CreationTime.Year == DateTime.Now.Year)
+                .CountAsync();
+
+            float total = countMale + countFemale;
+
+            float percentMale = total != 0 ? (countMale / total) * 100 : 0;
+
+            float percentFemale = total != 0 ? (countFemale / total) * 100 : 0;
+
+            percentMale = (float)Math.Round(percentMale, 2);
+
+            percentFemale = (float)Math.Round(percentFemale, 2);
+
+            PercentMaleFemaleDto data = new PercentMaleFemaleDto
+            {
+                PercentMale = percentMale,
+                PercentFemale = percentFemale
+            };
+
+            return CustomResult(data);
         }
     }
 }

@@ -1,4 +1,4 @@
-export class CarOutDto{
+export class CarOutDto {
     id!: number;
     creationTime!: Date;
     lastModificationTime!: Date;
@@ -11,4 +11,5 @@ export class CarOutDto{
     imgCarOut!: string;
     typeCard!: number;
     isCarParking!: boolean;
+    cost!: number;
 }

@@ -15,9 +15,10 @@ nz-header {
   padding: 0;
 }
 
-nz-content {
+nz-content.inner-content {
   margin: 0 16px;
   padding: 0;
+  background-color: #eff3f8;
 }
 
 nz-breadcrumb {
@@ -36,5 +37,9 @@ nz-footer {
 }
 
 nz-layout{
+  height: 100%;
+}
+
+nz-content{
   height: 100%;
 }

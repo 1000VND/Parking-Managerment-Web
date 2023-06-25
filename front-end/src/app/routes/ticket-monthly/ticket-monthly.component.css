@@ -49,3 +49,13 @@ nz-date-picker {
 ::ng-deep.webcam-wrapper>.mirrored {
   transform: scaleX(1) !important;
 }
+
+/* :host ::ng-deep.nz-pagination.ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted > ul.ng-star-inserted {
+  display: flex;
+  justify-content: end;
+} 
+
+ :host ::ng-deep nz-pagination.ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted > ul.ng-star-inserted > .ant-pagination-total-text.ng-star-inserted{
+  display: flex;
+  justify-content: start;
+} */

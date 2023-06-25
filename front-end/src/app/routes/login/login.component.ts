@@ -3,7 +3,7 @@ import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Login } from 'src/app/models/login.model';
+import { Login } from 'src/app/models/User/login.model';
 import { LoadingComponent } from '../common/loading/loading.component';
 import { finalize } from 'rxjs';
 
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res.data))
         sessionStorage.setItem('user', JSON.stringify(res.data))
         if (res.data.role == 1) {
-          this.router.navigateByUrl('nav-bar/register');
+          this.router.navigateByUrl('nav-bar/dashboard');
         } else {
           this.router.navigateByUrl('nav-bar/home');
         }

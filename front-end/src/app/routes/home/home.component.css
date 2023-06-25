@@ -1,17 +1,17 @@
-/* .container{
-    margin: 0;
-    padding: 0;
-    display: inline-block;
-    width: 50%;
-} */
+* {
+    font-size: 20px;
+}
 
 ::ng-deep .webcam-wrapper>.mirrored {
     transform: scaleX(1) !important;
+    width: 43vh;
+    height: 30vh;
 }
 
 mark {
     color: red;
     background: white;
+    padding: 0px;
 }
 
 .title {
@@ -20,5 +20,37 @@ mark {
 }
 
 span {
-    font-size: 20px;
+    font-size: 1.2rem;
+}
+
+button {
+    font-size: 1.0rem;
+}
+
+.image-pic {
+    width: 43vh;
+    height: 30vh;
+}
+
+:host ::ng-deep .ant-card-head-title.ng-star-inserted {
+    font-size: 1.2rem;
+}
+
+:host ::ng-deep .ant-descriptions-item.ng-star-inserted>.ant-descriptions-item-container>.ant-descriptions-item-content {
+    font-size: 1.2rem;
+}
+
+:host ::ng-deep .ant-descriptions-item.ng-star-inserted>.ant-descriptions-item-container>.ant-descriptions-item-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+:host ::ng-deep .ant-descriptions-header.ng-star-inserted .ant-descriptions-title.ng-star-inserted {
+    font-size: 1.3rem;
+}
+
+.btn-car{
+    border-radius: 6px;
+    height: 40px;
+    width: 150px;
 }

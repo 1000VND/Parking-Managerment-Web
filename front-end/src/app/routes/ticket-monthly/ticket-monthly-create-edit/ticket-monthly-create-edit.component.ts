@@ -25,8 +25,8 @@ export class TicketMonthlyCreateEditComponent {
   isVisible = false;
   isOkLoading = false;
   options = [
-    { label: 'Man', value: 1 },
-    { label: 'Woman', value: 0 }
+    { label: 'Male', value: 1 },
+    { label: 'Female', value: 0 }
   ];
   ticketMonthlyDto: GetAllDataTicketMonthlyDto = new GetAllDataTicketMonthlyDto();
   isCameraExist = true;
@@ -35,7 +35,7 @@ export class TicketMonthlyCreateEditComponent {
   webcamImageIn!: WebcamImage | undefined;
   nextWebcamIn: Subject<boolean | string> = new Subject<boolean | string>();
   resultImageIn!: string;
-  imageIn: string = 'assets/error.png';
+  imageIn: string = '/assets/cameranotfound.png';
   isScan: boolean = true;
   statusCar: string = '';
   today = new Date()

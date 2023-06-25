@@ -28,7 +28,8 @@ import { PromotionCreateEditComponent } from './routes/promotion/promotion-creat
 import { PromotionDetailCreateEditComponent } from './routes/promotion/promotion-detail-create-edit/promotion-detail-create-edit.component';
 import { ReportCarLossComponent } from './routes/report/report-car-loss/report-car-loss.component';
 import { TicketMonthlyCreateEditComponent } from './routes/ticket-monthly/ticket-monthly-create-edit/ticket-monthly-create-edit.component';
-import { DxChartModule } from 'devextreme-angular';
+import { DxChartModule, DxPieChartModule } from 'devextreme-angular';
+import { DashboardComponent } from './routes/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { DxChartModule } from 'devextreme-angular';
     PromotionCreateEditComponent,
     PromotionDetailCreateEditComponent,
     ReportCarLossComponent,
-    TicketMonthlyCreateEditComponent
+    TicketMonthlyCreateEditComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { DxChartModule } from 'devextreme-angular';
     NgOptimizedImage,
     NgZorroAntdModule,
     NgxSpinnerModule,
-    DxChartModule
+    DxChartModule,
+    DxPieChartModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { UserDto } from 'src/app/models/user.model';
+import { UserDto } from 'src/app/models/User/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingComponent } from '../common/loading/loading.component';

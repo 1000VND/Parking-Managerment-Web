@@ -101,9 +101,36 @@ namespace API.Controllers
         [HttpGet("CheckLPCarOut")]
         public async Task<IActionResult> CheckLicensePlate(string plate)
         {
+
             var carsLists = _dataContext.Cars.OrderByDescending(x => x.CarTimeIn);
-            var carExits = await carsLists.FirstOrDefaultAsync(e => e.LicensePlateIn == plate && e.IsCarParking == 0);
-            return CustomResult(carExits);
+
+            var carExist = await carsLists.FirstOrDefaultAsync(e => e.LicensePlateIn == plate && e.IsCarParking == 0);
+
+            for (int i = 0; i <= 13; i++)
+            {
+                DateTime nextDayIn1 = carExist.CarTimeIn.Value.AddDays(i);
+
+                DateTime nextDayAtMidnightIn1 = nextDayIn1.Date; 
+
+                DateTime nextDayOut1 = DateTime.Now.AddDays(0);
+
+                DateTime nextDayAtMidnightOut1 = nextDayOut1.Date;
+
+                DateTime startDate = nextDayAtMidnightIn1;
+
+                DateTime endDate = nextDayAtMidnightOut1;
+
+                TimeSpan duration = endDate.Subtract(startDate);
+
+                int numOfDays = duration.Days;
+
+                if (numOfDays == 0)
+                {
+                    carExist.Cost = 20000 + 20000 * i;
+                }
+            }
+
+            return CustomResult(carExist);
         }
     }
 

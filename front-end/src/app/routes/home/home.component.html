@@ -1,154 +1,107 @@
 <parking-loading></parking-loading>
-<div class="d-flex justify-content-between">
-    <h1>Home</h1>
+<div style="background-color: #b6cbee; text-align: left;">
+    <h1 style="margin-left: 20px; margin-bottom: 5px;">Car management</h1>
 </div>
-<div class="d-flex ">
-    <nz-card nzTitle="VEHICLE MANAGEMENT IN THE PARKING LOT">
-        <div class="d-flex flex-column">
-            <div class="d-flex flex-row p-2">
-                <div>
-                    <div *ngIf="isCameraExist; else noCameraExist" class="camera">
-                        <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableIn()"
-                            (imageCapture)="handleImageIn($event)" *ngIf="showWebcamIn"
-                            [switchCamera]="nextWebcamObservableIn()">
-                        </webcam>
+<div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+    <div nz-col class="gutter-row" [nzSpan]="12">
+        <nz-card class="title-card" nzTitle="VEHICLE MANAGEMENT IN THE PARKING LOT">
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-row justify-content-between">
+                        <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+                            <webcam class="mirrored" [height]="400" [width]="400" [trigger]="triggerObservableIn()"
+                                (imageCapture)="handleImageIn($event)" *ngIf="showWebcamIn"
+                                [switchCamera]="nextWebcamObservableIn()">
+                            </webcam>
+                        </div>
+
+                        <ng-template #noCameraExist>
+                            Camera Device not Available
+                        </ng-template>
+
+                        <div class="ml-2">
+                            <img class="image-pic" [src]="imageIn">
+                        </div>
                     </div>
-
-                    <ng-template #noCameraExist>
-                        Camera Device not Available
-                    </ng-template>
-                </div>
-                <div class="ml-2">
-                    <img width="450" height="337" [src]="imageIn">
-                </div>
-            </div>
-            <div class="d-flex flex-row">
-                <div style="width: 450px;" class="ml-2 mr-2">
-                    <div>
-                        <h1>
-                            Car information in
-                        </h1>
-                    </div>
-
-                    <div>
-                        <span *ngIf="isScan">License plate:
-                            <mark style="color: green; background-color: white;"> {{ resultImageIn }}</mark>
-                        </span>
-
-                        <span *ngIf="!isScan">License plate: <mark>{{ resultImageIn }}</mark>
-                        </span>
-                    </div>
-
-                    <div>
-                        <span>
-                            Customer type: {{typeCard}}
-                        </span>
-                    </div>
-
-                    <div>
-                        <span id="clock">
-                            Time in: {{timeIn}}
-                        </span>
-                    </div>
-
-
-                </div>
-                <div style="width: 450px;" class="d-flex justify-content-between">
-                    <button nz-button nzType="primary" (click)="capPictureIn()">
-                        <i class="fa-solid fa-camera mr-2"></i>
-                        Take a shot
-                    </button>
-                    <button class="ml-2" nz-button nzType="primary" (click)="takeCar()">
-                        <i class="fa-solid fa-arrow-right mr-2"></i>
-                        Take car
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nz-card>
-
-    <nz-card class="ml-5" nzTitle="MANAGE THE CAR OUT OF THE PARKING LOT">
-        <div class="d-flex flex-column">
-            <div class="d-flex flex-row p-2">
-                <div>
-                    <div *ngIf="isCameraExist; else noCameraExist" class="camera">
-                        <webcam class="mirrored" [height]="450" [width]="450" [trigger]="triggerObservableOut()"
-                            (imageCapture)="handleImageOut($event)" *ngIf="showWebcamOut"
-                            [switchCamera]="nextWebcamObservableOut()">
-                        </webcam>
-                    </div>
-
-                    <ng-template #noCameraExist>
-                        Camera Device not Available
-                    </ng-template>
-                </div>
-                <div class="ml-2">
-                    <img width="450" height="337" [src]="carOutDto.imgCarIn">
-                </div>
-            </div>
-            <div class="d-flex flex-row">
-                <div style="width: 450px;" class="ml-2 mr-2">
-                    <div>
-                        <h1>
-                            Car information out
-                        </h1>
-                    </div>
-
-                    <div>
-                        <span *ngIf="isScan">License plate:
-                            <mark style="color: green; background-color: white;"> {{ resultImageOut }}</mark>
-                        </span>
-
-                        <span *ngIf="!isScan">License plate: <mark>{{ resultImageOut }}</mark>
-                        </span>
-                    </div>
-
-                    <div>
-                        <span>
-                            Customer type: {{carOutDto.typeCard != null ? (carOutDto.typeCard == 1 ? 'Khách hàng tháng'
-                            :'Khách hàng vãng lai') : ''}}
-                        </span>
-                    </div>
-
-                    <div>
-                        <span>
-                            Time in: {{timeOut}}
-                        </span>
-                    </div>
-
-                    <div>
-                        <span>
-                            Time out: {{timeOut1}}
-                        </span>
-                    </div>
-
-                    <div>
-                        <span>
-                            Time total: {{totalTime}}
-                        </span>
-                    </div>
-
-                    <div>
-                        <span>
-                            Parking fee: 20.000 VND
-                        </span>
-                    </div>
-                </div>
-                <div style="width: 450px;" class="d-flex justify-content-between">
-                    <div>
-                        <button nz-button nzType="primary" (click)="capPictureOut()">
+                    <div class="d-flex justify-content-around">
+                        <button class="btn-car" nz-button nzType="primary" (click)="capPictureIn()">
                             <i class="fa-solid fa-camera mr-2"></i>
                             Take a shot
                         </button>
+                        <button class="btn-car" nz-button nzType="primary" (click)="takeCar()">
+                            <i class="fa-solid fa-arrow-right mr-2"></i>
+                            Take car
+                        </button>
                     </div>
-                    <div class="ml-2">
-                        <button nz-button nzType="primary" (click)="carOut()">
+                </div>
+                <div class="d-flex flex-row" style="height: 155px;">
+                    <div class="ml-2 mt-2">
+                        <nz-descriptions nzTitle="Car Info In">
+                            <nz-descriptions-item *ngIf="!isScan" nzTitle="License plate"><mark
+                                    style="color: green; background-color: white;"> {{ resultImageIn
+                                    }}</mark></nz-descriptions-item>
+                            <nz-descriptions-item *ngIf="isScan" nzTitle="License plate"><mark>{{ resultImageIn
+                                    }}</mark></nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Customer type">{{typeCard}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Time in">{{timeIn}}</nz-descriptions-item>
+                        </nz-descriptions>
+                    </div>
+                </div>
+            </div>
+        </nz-card>
+    </div>
+
+    <div nz-col class="gutter-row" [nzSpan]="12">
+        <nz-card class="title-card" nzTitle="MANAGE THE CAR OUT OF THE PARKING LOT">
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-row justify-content-between">
+                        <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+                            <webcam class="mirrored" [trigger]="triggerObservableOut()"
+                                (imageCapture)="handleImageOut($event)" *ngIf="showWebcamOut"
+                                [switchCamera]="nextWebcamObservableOut()">
+                            </webcam>
+                        </div>
+
+                        <ng-template #noCameraExist>
+                            Camera Device not Available
+                        </ng-template>
+
+                        <div class="ml-2">
+                            <img class="image-pic" [src]="carOutDto.imgCarIn">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-around">
+                        <button class="btn-car" nz-button nzType="primary" (click)="capPictureOut()">
+                            <i class="fa-solid fa-camera mr-2"></i>
+                            Take a shot
+                        </button>
+                        <button class="btn-car" nz-button nzType="primary" (click)="carOut()">
                             <i class="fa-solid fa-arrow-left mr-2"></i>
                             Export car
                         </button>
                     </div>
                 </div>
+                <div class="d-flex flex-row">
+                    <div class="ml-2 mt-2">
+                        <nz-descriptions nzTitle="Car Info Out">
+                            <nz-descriptions-item *ngIf="!isScan" nzTitle="License plate"><mark
+                                    style="color: green; background-color: white;"> {{ resultImageOut
+                                    }}</mark></nz-descriptions-item>
+                            <nz-descriptions-item *ngIf="isScan" nzTitle="License plate"><mark>{{ resultImageOut
+                                    }}</mark></nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Customer type">{{carOutDto.typeCard != null ?
+                                (carOutDto.typeCard == 1 ? 'Khách hàng tháng'
+                                :'Khách hàng vãng lai') : ''}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Time in">{{timeOut}}</nz-descriptions-item>
+
+                            <nz-descriptions-item nzTitle="Time out">{{timeOut1}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Time total">{{totalTime}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Parking fee">{{cost}} VND</nz-descriptions-item>
+                        </nz-descriptions>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nz-card>
+        </nz-card>
+    </div>
 </div>

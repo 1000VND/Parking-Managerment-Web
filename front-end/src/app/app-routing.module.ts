@@ -7,6 +7,7 @@ import { TicketMonthlyComponent } from './routes/ticket-monthly/ticket-monthly.c
 import { UserComponent } from './routes/user/user.component';
 import { PromotionComponent } from './routes/promotion/promotion.component';
 import { ReportCarLossComponent } from './routes/report/report-car-loss/report-car-loss.component';
+import { DashboardComponent } from './routes/dashboard/dashboard.component';
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
   { path: 'login', component: LoginComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
       { path: 'report-car-loss', component: ReportCarLossComponent },
 
       // Role amdin
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'register', component: UserComponent },
       { path: 'promotion', component: PromotionComponent },
     ]

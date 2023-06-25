@@ -44,29 +44,7 @@ export class HomeComponent implements OnInit {
   carInput: CarInput = new CarInput();
   typeCard!: string;
   carOutDto: CarOutDto = new CarOutDto();
-
-  data: any[] = [{
-    day: 'Monday',
-    oranges: 3,
-  }, {
-    day: 'Tuesday',
-    oranges: 2,
-  }, {
-    day: 'Wednesday',
-    oranges: 3,
-  }, {
-    day: 'Thursday',
-    oranges: 4,
-  }, {
-    day: 'Friday',
-    oranges: 6,
-  }, {
-    day: 'Saturday',
-    oranges: 11,
-  }, {
-    day: 'Sunday',
-    oranges: 4,
-  }];
+  cost: number = 0;
 
   constructor(
     private _dataformat: DataFormatService,
@@ -180,6 +158,7 @@ export class HomeComponent implements OnInit {
             const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
             const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
             this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
+            this.cost = this.carOutDto.cost;
           })
         }
         else {
@@ -270,7 +249,8 @@ export class HomeComponent implements OnInit {
     this.timeOut = '';
     this.timeOut1 = '';
     this.totalTime = '';
-    this.imageOut = '/assets/cameranotfound.png'
+    this.imageOut = '/assets/cameranotfound.png';
+    this.cost = 0;
   }
 
   validateIn() {

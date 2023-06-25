@@ -1,51 +1,57 @@
 <parking-loading></parking-loading>
-<div class="d-flex justify-content-between">
-    <h1>Ticket Monthly</h1>
-    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
-        <i class="fa-solid fa-user-plus mr-2"></i>
-        Add
-    </button>
+<div style="background-color: #b6cbee; text-align: left;" class="d-flex justify-content-between">
+    <h1 style="margin-left: 20px; margin-bottom: 5px;">Ticket Monthly</h1>
 </div>
 
-<nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5"
-    [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
-    <ng-template #rangeTemplate let-range="range" let-total>
-        {{ range[0] }}-{{ range[1] }} of {{ total }} items
-    </ng-template>
-    <thead>
-        <tr>
-          <th nzAlign="center">Creation Time</th>
-          <th nzAlign="center">License Plate</th>
-          <th nzAlign="center">Customer Name</th>
-          <th nzAlign="center">Phone Number</th>
-          <th nzAlign="center">Customer Address</th>
-          <th nzAlign="center">Gender</th>
-          <th nzAlign="center">Last Register Date</th>
-          <th nzAlign="center">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="rowData" *ngFor="let data of virtualTable.data;">
-            <ng-container>
-                <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ data.licensePlate }}</td>
-                <td>{{ data.customerName }}</td>
-                <td>{{ data.phoneNumber }}</td>
-                <td>{{ data.customerAddress}}</td>
-                <td>{{ data.gender == 1 ? 'Man' : 'Woman'}}</td>
-                <td>{{ data.lastRegisterDate | date: 'MM/yyyy'}}</td>
-                <td nzAlign="center">
-                    <button style="background-color: #abc23a;color: black; border: none;" class="mr-3" nz-button nzType="primary" (click)="createModal.show(data)">
-                        <i class="fa-regular fa-file-lines mr-1"></i>
-                        Detail
-                    </button>
-                    <button style="background-color: #ff4d4f;color: black; border: none;" nz-button nzType="primary" nzDanger (click)="deleteTicket(data.id!)">
-                        <i class="fa-solid fa-trash-can mr-1"></i>
-                        Delete
-                    </button>
-                </td>
-            </ng-container>
-        </tr>
-        <app-ticket-monthly-create-edit #createModal (modalSave)="getAllData()"></app-ticket-monthly-create-edit>
-    </tbody>
-</nz-table>
+<div style="background-color: white;">
+    <nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5"
+        [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
+        <ng-template #rangeTemplate let-range="range" let-total>
+            {{ range[0] }}-{{ range[1] }} of {{ total }} items
+        </ng-template>
+        <thead>
+            <tr>
+                <th nzAlign="center">Creation Time</th>
+                <th nzAlign="center">License Plate</th>
+                <th nzAlign="center">Customer Name</th>
+                <th nzAlign="center">Phone Number</th>
+                <th nzAlign="center">Customer Address</th>
+                <th nzAlign="center">Gender</th>
+                <th nzAlign="center">Last Register Date</th>
+                <th nzAlign="center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="rowData" *ngFor="let data of virtualTable.data;">
+                <ng-container>
+                    <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{ data.licensePlate }}</td>
+                    <td>{{ data.customerName }}</td>
+                    <td>{{ data.phoneNumber }}</td>
+                    <td>{{ data.customerAddress}}</td>
+                    <td>{{ data.gender == 1 ? 'Male' : 'Female'}}</td>
+                    <td>{{ data.lastRegisterDate | date: 'MM/yyyy'}}</td>
+                    <td nzAlign="center">
+                        <button style="background-color: #abc23a;color: black; border: none;" class="mr-3" nz-button
+                            nzType="primary" (click)="createModal.show(data)">
+                            <i class="fa-regular fa-file-lines mr-1"></i>
+                            Detail
+                        </button>
+                        <button style="background-color: #ff4d4f;color: black; border: none;" nz-button nzType="primary"
+                            nzDanger (click)="deleteTicket(data.id!)">
+                            <i class="fa-solid fa-trash-can mr-1"></i>
+                            Delete
+                        </button>
+                    </td>
+                </ng-container>
+            </tr>
+            <app-ticket-monthly-create-edit #createModal (modalSave)="getAllData()"></app-ticket-monthly-create-edit>
+        </tbody>
+    </nz-table>
+    <div class="d-flex justify-content-end mr-3">
+        <button nz-button nzType="primary" (click)="createModal.show()">
+            <i class="fa-solid fa-user-plus mr-2"></i>
+            Add
+        </button>
+    </div>
+</div>

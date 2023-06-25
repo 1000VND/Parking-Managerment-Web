@@ -1,0 +1,42 @@
+.chart {
+    width: 75%;
+    background-color: #f8fafb;
+}
+
+.pie-chart {
+    width: 25%;
+    background-color: #f8fafb;
+    margin-left: 10px;
+}
+
+nz-card {
+    text-align: center;
+    background-color: #f8fafb;
+}
+
+#chart,
+#pie {
+    height: 610px;
+}
+
+i {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+dx-chart,
+dx-pie-chart{
+    height: 610px;
+}
+
+
+
+span {
+    font-weight: bold;
+    font-size: 25px;
+}
+
+::ng-deep .ant-card-head-title {
+    font-weight: bold;
+    font-size: 20px;
+}

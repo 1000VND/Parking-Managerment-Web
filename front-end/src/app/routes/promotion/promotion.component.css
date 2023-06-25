@@ -11,11 +11,13 @@
   border: 1px solid black;
 }
 
-:host ::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
+:host
+  ::ng-deep
+  .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
   display: block !important;
 }
 
-tr>th {
+tr > th {
   background-color: #dee9fc;
 }
 
@@ -23,7 +25,10 @@ tr>th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
+::ng-deep
+  .ant-table-tbody.ng-star-inserted
+  > tr.rowData.ant-table-row.ng-star-inserted:hover
+  > td {
   background: unset !important;
 }
 
@@ -44,4 +49,23 @@ tr>th {
 
 nz-date-picker {
   width: 100%;
+}
+
+.table {
+  width: 100%;
+}
+
+/* Styles for small screens */
+@media screen and (max-width: 600px) {
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table ts {
+    display: block;
+    width: 100%;
+  }
 }
