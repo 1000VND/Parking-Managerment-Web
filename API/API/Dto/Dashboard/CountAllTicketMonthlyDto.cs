@@ -19,5 +19,18 @@ namespace API.Dto.TicketMonthly
         public int Month10 { get; set; }
         public int Month11 { get; set; }
         public int Month12 { get; set; }
+        public int CarReturnMonth1 { get; set; }
+        public int CarReturnMonth2 { get; set; }
+        public int CarReturnMonth3 { get; set; }
+        public int CarReturnMonth4 { get; set; }
+        public int CarReturnMonth5 { get; set; }
+        public int CarReturnMonth6 { get; set; }
+        public int CarReturnMonth7 { get; set; }
+        public int CarReturnMonth8 { get; set; }
+        public int CarReturnMonth9 { get; set; }
+        public int CarReturnMonth10 { get; set; }
+        public int CarReturnMonth11 { get; set; }
+        public int CarReturnMonth12 { get; set; }
+
     }
 }

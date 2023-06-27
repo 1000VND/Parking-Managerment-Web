@@ -1,49 +1,64 @@
 <parking-loading></parking-loading>
 <div class="mb-3 d-flex justify-content-between">
-    <nz-card style="width:300px;" nzTitle="Total employee">
+    <nz-card style="width:300px;" nzTitle="Car number">
         <div class="d-flex flex-column">
             <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1" data-val="340">000</span>
+            <span class="num mt-1">{{value1}}</span>
         </div>
     </nz-card>
 
-    <nz-card style="width:300px;" nzTitle="Total employee">
+    <nz-card style="width:300px;" nzTitle="Empty space">
         <div class="d-flex flex-column">
             <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1" data-val="5000">000</span>
+            <span class="num mt-1">{{value2}}</span>
         </div>
     </nz-card>
 
-    <nz-card style="width:300px;" nzTitle="Total employee">
+    <nz-card style="width:300px;" nzTitle="Car today">
         <div class="d-flex flex-column">
             <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1" data-val="250">000</span>
+            <span class="num mt-1">{{value3}}</span>
         </div>
     </nz-card>
 
-    <nz-card style="width:300px;" nzTitle="Total employee">
+    <nz-card style="width:300px;" nzTitle="Money today">
         <div class="d-flex flex-column">
             <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1" data-val="100">000</span>
+            <span class="num mt-1">{{value4}}</span>
         </div>
     </nz-card>
 </div>
 
 <div class="d-flex mt-3">
-    <div class="chart" id="chart"> 
-        <dx-chart title="Monthly car deliveries" [dataSource]="data" class="mr-3">
-            <dxi-series argumentField="month" valueField="value" name="Car parking" type="bar" color="#1ba8f0">
-            </dxi-series>
-            <dxo-common-series-settings argumentField="nameColumn">
-                <dxo-label [customizeText]="customizeLabelText" [visible]="true"
-                    [format]="{type: 'fixedPoint', precision: 2 }">
+    <div class="chart" id="chart">
+        <dx-chart title="Customer data" [dataSource]="data" class="mr-3">
+
+            <dxi-value-axis name="frequency" position="left" [showZero]="true">
+                <dxo-label [customizeText]="customizeLabelText"></dxo-label>
+            </dxi-value-axis>
+
+            <dxo-common-series-settings argumentField="month" type="bar" hoverMode="allArgumentPoints"
+                selectionMode="allArgumentPoints">
+                <dxo-label [visible]="true" [format]="{ type: 'fixedPoint', precision: 0 }">
                 </dxo-label>
             </dxo-common-series-settings>
+
             <dxo-legend verticalAlignment="bottom" horizontalAlignment="center" itemTextPosition="top">
             </dxo-legend>
+
             <dxo-export [enabled]="true"></dxo-export>
+
             <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeTooltip">
             </dxo-tooltip>
+
+            <dxi-series axis="frequency" valueField="value" name="Car parking" type="bar"
+                color="#1ba8f0">
+            </dxi-series>
+
+            <dxi-series  type="line" valueField="valueLine" name="Car return" color="#79d2b5" axis="frequency">
+                <dxo-label [customizeText]="customizeLabelText"></dxo-label>
+            </dxi-series>
+
         </dx-chart>
     </div>
 

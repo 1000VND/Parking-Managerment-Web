@@ -1,73 +1,51 @@
 <parking-loading></parking-loading>
-<div class="d-flex justify-content-between">
-  <h1>Promotion</h1>
+<div style="background-color: #b6cbee; text-align: left;" class="d-flex justify-content-between">
+  <h1 style="margin-left: 20px; margin-bottom: 5px;">Promotion</h1>
 </div>
-<h5>Search</h5>
-<div nz-row nzJustify="start">
-  <div nz-col nzSpan="6">
-    <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
-      <input type="text" nz-input [(ngModel)]="searchInput.promotionName" />
-    </nz-input-group>
-  </div>
+<div class="mt-2">
+  <h5>Search</h5>
+  <div nz-row nzJustify="start">
 
-  <div nz-col nzSpan="6" class="d-flex ml-2">
-    <nz-input-group nzAddOnBefore="From Date">
-      <nz-date-picker
-        [(ngModel)]="searchInput.fromDate"
-        [nzMode]="'date'"
-        id="fromDate"
-      ></nz-date-picker>
-    </nz-input-group>
+    <div nz-col nzSpan="6">
+      <nz-input-group nzRequired nzAddOnBefore="Promotion Name">
+        <input type="text" nz-input [(ngModel)]="searchInput.promotionName" />
+      </nz-input-group>
+    </div>
 
-    <nz-input-group class="ml-2" nzAddOnBefore="To Date">
-      <nz-date-picker
-        [(ngModel)]="searchInput.toDate"
-        [nzMode]="'date'"
-        id="toDate"
-      ></nz-date-picker>
-    </nz-input-group>
-  </div>
+    <div nz-col nzSpan="6" class="d-flex ml-2">
+      <nz-input-group nzAddOnBefore="From Date">
+        <nz-date-picker nzFormat="dd-MM-yyyy" [(ngModel)]="searchInput.fromDate" [nzMode]="'date'"
+          id="fromDate"></nz-date-picker>
+      </nz-input-group>
 
-  <div class="search" nz-col nzSpan="8" class="ml-2">
-    <div nz-row nzJustify="start">
-      <button
-        class="mr-3"
-        nz-button
-        nzType="primary"
-        nzGhost
-        (click)="search()"
-      >
-        <i class="fa-solid fa-magnifying-glass mr-2"></i>
-        Search
-      </button>
+      <nz-input-group class="ml-2" nzAddOnBefore="To Date">
+        <nz-date-picker nzFormat="dd-MM-yyyy" [(ngModel)]="searchInput.toDate" [nzMode]="'date'"
+          id="toDate"></nz-date-picker>
+      </nz-input-group>
+    </div>
+
+    <div class="search" nz-col nzSpan="8" class="ml-2">
+      <div nz-row nzJustify="start">
+        <button class="mr-3" nz-button nzType="primary" nzGhost (click)="search()">
+          <i class="fa-solid fa-magnifying-glass mr-2"></i>
+          Search
+        </button>
+      </div>
     </div>
   </div>
 </div>
+
 
 <div class="d-flex flex-column">
   <div>
     <div class="d-flex justify-content-end">
-      <button
-        class="mr-3"
-        nz-button
-        nzType="primary"
-        (click)="createModal.show()"
-      >
+      <button class="mr-3" nz-button nzType="primary" (click)="createModal.show()">
         <i class="fa-solid fa-user-plus mr-2"></i>
         Add
       </button>
     </div>
-    <nz-table
-      class="table"
-      [nzScroll]="{ x: 'none', y: '30vh' }"
-      #virtualTable
-      nzTitle="Promotion List"
-      [nzBordered]="true"
-      [nzSize]="'small'"
-      [nzData]="listData"
-      [nzPageSize]="5"
-      [nzShowTotal]="rangeTemplate"
-    >
+    <nz-table class="table" [nzScroll]="{ x: 'none', y: '30vh' }" #virtualTable nzTitle="Promotion List"
+      [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="4" [nzShowTotal]="rangeTemplate">
       <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
       </ng-template>
@@ -83,12 +61,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          class="rowData"
-          *ngFor="let data of virtualTable.data"
-          [class.selected]="data.id === selectedRowIndex"
-          (click)="onChangeSelectRow(data.id)"
-        >
+        <tr class="rowData" *ngFor="let data of virtualTable.data" [class.selected]="data.id === selectedRowIndex"
+          (click)="onChangeSelectRow(data.id)">
           <td nzAlign="center" [nzDisabled]="true">
             {{ data.creationTime | date : "dd/MM/yyyy HH:mm" }}
           </td>
@@ -100,60 +74,33 @@
           <td nzAlign="center">{{ data.toDate | date : "dd/MM/yyyy" }}</td>
           <td>{{ data.discount + " %" }}</td>
           <td nzAlign="center">
-            <button
-              style="background-color: #fbd66c; color: black; border: none"
-              class="mr-3"
-              nz-button
-              nzType="default"
-              (click)="createModal.show(data)"
-              (click)="$event.stopPropagation()"
-            >
+            <button style="background-color: #fbd66c; color: black; border: none" class="mr-3" nz-button
+              nzType="default" (click)="createModal.show(data)" (click)="$event.stopPropagation()">
               <i class="fa-regular fa-pen-to-square mr-1"></i>
               Edit
             </button>
-            <button
-              style="background-color: #ff4d4f; color: black; border: none"
-              nz-button
-              nzType="default"
-              nzDanger
-              (click)="deletePromotion(data.id!)"
-              (click)="$event.stopPropagation()"
-            >
+            <button style="background-color: #ff4d4f; color: black; border: none" nz-button nzType="default" nzDanger
+              (click)="deletePromotion(data.id!)" (click)="$event.stopPropagation()">
               <i class="fa-solid fa-trash-can mr-1"></i>
               Delete
             </button>
           </td>
         </tr>
-        <promotion-create-edit
-          #createModal
-          (modalSave)="search()"
-        ></promotion-create-edit>
+        <promotion-create-edit #createModal (modalSave)="search()"></promotion-create-edit>
       </tbody>
     </nz-table>
   </div>
 
   <div>
     <div class="d-flex justify-content-end">
-      <button
-        [disabled]="this.selectedItem.id != null ? false : true"
-        class="mr-3"
-        nz-button
-        nzType="primary"
-        (click)="createDetailModal.show(this.selectedItem)"
-      >
+      <button [disabled]="this.selectedItem.id != null ? false : true" class="mr-3" nz-button nzType="primary"
+        (click)="createDetailModal.show(this.selectedItem)">
         <i class="fa-solid fa-user-plus mr-2"></i>
         Add
       </button>
     </div>
-    <nz-table
-      [nzScroll]="{ x: 'none', y: '20vh' }"
-      #virtualTable2
-      nzTitle="Promotion Detail List"
-      [nzBordered]="true"
-      [nzSize]="'default'"
-      [nzData]="dataSubTale"
-      [nzShowPagination]="false"
-    >
+    <nz-table [nzScroll]="{ x: 'none', y: '20vh' }" #virtualTable2 nzTitle="Promotion Detail List" [nzBordered]="true"
+      [nzSize]="'default'" [nzData]="dataSubTale" [nzShowPagination]="false">
       <thead>
         <tr>
           <th nzAlign="center">Customer Name</th>
@@ -171,10 +118,8 @@
             <td>{{ data1.status == 0 ? "Not applied yet" : "Applied" }}</td>
           </ng-container>
         </tr>
-        <promotion-detail-create-edit
-          #createDetailModal
-          (modalSave)="getPromotionDetail()"
-        ></promotion-detail-create-edit>
+        <promotion-detail-create-edit #createDetailModal
+          (modalSave)="getPromotionDetail()"></promotion-detail-create-edit>
       </tbody>
     </nz-table>
   </div>

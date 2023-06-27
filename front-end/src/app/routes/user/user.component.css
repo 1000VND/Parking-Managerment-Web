@@ -21,6 +21,6 @@ tr>th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep .ant-table-tbody.ng-star-inserted > tr.rowData.ant-table-row.ng-star-inserted:hover > td {
+::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
 }

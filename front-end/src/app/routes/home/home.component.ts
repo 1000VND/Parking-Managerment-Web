@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { WebcamImage, WebcamInitError, WebcamMirrorProperties, WebcamUtil } from 'ngx-webcam';
+import { WebcamImage, WebcamUtil } from 'ngx-webcam';
 import { Observable, Subject, finalize } from 'rxjs';
 import { DataFormatService } from 'src/app/services/data-format.service';
 import * as Tesseract from 'tesseract.js';
@@ -9,7 +9,6 @@ import { CarService } from 'src/app/services/car.service';
 import { CarInput } from 'src/app/models/Car/car-input.model';
 import { ToastrService } from 'ngx-toastr';
 import { CarOutDto } from 'src/app/models/Car/car-out-dto.model';
-
 
 @Component({
   selector: 'home',
@@ -186,7 +185,6 @@ export class HomeComponent implements OnInit {
   takeCar() {
     if (this.validateIn()) {
       this.loading.loading(true);
-      console.log(this.resultImageIn);
       if (this.isScan) {
         let data = Object.assign(new CarInput, {
           licensePlateIn: this.resultImageIn,

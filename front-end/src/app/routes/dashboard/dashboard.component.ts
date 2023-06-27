@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import { DasboardService } from 'src/app/services/dasboard.service';
 import { LoadingComponent } from '../common/loading/loading.component';
 import { finalize } from 'rxjs';
-import * as moment from 'moment';
 
 @Component({
   selector: 'dashboard',
@@ -13,13 +11,16 @@ import * as moment from 'moment';
 export class DashboardComponent implements OnInit {
   @ViewChild(LoadingComponent, { static: false }) loading!: LoadingComponent;
 
-  data: { month: string, value: number }[] = [];
+  data: { month: string, value: number , valueLine:number}[] = [];
   dataService: any[] = [];
   dataDoughnut: any[] = [];
-
+  value1: number = 340;
+  value2: number = 5001;
+  value3: number = 250;
+  value4: number = 100;
+  [key: string]: any;
   constructor(
     private _service: DasboardService,
-    private _toastr: ToastrService,
   ) {
   }
 
@@ -37,9 +38,8 @@ export class DashboardComponent implements OnInit {
   };
 
   customizeTooltip(arg: any) {
-    console.log(arg)
     return {
-      text: `${arg.argumentText} : ${arg.valueText}`,
+      text: `${arg.argumentText} : ${arg.valueText} time`,
     };
   }
 
@@ -56,51 +56,63 @@ export class DashboardComponent implements OnInit {
       this.data = [
         {
           month: 'Month 1',
-          value: this.dataService[0].month1
+          value: this.dataService[0].month1,
+          valueLine: this.dataService[0].carReturnMonth1
         },
         {
           month: 'Month 2',
-          value: this.dataService[0].month2
+          value: this.dataService[0].month2,
+          valueLine: this.dataService[0].carReturnMonth2
         },
         {
           month: 'Month 3',
-          value: this.dataService[0].month3
+          value: this.dataService[0].month3,
+          valueLine: this.dataService[0].carReturnMonth3
         },
         {
           month: 'Month 4',
-          value: this.dataService[0].month4
+          value: this.dataService[0].month4,
+          valueLine: this.dataService[0].carReturnMonth4
         },
         {
           month: 'Month 5',
-          value: this.dataService[0].month5
+          value: this.dataService[0].month5,
+          valueLine: this.dataService[0].carReturnMonth5
         },
         {
           month: 'Month 6',
-          value: this.dataService[0].month6
+          value: this.dataService[0].month6,
+          valueLine: this.dataService[0].carReturnMonth6
         },
         {
           month: 'Month 7',
-          value: this.dataService[0].month7
+          value: this.dataService[0].month7,
+          valueLine: this.dataService[0].carReturnMonth7
         },
         {
           month: 'Month 8',
-          value: this.dataService[0].month8
+          value: this.dataService[0].month8,
+          valueLine: this.dataService[0].carReturnMonth8
         },
         {
           month: 'Month 9',
-          value: this.dataService[0].month9
+          value: this.dataService[0].month9,
+          valueLine: this.dataService[0].carReturnMonth9
         },
         {
           month: 'Month 10',
-          value: this.dataService[0].month10
+          value: this.dataService[0].month10,
+          valueLine: this.dataService[0].carReturnMonth10
         },
         {
           month: 'Month 11',
-          value: this.dataService[0].month11
+          value: this.dataService[0].month11,
+          valueLine: this.dataService[0].carReturnMonth11
         },
         {
           month: 'Month 12',
-          value: this.dataService[0].month12
+          value: this.dataService[0].month12,
+          valueLine: this.dataService[0].carReturnMonth12
         }
       ];
     })
@@ -111,7 +123,6 @@ export class DashboardComponent implements OnInit {
     this._service.getDataDoughnut().pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe(res => {
-      console.log(res.data)
       this.dataDoughnut = [
         {
           type: 'Male',
@@ -129,9 +140,10 @@ export class DashboardComponent implements OnInit {
     const valueDisplays = document.querySelectorAll(".num") as NodeListOf<HTMLElement>;
     const endValueDuration = 2000;
 
-    valueDisplays.forEach((valueDisplay) => {
+    valueDisplays.forEach((valueDisplay, index) => {
+      const propertyName = `value${index + 1}`;
+      const endValue = this[propertyName];
       let startValue = 0;
-      let endValue = parseInt(valueDisplay.getAttribute("data-val")!);
 
       let updateInterval = endValueDuration / endValue;
 
@@ -148,5 +160,5 @@ export class DashboardComponent implements OnInit {
       }, updateInterval);
     });
   }
-
 }
+

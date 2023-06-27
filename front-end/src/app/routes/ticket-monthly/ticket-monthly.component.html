@@ -4,6 +4,12 @@
 </div>
 
 <div style="background-color: white;">
+    <div class="d-flex justify-content-end mt-3 mb-2">
+        <button nz-button nzType="primary" (click)="createModal.show()">
+            <i class="fa-solid fa-user-plus mr-2"></i>
+            Add
+        </button>
+    </div>
     <nz-table #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData" [nzPageSize]="5"
         [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
         <ng-template #rangeTemplate let-range="range" let-total>
@@ -48,10 +54,4 @@
             <app-ticket-monthly-create-edit #createModal (modalSave)="getAllData()"></app-ticket-monthly-create-edit>
         </tbody>
     </nz-table>
-    <div class="d-flex justify-content-end mr-3">
-        <button nz-button nzType="primary" (click)="createModal.show()">
-            <i class="fa-solid fa-user-plus mr-2"></i>
-            Add
-        </button>
-    </div>
 </div>

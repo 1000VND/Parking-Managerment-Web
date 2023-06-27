@@ -9,7 +9,6 @@ import { TicketService } from 'src/app/services/ticket.service';
 import { LoadingComponent } from '../../common/loading/loading.component';
 import * as Tesseract from 'tesseract.js';
 import { differenceInCalendarDays } from 'date-fns';
-import { PromotionDtoInput } from 'src/app/models/Promotion/promotion-dto-input';
 
 @Component({
   selector: 'app-ticket-monthly-create-edit',

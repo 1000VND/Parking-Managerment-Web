@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpPost("CountParkingAccessCar")]
-        public async Task<IActionResult> CountParkingAccessCar()
+        public Task<IActionResult> CountParkingAccessCar()
         {
             var checkExits = _dataContext.Cars
                 .GroupBy(e => e.LicensePlateIn)
@@ -38,14 +38,14 @@ namespace API.Controllers
 
             if (checkExits != null)
             {
-                return CustomResult(checkExits.Count()) ;
+                return (Task<IActionResult>)CustomResult(checkExits.Count()) ;
             }
 
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
 
         [HttpPost("CountAllParkingCar")]
-        public async Task<IActionResult> CountAllParkingCar()
+        public Task<IActionResult> CountAllParkingCar()
         {
             var checkExits = _dataContext.Cars
                 .GroupBy(e => e.Id)
@@ -53,10 +53,10 @@ namespace API.Controllers
 
             if (checkExits != null)
             {
-                return CustomResult(checkExits.Count());
+                return (Task<IActionResult>)CustomResult(checkExits.Count());
             }
 
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
 
         [HttpGet("CountAllTicketMonthly")]
@@ -70,7 +70,7 @@ namespace API.Controllers
         }
 
         [HttpPost("CountAllCarInventory")]
-        public async Task<IActionResult> CountAllCarInventory()
+        public Task<IActionResult> CountAllCarInventory()
         {
             var checkExits = _dataContext.Cars
                 .Where(h => ((int?)h.IsCarParking) == 2)
@@ -79,14 +79,14 @@ namespace API.Controllers
 
             if (checkExits != null)
             {
-                return CustomResult(checkExits.Count());
+                return (Task<IActionResult>)CustomResult(checkExits.Count());
             }
 
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
 
         [HttpPost("CountParkingCarByYear")]
-        public async Task<IActionResult> CountParkingCarByYear(int year)
+        public Task<IActionResult> CountParkingCarByYear(int year)
         {
             var checkExits = _dataContext.Cars
                 .Where(h => h.CreationTime.Year == year)
@@ -99,10 +99,10 @@ namespace API.Controllers
 
             if (checkExits != null)
             {
-                return CustomResult(checkExits);
+                return (Task<IActionResult>)CustomResult(checkExits);
             }
 
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
 
         [HttpGet("RateMaleFemale")]

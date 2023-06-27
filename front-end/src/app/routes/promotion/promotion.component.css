@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-::ng-deep .ant-input-group-addon.ng-star-inserted {
+:host::ng-deep .ant-input-group-addon.ng-star-inserted {
   background: #dcdcdc;
   color: black;
 }
@@ -11,13 +11,11 @@
   border: 1px solid black;
 }
 
-:host
-  ::ng-deep
-  .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
+:host::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
   display: block !important;
 }
 
-tr > th {
+tr>th {
   background-color: #dee9fc;
 }
 
@@ -25,10 +23,7 @@ tr > th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep
-  .ant-table-tbody.ng-star-inserted
-  > tr.rowData.ant-table-row.ng-star-inserted:hover
-  > td {
+:host::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
 }
 

@@ -9,11 +9,11 @@ import { DataFormatService } from './services/data-format.service';
 export class AppComponent implements OnInit {
 
   constructor(
-  ){}
-  
+  ) { }
+
   ngOnInit(): void {
-    
+
   }
   title = 'front-end';
-  
+
 }

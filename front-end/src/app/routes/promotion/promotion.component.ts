@@ -38,9 +38,11 @@ export class PromotionComponent implements OnInit {
   search() {
     this.loading.loading(true);
     if ((this.searchInput.fromDate && !this.searchInput.toDate) || (!this.searchInput.fromDate && this.searchInput.toDate)) {
+      this.loading.loading(false);
       return this._toastr.warning('You have not entered enough information!');
     }
     if (this.searchInput.fromDate > this.searchInput.toDate) {
+      this.loading.loading(false);
       return this._toastr.warning('ToDate can not less than FromDate');
     }
     this._service.getAllPromotion(this.searchInput).pipe(finalize(() => {
@@ -48,6 +50,8 @@ export class PromotionComponent implements OnInit {
     })).subscribe(res => {
       this.listData = res.data ?? [];
     })
+    this.selectedRowIndex = -1;
+    this.dataSubTale = [];
   }
 
   deletePromotion(id: number) {
