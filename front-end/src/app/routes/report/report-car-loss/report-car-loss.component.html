@@ -1,1 +1,39 @@
-<p>report-car-loss works!</p>
+<parking-loading></parking-loading>
+<div class="d-flex justify-content-between">
+    <h1>Car Reports</h1>
+    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
+        <i class="fa-solid fa-user-plus mr-2"></i>
+        Add
+    </button>
+</div>
+
+<nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData"
+    [nzPageSize]="5" [nzPageSizeOptions]=[5,10,20,30] [nzShowSizeChanger]="true" [nzShowTotal]="rangeTemplate">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center">Creation Time</th>
+            <th nzAlign="center">Customer Name</th>
+            <th nzAlign="center">User Name</th>
+            <th nzAlign="center">License Plate</th>
+            <th nzAlign="center">Reason</th>
+            <th nzAlign="center" nzWidth="20%">Content</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="rowData" *ngFor="let data of virtualTable.data">
+            <ng-container>
+                <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ data.customerName }}</td>
+                <td>{{ data.userName }}</td>
+                <td>{{ data.licensePlate }}</td>
+                <td>{{ data.reason }}</td>
+                <td>{{ data.content }}</td>
+
+            </ng-container>
+        </tr>
+        <report-car-loss-create #createModal (modalSave)="getAllData()"></report-car-loss-create>
+    </tbody>
+</nz-table>

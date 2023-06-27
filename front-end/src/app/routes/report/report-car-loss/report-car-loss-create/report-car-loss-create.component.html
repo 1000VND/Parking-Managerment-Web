@@ -1,0 +1,50 @@
+<parking-loading></parking-loading>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Add Report'" (nzOnCancel)="handleCancel()" (nzOnOk)="save()"
+    [nzOkLoading]="isOkLoading">
+    <div *nzModalContent>
+        <form nz-form [formGroup]="form" (ngSubmit)="save()">
+            <nz-form-item *ngIf="carReportDto.id == null">
+                <nz-form-control nzErrorTip="The input is not valid customer name!">
+                    <nz-input-group nzAddOnBefore="Customer name">
+                        <input type="text" nz-input formControlName="customerName" id="customerName" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid user name!">
+                    <nz-input-group nzAddOnBefore="User name">
+                        <input type="text" nz-input formControlName="userName" id="userName"  />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-control nzErrorTip="The input is not valid license plate!">
+                  <nz-input-group nzAddOnBefore="License plate">
+                      <input type="text" nz-input formControlName="licensePlate" id="licensePlate" />
+                  </nz-input-group>
+              </nz-form-control>
+          </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="The input is not valid reason!">
+                    <nz-input-group nzAddOnBefore="Reason">
+                        <nz-select formControlName="reason" id="reason" style="width: 100%;">
+                            <nz-option *ngFor="let option of options" [nzValue]="option.value"
+                                [nzLabel]="option.label"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-control nzErrorTip="The input is not valid content!">
+                  <nz-input-group nzAddOnBefore="Content">
+                      <input type="text" nz-input formControlName="content" id="content" />
+                  </nz-input-group>
+              </nz-form-control>
+          </nz-form-item>
+        </form>
+    </div>
+</nz-modal>
