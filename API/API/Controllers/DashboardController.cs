@@ -22,45 +22,14 @@ namespace API.Controllers
             (
                 DataContext dataContext,
                 IDapperRepository dapperRepository
-
             )
         {
             _dataContext = dataContext;
             _dapperRepository = dapperRepository;
         }
 
-        [HttpPost("CountParkingAccessCar")]
-        public Task<IActionResult> CountParkingAccessCar()
-        {
-            var checkExits = _dataContext.Cars
-                .GroupBy(e => e.LicensePlateIn)
-                .Select(grp => grp.Count());
-
-            if (checkExits != null)
-            {
-                return (Task<IActionResult>)CustomResult(checkExits.Count()) ;
-            }
-
-            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
-        }
-
-        [HttpPost("CountAllParkingCar")]
-        public Task<IActionResult> CountAllParkingCar()
-        {
-            var checkExits = _dataContext.Cars
-                .GroupBy(e => e.Id)
-                .Select(grp => grp.Count());
-
-            if (checkExits != null)
-            {
-                return (Task<IActionResult>)CustomResult(checkExits.Count());
-            }
-
-            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
-        }
-
         [HttpGet("CountAllTicketMonthly")]
-        public async Task<IActionResult> GetDataStored()
+        public async Task<IActionResult> CountAllTicketMonthly()
         {
             var dp = new DynamicParameters();
 
@@ -69,44 +38,8 @@ namespace API.Controllers
             return CustomResult(data);
         }
 
-        [HttpPost("CountAllCarInventory")]
-        public Task<IActionResult> CountAllCarInventory()
-        {
-            var checkExits = _dataContext.Cars
-                .Where(h => ((int?)h.IsCarParking) == 2)
-                .GroupBy(e => e.Id)
-                .Select(grp => grp.Count());
-
-            if (checkExits != null)
-            {
-                return (Task<IActionResult>)CustomResult(checkExits.Count());
-            }
-
-            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
-        }
-
-        [HttpPost("CountParkingCarByYear")]
-        public Task<IActionResult> CountParkingCarByYear(int year)
-        {
-            var checkExits = _dataContext.Cars
-                .Where(h => h.CreationTime.Year == year)
-                .GroupBy(e => e.CreationTime.Month)
-                .Select(g => new
-                {
-                    month = g.Key,
-                    count = g.Select(e => e.Id).Count()
-                }).ToList();
-
-            if (checkExits != null)
-            {
-                return (Task<IActionResult>)CustomResult(checkExits);
-            }
-
-            return (Task<IActionResult>)CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
-        }
-
         [HttpGet("RateMaleFemale")]
-        public async Task<IActionResult> PercentMaleFemale()
+        public async Task<IActionResult> RateMaleFemale()
         {
             int countMale = await _dataContext.TicketMonthlys.AsNoTracking()
                 .Where(e => e.Gender == Enum.Status.Yes && e.CreationTime.Year == DateTime.Now.Year)
@@ -131,6 +64,16 @@ namespace API.Controllers
                 PercentMale = percentMale,
                 PercentFemale = percentFemale
             };
+
+            return CustomResult(data);
+        }
+
+        [HttpGet("GetDataCard")]
+        public async Task<IActionResult> GetDataCard()
+        {
+            var dp = new DynamicParameters();
+
+            var data = await Task.FromResult(_dapperRepository.GetAll<GetDataCardDto>("GetDataCard", dp, commandType: System.Data.CommandType.StoredProcedure));
 
             return CustomResult(data);
         }

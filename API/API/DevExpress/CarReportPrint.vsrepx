@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="20.2.5.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v20.2, Version=20.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="CarReport" Margins="100, 100, 120, 100" PaperKind="A4" PageWidth="827" PageHeight="1169" Version="20.2" Font="Arial, 9.75pt">
+  <Extensions>
+    <Item1 Ref="1" Key="VSReportExtInfo" Value=".vsrepx" />
+  </Extensions>
+  <Bands>
+    <Item1 Ref="2" ControlType="TopMarginBand" Name="TopMargin" HeightF="119.791664">
+      <Controls>
+        <Item1 Ref="3" ControlType="XRLabel" Name="label9" Multiline="true" AutoWidth="true" TextAlignment="MiddleLeft" SizeF="63.541687,23" LocationFloat="563.458252,85.00001" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="4" EventName="BeforePrint" PropertyName="Text" Expression="[month]" />
+          </ExpressionBindings>
+          <StylePriority Ref="5" UseTextAlignment="false" />
+        </Item1>
+        <Item2 Ref="6" ControlType="XRLabel" Name="label8" Multiline="true" Text="năm" TextAlignment="MiddleCenter" SizeF="40.625,23" LocationFloat="522.833252,85.00001" Padding="2,2,0,0,100">
+          <StylePriority Ref="7" UseTextAlignment="false" />
+        </Item2>
+        <Item3 Ref="8" ControlType="XRLabel" Name="label7" Multiline="true" AutoWidth="true" TextAlignment="MiddleCenter" SizeF="29.1666565,23" LocationFloat="493.6666,85.00001" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="9" EventName="BeforePrint" PropertyName="Text" Expression="[month]" />
+          </ExpressionBindings>
+          <StylePriority Ref="10" UseTextAlignment="false" />
+        </Item3>
+        <Item4 Ref="11" ControlType="XRLabel" Name="label6" Multiline="true" Text="tháng" TextAlignment="MiddleCenter" SizeF="44.7916565,23" LocationFloat="448.8749,85.00001" Padding="2,2,0,0,100">
+          <StylePriority Ref="12" UseTextAlignment="false" />
+        </Item4>
+        <Item5 Ref="13" ControlType="XRLabel" Name="label5" Multiline="true" AutoWidth="true" TextAlignment="MiddleCenter" SizeF="29.1666565,23" LocationFloat="419.708252,85.00001" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="14" EventName="BeforePrint" PropertyName="Text" Expression="[day]" />
+          </ExpressionBindings>
+          <StylePriority Ref="15" UseTextAlignment="false" />
+        </Item5>
+        <Item6 Ref="16" ControlType="XRLabel" Name="label4" Multiline="true" Text="Hà Nội, ngày" TextAlignment="MiddleRight" SizeF="419.708252,23" LocationFloat="0,85.00001" Padding="2,2,0,0,100">
+          <StylePriority Ref="17" UseTextAlignment="false" />
+        </Item6>
+        <Item7 Ref="18" ControlType="XRLabel" Name="label3" Multiline="true" Text="____________oOo____________" TextAlignment="TopCenter" SizeF="626.999939,22.9999962" LocationFloat="0,62" Padding="2,2,0,0,100">
+          <StylePriority Ref="19" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="20" ControlType="XRLabel" Name="label2" Multiline="true" Text="Độc lập - Tự do - Hạnh phúc" TextAlignment="TopCenter" SizeF="626.999939,22.9999962" LocationFloat="0,23.0000019" Font="Arial, 13.47pt, style=Bold" Padding="2,2,0,0,100">
+          <StylePriority Ref="21" UseFont="false" UseTextAlignment="false" />
+        </Item8>
+        <Item9 Ref="22" ControlType="XRLabel" Name="label1" Multiline="true" Text="CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM" TextAlignment="TopCenter" SizeF="626.999939,23" LocationFloat="0,0" Font="Arial, 13.47pt, style=Bold" Padding="2,2,0,0,100">
+          <StylePriority Ref="23" UseFont="false" UseTextAlignment="false" />
+        </Item9>
+      </Controls>
+    </Item1>
+    <Item2 Ref="24" ControlType="BottomMarginBand" Name="BottomMargin" />
+    <Item3 Ref="25" ControlType="DetailBand" Name="Detail" HeightF="319.791656">
+      <Controls>
+        <Item1 Ref="26" ControlType="XRLabel" Name="label10" Multiline="true" Text="BIÊN BẢN MẤT XE" TextAlignment="TopCenter" SizeF="626.999939,23" LocationFloat="0,0" Font="Arial, 13.47pt, style=Bold" Padding="2,2,0,0,100">
+          <StylePriority Ref="27" UseFont="false" UseTextAlignment="false" />
+        </Item1>
+      </Controls>
+    </Item3>
+  </Bands>
+</XtraReportsLayoutSerializer>

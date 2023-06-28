@@ -5,6 +5,10 @@
         <i class="fa-solid fa-user-plus mr-2"></i>
         Add
     </button>
+    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="printReport()">
+        <i class="fa-solid fa-user-plus mr-2"></i>
+        Export
+    </button>
 </div>
 
 <nz-table [nzScroll]="{x:'none',y:'35vh'}" #virtualTable [nzBordered]="true" [nzSize]="'small'" [nzData]="listData"

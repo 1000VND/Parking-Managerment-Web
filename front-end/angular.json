@@ -70,7 +70,8 @@
               "jszip",
               "devexpress-diagram",
               "devextreme-quill",
-              "devexpress-gantt"
+              "devexpress-gantt",
+              "file-saver"
             ]
           },
           "configurations": {

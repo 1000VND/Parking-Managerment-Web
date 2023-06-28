@@ -16,15 +16,22 @@ export class DasboardService {
     private toastr: ToastrService
   ) { }
 
-  getDataChart(): Observable<any> {
+  countAllTicketMonthly(): Observable<any> {
     return this.http.get(this.baseUrl + 'CountAllTicketMonthly').pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
     }));
   }
 
-  getDataDoughnut(): Observable<any> {
+  rateMaleFemale(): Observable<any> {
     return this.http.get(this.baseUrl + 'RateMaleFemale').pipe(catchError((err) => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }));
+  }
+
+  getDataCard(): Observable<any> {
+    return this.http.get(this.baseUrl + 'GetDataCard').pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
     }));

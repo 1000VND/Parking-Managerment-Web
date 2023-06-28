@@ -11,13 +11,14 @@ import { finalize } from 'rxjs';
 export class DashboardComponent implements OnInit {
   @ViewChild(LoadingComponent, { static: false }) loading!: LoadingComponent;
 
-  data: { month: string, value: number , valueLine:number}[] = [];
+  data: { month: string, value: number, valueLine: number }[] = [];
   dataService: any[] = [];
   dataDoughnut: any[] = [];
-  value1: number = 340;
-  value2: number = 5001;
-  value3: number = 250;
-  value4: number = 100;
+  dataCard: any;
+  card1: number = 0;
+  card2: number = 0;
+  card3: number = 0;
+  card4: number = 0;
   [key: string]: any;
   constructor(
     private _service: DasboardService,
@@ -30,7 +31,7 @@ export class DashboardComponent implements OnInit {
   ngAfterViewInit() {
     this.getDataChart();
     this.getDataDoughnut();
-    this.animation();
+    this.getDataCard();
   }
 
   customizeLabelText(info: any) {
@@ -39,7 +40,13 @@ export class DashboardComponent implements OnInit {
 
   customizeTooltip(arg: any) {
     return {
-      text: `${arg.argumentText} : ${arg.valueText} time`,
+      text: `${arg.argumentText} : ${arg.valueText}`,
+    };
+  }
+
+  customizeTooltipPie(arg: any) {
+    return {
+      text: `${arg.argumentText} : ${arg.valueText}%`,
     };
   }
 
@@ -49,7 +56,7 @@ export class DashboardComponent implements OnInit {
 
   getDataChart() {
     this.loading.loading(true);
-    this._service.getDataChart().pipe(finalize(() => {
+    this._service.countAllTicketMonthly().pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe(res => {
       this.dataService = [...res.data];
@@ -120,7 +127,7 @@ export class DashboardComponent implements OnInit {
 
   getDataDoughnut() {
     this.loading.loading(true);
-    this._service.getDataDoughnut().pipe(finalize(() => {
+    this._service.rateMaleFemale().pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe(res => {
       this.dataDoughnut = [
@@ -136,28 +143,61 @@ export class DashboardComponent implements OnInit {
     })
   }
 
+  getDataCard() {
+    this.loading.loading(true);
+    this._service.getDataCard().pipe(finalize(() => {
+      this.loading.loading(false);
+    })).subscribe(res => {
+      this.card1 = res.data[0].carNumber;
+      this.card2 = 100 - res.data[0].carNumber;
+      this.card3 = res.data[0].carToday;
+      this.card4 = res.data[0].moneyToday;
+      this.animation();
+    })
+  }
+
   animation() {
     const valueDisplays = document.querySelectorAll(".num") as NodeListOf<HTMLElement>;
     const endValueDuration = 2000;
 
     valueDisplays.forEach((valueDisplay, index) => {
-      const propertyName = `value${index + 1}`;
-      const endValue = this[propertyName];
-      let startValue = 0;
+      const propertyName = `card${index + 1}`;
+      if (propertyName == 'card4') {
+        const endValue = this[propertyName];
+        let startValue = 0;
 
-      let updateInterval = endValueDuration / endValue;
+        let updateInterval = endValueDuration / endValue;
 
-      let counter = setInterval(() => {
-        let increment = Math.ceil(Math.random() * 50);
-        startValue += increment;
+        let counter = setInterval(() => {
+          let increment = Math.ceil(Math.random() * 10000);
+          startValue += increment;
 
-        if (startValue >= endValue) {
-          startValue = endValue;
-          clearInterval(counter);
-        }
+          if (startValue >= endValue) {
+            startValue = endValue;
+            clearInterval(counter);
+          }
 
-        valueDisplay.textContent = startValue.toString();
-      }, updateInterval);
+          valueDisplay.textContent = startValue.toString();
+        }, updateInterval);
+
+      } else {
+        const endValue = this[propertyName];
+        let startValue = 0;
+
+        let updateInterval = endValueDuration / endValue;
+
+        let counter = setInterval(() => {
+          let increment = Math.ceil(Math.random() * 50);
+          startValue += increment;
+
+          if (startValue >= endValue) {
+            startValue = endValue;
+            clearInterval(counter);
+          }
+
+          valueDisplay.textContent = startValue.toString();
+        }, updateInterval);
+      }
     });
   }
 }

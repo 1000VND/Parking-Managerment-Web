@@ -4,6 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { LoadingComponent } from 'src/app/routes/common/loading/loading.component';
 import { finalize } from 'rxjs';
 import { CarReportService } from 'src/app/services/car-report.service';
+import { HttpClient } from '@angular/common/http';
+import * as saveAs from 'file-saver';
+import { environment } from 'src/environment/environment';
 
 @Component({
   selector: 'report-car-loss',
@@ -22,7 +25,7 @@ export class ReportCarLossComponent implements OnInit {
   constructor(
     private _service: CarReportService,
     private _toast: ToastrService,
-    private renderer: Renderer2
+    private _http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -40,6 +43,26 @@ export class ReportCarLossComponent implements OnInit {
     })).subscribe((res) => {
       this.listData = res.data;
     });
+  }
+
+  printReport() {
+    const body = {
+      day: 3,
+      month: 5,
+      year: 2023
+    }
+    return this._http
+      .post(
+        `${environment.baseUrl}Report/CarReport`,
+        body,
+        {
+          responseType: "blob",
+        }
+      )
+      .pipe(finalize(() => (this.loading.loading(false))))
+      .subscribe((blob) => {
+        saveAs(blob, "hungw" + ".docx");
+      });
   }
 
 }

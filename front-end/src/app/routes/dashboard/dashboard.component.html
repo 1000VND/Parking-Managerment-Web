@@ -2,29 +2,29 @@
 <div class="mb-3 d-flex justify-content-between">
     <nz-card style="width:300px;" nzTitle="Car number">
         <div class="d-flex flex-column">
-            <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1">{{value1}}</span>
+            <i class="fa-solid fa-car mb-3"></i>
+            <span class="num mt-1">000</span>
         </div>
     </nz-card>
 
     <nz-card style="width:300px;" nzTitle="Empty space">
         <div class="d-flex flex-column">
-            <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1">{{value2}}</span>
+            <i class="fa-regular fa-hourglass mb-3"></i>
+            <span class="num mt-1">000</span>
         </div>
     </nz-card>
 
     <nz-card style="width:300px;" nzTitle="Car today">
         <div class="d-flex flex-column">
-            <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1">{{value3}}</span>
+            <i class="fa-solid fa-calendar-day mb-3"></i>
+            <span class="num mt-1">000</span>
         </div>
     </nz-card>
 
     <nz-card style="width:300px;" nzTitle="Money today">
         <div class="d-flex flex-column">
-            <i class="fa-solid fa-user-large mb-3"></i>
-            <span class="num mt-1">{{value4}}</span>
+            <i class="fa-solid fa-coins mb-3"></i>
+            <span class="num mt-1">000</span>
         </div>
     </nz-card>
 </div>
@@ -56,7 +56,7 @@
             </dxi-series>
 
             <dxi-series  type="line" valueField="valueLine" name="Car return" color="#79d2b5" axis="frequency">
-                <dxo-label [customizeText]="customizeLabelText"></dxo-label>
+                <dxo-label [customizeText]="customizeLabelText" ></dxo-label>
             </dxi-series>
 
         </dx-chart>
@@ -73,6 +73,8 @@
                     <dxo-connector [visible]="true" [width]="1"></dxo-connector>
                 </dxo-label>
             </dxi-series>
+            <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeTooltipPie">
+            </dxo-tooltip>
         </dx-pie-chart>
     </div>
 </div>

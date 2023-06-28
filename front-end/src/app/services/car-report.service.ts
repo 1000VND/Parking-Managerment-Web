@@ -4,7 +4,6 @@ import { environment } from 'src/environment/environment';
 import { CarReportDto } from '../models/Report/CarReport/car-report.model';
 import { Observable, catchError, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { CreateCarReportDto } from '../models/Report/CarReport/create-car-report.model';
 
 @Injectable({
   providedIn: 'root'
