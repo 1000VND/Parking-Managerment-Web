@@ -44,11 +44,6 @@ export class TicketService {
     }));
   }
 
-  getPlate(): Observable<any> {
-    return this.http.get(this.baseUrl + "GetCarExits").pipe(catchError(err => {
-      this.toastr.error(err.error.message);
-      return of(err);
-    }))
-  }
+  
 }
 

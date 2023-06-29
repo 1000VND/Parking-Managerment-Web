@@ -18,7 +18,7 @@ export class CarReportService {
   ) { }
 
   getAllCarReport(): Observable<any> {
-    return this.http.get<CarReportDto>(this.baseUrl + 'GetAll').pipe(catchError((err) => {
+    return this.http.get(this.baseUrl + 'GetAll').pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
     }));
@@ -26,6 +26,13 @@ export class CarReportService {
 
   create(data: any): Observable<any> {
     return this.http.post(this.baseUrl + 'CreateOrEdit', data).pipe(catchError((err) => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }));
+  }
+
+  getDataForByIdCarReport(id: number): Observable<any> {
+    return this.http.get(this.baseUrl + 'GetDataForByIdCarReport?id=' + id).pipe(catchError((err) => {
       this.toastr.error(err.error.message);
       return of(err);
     }));

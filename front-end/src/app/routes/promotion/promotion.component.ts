@@ -72,6 +72,7 @@ export class PromotionComponent implements OnInit {
     if (index === this.selectedRowIndex) {
       this.selectedRowIndex = -1;
       this.selectedItem = new GetAllDataPromotionDto();
+      this.dataSubTale = [];
     } else {
       const previousRowElement = document.querySelector('.selected');
       if (previousRowElement) {
@@ -87,6 +88,7 @@ export class PromotionComponent implements OnInit {
         this.renderer.addClass(rowElement, 'selected');
       } else {
         this.renderer.removeClass(rowElement, 'selected');
+
       }
     });
     this.getPromotionDetail();

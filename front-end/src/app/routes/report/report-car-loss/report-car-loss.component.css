@@ -21,6 +21,41 @@ tr>th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep .ant-table-tbody.ng-star-inserted > tr.rowData.ant-table-row.ng-star-inserted:hover > td {
+::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
+}
+
+input#userName {
+  background-color: white;
+  color: black;
+}
+
+::ng-deep.ant-form-item-label.p-label>label {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+nz-date-picker {
+  width: 100%;
+}
+
+.btn-export {
+  background-color: white;
+  color: #28a745;
+  border: 2px solid;
+  border-color: #28a745;
+  border-radius: 5px;
+}
+
+.btn-add {
+  background-color: white;
+  color: #1890ff;
+  border: 2px solid;
+  border-color: #1890ff;
+  border-radius: 5px;
+}
+
+.selected {
+  background-color: #bde2ff !important;
 }

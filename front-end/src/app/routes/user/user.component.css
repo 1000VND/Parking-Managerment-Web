@@ -24,3 +24,27 @@ tr>th {
 ::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
 }
+
+.btn-add {
+  background-color: white;
+  color: #1890ff;
+  border: 2px solid;
+  border-color: #1890ff;
+  border-radius: 5px;
+}
+
+.btn-delete {
+  background-color: white;
+  color: #ff4d4f;
+  border: 2px solid;
+  border-color: #ff4d4f;
+  border-radius: 5px;
+}
+
+.btn-edit {
+  background-color: white;
+  color: #fbd66c;
+  border: 2px solid;
+  border-color: #fbd66c;
+  border-radius: 5px;
+}

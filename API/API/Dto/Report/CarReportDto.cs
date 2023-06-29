@@ -7,8 +7,11 @@ namespace API.Dto.Report
 {
     public class CarReportDto
     {
-        public int Day { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
+        public string userName { get; set; }
+        public string customerName { get; set; }
+        public string customerBirthday { get; set; }
+        public string identityCard { get; set; }
+        public string licensePlate { get; set; }
+        public string customerNumber { get; set; }
     }
 }

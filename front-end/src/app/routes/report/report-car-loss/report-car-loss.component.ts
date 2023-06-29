@@ -19,13 +19,14 @@ export class ReportCarLossComponent implements OnInit {
   isVisible = false;
   isOkLoading = false;
   selectedData: any;
-  addCarReport: CarReportDto = new CarReportDto();
+  dataReport: CarReportDto[] = [];
   selectedRowIndex = -1;
+  selectedItem: CarReportDto = new CarReportDto();
 
   constructor(
     private _service: CarReportService,
-    private _toast: ToastrService,
-    private _http: HttpClient
+    private _http: HttpClient,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit() {
@@ -45,24 +46,61 @@ export class ReportCarLossComponent implements OnInit {
     });
   }
 
-  printReport() {
-    const body = {
-      day: 3,
-      month: 5,
-      year: 2023
-    }
-    return this._http
-      .post(
-        `${environment.baseUrl}Report/CarReport`,
-        body,
-        {
-          responseType: "blob",
-        }
-      )
-      .pipe(finalize(() => (this.loading.loading(false))))
-      .subscribe((blob) => {
-        saveAs(blob, "hungw" + ".docx");
-      });
+  printReport(selected: number) {
+    this.loading.loading(true);
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+
+    this._service.getDataForByIdCarReport(selected).pipe(finalize(() => {
+      if (this.dataReport) {
+        setTimeout(()=>{
+          const body = {
+            userName: this.dataReport[0].userName,
+            customerName: this.dataReport[0].customerName,
+            customerBirthday: this.dataReport[0].customerBirthday,
+            identityCard:this.dataReport[0].identityCard,
+            licensePlate: this.dataReport[0].licensePlate,
+            customerNumber: this.dataReport[0].customerNumber
+          };
+
+  
+          return this._http.post(`${environment.baseUrl}Report/CarReport`, body, {
+            responseType: "blob",
+          }).pipe(finalize(() => {
+            this.loading.loading(false);
+          })).subscribe((blob) => {
+            saveAs(blob, "Biên bản mất xe " + dd + "_" + mm + "_" + yyyy + ".docx");
+          });
+        },500)
+      }
+    })).subscribe((res) => {
+      this.dataReport = res.data;
+    });
+
   }
 
+  onChangeSelectRow(index: number) {
+    if (index === this.selectedRowIndex) {
+      this.selectedRowIndex = -1;
+      this.selectedItem = new CarReportDto();
+    } else {
+      const previousRowElement = document.querySelector('.selected');
+      if (previousRowElement) {
+        this.renderer.removeClass(previousRowElement, 'selected');
+      }
+      this.selectedRowIndex = index;
+      this.selectedItem = this.listData.find(e => e.id == index);
+    }
+
+    const rowElements = document.querySelectorAll('tr[nz-tr]');
+    rowElements.forEach((rowElement, i) => {
+      if (i === this.selectedRowIndex) {
+        this.renderer.addClass(rowElement, 'selected');
+      } else {
+        this.renderer.removeClass(rowElement, 'selected');
+      }
+    });
+  }
 }

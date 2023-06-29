@@ -3,6 +3,11 @@
     <div class="logo"> <span nz-icon nzType="car" nzTheme="outline">
       </span></div>
     <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item routerLink="/nav-bar/dashboard" [nzMatchRouter]="true">
+        <span nz-icon nzType="dashboard" nzTheme="outline"></span>
+        <span>Dashboards</span>
+      </li>
+
       <li *ngIf="userSession == 0" nz-menu-item routerLink="/nav-bar/home" [nzMatchRouter]="true">
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Car management</span>
@@ -20,11 +25,6 @@
             <span>Vehicle loss record</span>
           </li>
         </ul>
-      </li>
-
-      <li *ngIf="userSession == 1" nz-menu-item routerLink="/nav-bar/dashboard" [nzMatchRouter]="true">
-        <span nz-icon nzType="dashboard" nzTheme="outline"></span>
-        <span>Dashboards</span>
       </li>
 
       <li *ngIf="userSession == 1" nz-menu-item routerLink="/nav-bar/register" [nzMatchRouter]="true">

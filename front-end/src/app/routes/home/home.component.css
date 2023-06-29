@@ -54,3 +54,11 @@ button {
     height: 40px;
     width: 150px;
 }
+
+.btn-add {
+    background-color: white;
+    color: #1890ff;
+    border: 2px solid;
+    border-color: #1890ff;
+    border-radius: 5px;
+  }

@@ -1,12 +1,15 @@
 <parking-loading></parking-loading>
-<div class="d-flex justify-content-between">
-    <h1>Car Reports</h1>
-    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
+<div style="background-color: #b6cbee; text-align: left;" class="d-flex justify-content-between">
+    <h1 style="margin-left: 20px; margin-bottom: 5px;">Car Report</h1>
+</div>
+<div class="d-flex justify-content-end mt-3 mb-2">
+    <button class="btn-add mr-3 mt-3" nz-button nzType="primary" (click)="createModal.show()">
         <i class="fa-solid fa-user-plus mr-2"></i>
         Add
     </button>
-    <button class="mr-3 mt-3" nz-button nzType="primary" (click)="printReport()">
-        <i class="fa-solid fa-user-plus mr-2"></i>
+    <button [disabled]="selectedItem.id == null" class="btn-export mr-3 mt-3" nz-button
+        (click)="printReport(selectedItem.id!)">
+        <i class="fa-solid fa-download mr-2"></i>
         Export
     </button>
 </div>
@@ -18,23 +21,30 @@
     </ng-template>
     <thead>
         <tr>
+            <th nzAlign="center">Creator name</th>
             <th nzAlign="center">Creation Time</th>
             <th nzAlign="center">Customer Name</th>
-            <th nzAlign="center">User Name</th>
             <th nzAlign="center">License Plate</th>
+            <th nzAlign="center">Customer Number</th>
+            <th nzAlign="center">Customer Birthday</th>
+            <th nzAlign="center">Identity Card</th>
             <th nzAlign="center">Reason</th>
-            <th nzAlign="center" nzWidth="20%">Content</th>
+            <th nzAlign="center">Content</th>
         </tr>
     </thead>
     <tbody>
-        <tr class="rowData" *ngFor="let data of virtualTable.data">
+        <tr class="rowData" *ngFor="let data of virtualTable.data" [class.selected]="data.id === selectedRowIndex"
+            (click)="onChangeSelectRow(data.id)">
             <ng-container>
+                <td nzAlign="center">{{ data.userName }}</td>
                 <td nzAlign="center" [nzDisabled]="true">{{ data.creationTime | date: 'dd/MM/yyyy HH:mm' }}</td>
-                <td>{{ data.customerName }}</td>
-                <td>{{ data.userName }}</td>
-                <td>{{ data.licensePlate }}</td>
-                <td>{{ data.reason }}</td>
-                <td>{{ data.content }}</td>
+                <td nzAlign="center">{{ data.customerName }}</td>
+                <td nzAlign="center">{{ data.licensePlate }}</td>
+                <td nzAlign="center">{{ data.customerNumber }}</td>
+                <td nzAlign="center">{{ data.customerBirthday | date: 'dd/MM/yyyy'}}</td>
+                <td nzAlign="center">{{ data.identityCard }}</td>
+                <td nzAlign="center">{{ data.reason }}</td>
+                <td nzAlign="center">{{ data.content }}</td>
 
             </ng-container>
         </tr>

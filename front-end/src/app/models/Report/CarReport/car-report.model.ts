@@ -6,4 +6,8 @@ export class CarReportDto {
   reason!: string;
   content!: string;
   creationTime!: Date;
+  customerNumber!: string;
+  customerBirthday!: Date;
+  identityCard!: string;
+  userName!: string;
 }

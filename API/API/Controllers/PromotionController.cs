@@ -245,5 +245,38 @@ namespace API.Controllers
             return CustomResult("Promotion not exits", System.Net.HttpStatusCode.NotFound);
         }
         #endregion
+
+        #region -- lấy biển số xe
+        [HttpGet("GetCarExits")]
+        public async Task<IActionResult> GetCarExits(int promotionId)
+        {
+            List<GetCarExistsDto> dataList = new List<GetCarExistsDto>();
+
+            var result = from t in _dataContext.TicketMonthlys
+                         where !_dataContext.TicketMonthlys.Any(t2 =>
+                            t2.LicensePlate == t.LicensePlate &&
+                            _dataContext.PromotionDetails
+                                .Where(pd => pd.PromotionId == promotionId && pd.IsDelete == 0)
+                                .Select(pd => pd.UserId)
+                                .Contains(t2.Id))
+                         group t by t.LicensePlate into g
+                         select g.Key;
+
+            foreach (var data in result)
+            {
+                var car = new GetCarExistsDto();
+
+                var licensePlate = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(f => f.LicensePlate == data);
+
+                car.Id = licensePlate.Id;
+
+                car.LicensePlate = data;
+
+                dataList.Add(car);
+            }
+
+            return CustomResult(dataList);
+        }
+        #endregion
     }
 }

@@ -82,11 +82,12 @@ namespace API.Controllers
                         var promoDetail = await _dataContext.PromotionDetails.FindAsync(findPromotion.PromotionDetailId);
                         promoDetail.Status = 1;
                         promoDetail.LastModificationTime = DateTime.Now;
-                        
+
                         _dataContext.PromotionDetails.Update(promoDetail);
                         await _dataContext.SaveChangesAsync();
                     }
-                } else
+                }
+                else
                 {
                     if (checkCarExist == null)
                     {
@@ -104,7 +105,7 @@ namespace API.Controllers
                     }
                 }
             }
-            
+
 
             return CustomResult("Add success!");
         }
@@ -199,20 +200,6 @@ namespace API.Controllers
         }
         #endregion
 
-        #region -- lấy biển số xe
-        [HttpGet("GetCarExits")]
-        public async Task<IActionResult> GetCarExits(int promotionId)
-        {
-            var promotion = await _dataContext.PromotionDetails.AsNoTracking().FirstOrDefaultAsync(e => e.Id == promotionId);
-
-            var checkExist = await (from t in _dataContext.TicketMonthlys.AsNoTracking().Where(ticket => (int)ticket.IsDelete == 1)
-                                    group t.LicensePlate by t.LicensePlate into g
-                                    select new
-                                    {
-                                        LicensePlate = g.Key
-                                    }).ToListAsync();
-            return CustomResult(checkExist);
-        }
-        #endregion
+        
     }
 }

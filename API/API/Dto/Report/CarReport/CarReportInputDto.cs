@@ -13,5 +13,8 @@ namespace API.Dto.Report.CarReport
         public string LicensePlate { get; set; }
         public string Reason { get; set; }
         public string Content { get; set; }
+        public string CustomerNumber { get; set; }
+        public DateTime? CustomerBirthday { get; set; }
+        public string IdentityCard { get; set; }
     }
 }

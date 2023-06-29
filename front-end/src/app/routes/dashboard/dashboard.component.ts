@@ -148,11 +148,13 @@ export class DashboardComponent implements OnInit {
     this._service.getDataCard().pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe(res => {
-      this.card1 = res.data[0].carNumber;
-      this.card2 = 100 - res.data[0].carNumber;
-      this.card3 = res.data[0].carToday;
-      this.card4 = res.data[0].moneyToday;
-      this.animation();
+      if (res.data[0] != null){
+        this.card1 = res.data[0].carNumber;
+        this.card2 = 100 - res.data[0].carNumber;
+        this.card3 = res.data[0].carToday;
+        this.card4 = res.data[0].moneyToday;
+        this.animation();
+      }
     })
   }
 

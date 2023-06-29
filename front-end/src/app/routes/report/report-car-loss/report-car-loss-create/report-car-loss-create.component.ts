@@ -37,8 +37,11 @@ export class CarReportCreateComponent implements OnInit {
     this.form = this.fb.group({
       id: [null],
       customerName: [null, Validators.required],
-      userName: [null],
+      userName: [{ disabled: true, value: this.userLocal }, Validators.required],
       licensePlate: [null, Validators.required],
+      customerNumber: [null, Validators.required],
+      identityCard: [null, Validators.required],
+      customerBirthday: [null],
       reason: [null, Validators.required],
       content: [null, Validators.required],
     })

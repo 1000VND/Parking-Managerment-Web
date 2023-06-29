@@ -30,11 +30,15 @@ namespace API.Controllers.Report
             };
 
             jsonDataSource.Fill();
+
             report.DataSource = jsonDataSource;
+
             report.DataMember = null;
 
             string contentType = string.Format("application/{0}", "docx");
+
             byte[] fileBytes = await ExportFileTypeAsync(report, "docx", contentType, true);
+
             if (fileBytes != null)
                 return File(fileBytes, contentType);
             else

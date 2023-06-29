@@ -75,5 +75,12 @@ export class PromotionService {
     }))
   }
 
+  getCarExits(promotionId: number): Observable<any> {
+    return this.http.get(this.baseUrl + "GetCarExits?promotionId=" + promotionId).pipe(catchError(err => {
+      this.toastr.error(err.error.message);
+      return of(err);
+    }))
+  }
+
 }
 
