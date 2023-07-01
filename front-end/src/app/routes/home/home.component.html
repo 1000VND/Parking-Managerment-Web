@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-around">
-                        <button class="btn-add btn-car" nz-button  (click)="capPictureOut()">
+                        <button class="btn-add btn-car" nz-button (click)="capPictureOut()">
                             <i class="fa-solid fa-camera mr-2"></i>
                             Take a shot
                         </button>
@@ -91,8 +91,8 @@
                             <nz-descriptions-item *ngIf="isScan" nzTitle="License plate"><mark>{{ resultImageOut
                                     }}</mark></nz-descriptions-item>
                             <nz-descriptions-item nzTitle="Customer type">{{carOutDto.typeCard != null ?
-                                (carOutDto.typeCard == 1 ? 'Khách hàng tháng'
-                                :'Khách hàng vãng lai') : ''}}</nz-descriptions-item>
+                                (carOutDto.typeCard == 1 ? 'Monthly customer' :'Current customers') :
+                                ''}}</nz-descriptions-item>
                             <nz-descriptions-item nzTitle="Time in">{{timeOut}}</nz-descriptions-item>
 
                             <nz-descriptions-item nzTitle="Time out">{{timeOut1}}</nz-descriptions-item>

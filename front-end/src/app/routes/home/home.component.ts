@@ -157,7 +157,7 @@ export class HomeComponent implements OnInit {
             const totalTimeInMilliseconds = timeOut.getTime() - timeIn.getTime();
             const totalTimeInHours = totalTimeInMilliseconds / (1000 * 60 * 60);
             this.totalTime = totalTimeInHours.toFixed(2) + ' Hours';
-            this.cost = this.carOutDto.cost;
+            this.cost = this.carOutDto.typeCard == 1 ? 0 : this.carOutDto.cost;
           })
         }
         else {
@@ -249,6 +249,7 @@ export class HomeComponent implements OnInit {
     this.totalTime = '';
     this.imageOut = '/assets/cameranotfound.png';
     this.cost = 0;
+    this.carOutDto = new CarOutDto();
   }
 
   validateIn() {
