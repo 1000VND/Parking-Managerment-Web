@@ -40,6 +40,7 @@ namespace API
             {
                 options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<IDapperRepository, DapperRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataFormatService } from './services/data-format.service';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +8,11 @@ import { DataFormatService } from './services/data-format.service';
 export class AppComponent implements OnInit {
 
   constructor(
-  ){}
-  
+  ) { }
+
   ngOnInit(): void {
-    
+
   }
   title = 'front-end';
-  
+
 }

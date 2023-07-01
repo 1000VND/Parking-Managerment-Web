@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-::ng-deep .ant-input-group-addon.ng-star-inserted {
+:host::ng-deep .ant-input-group-addon.ng-star-inserted {
   background: #dcdcdc;
   color: black;
 }
@@ -11,7 +11,7 @@
   border: 1px solid black;
 }
 
-:host ::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
+:host::ng-deep .ant-pagination.ant-table-pagination.ant-table-pagination-right.mini.ng-star-inserted {
   display: block !important;
 }
 
@@ -23,7 +23,7 @@ tr>th {
   background-color: #bde2ff !important;
 }
 
-::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
+:host::ng-deep .ant-table-tbody.ng-star-inserted>tr.rowData.ant-table-row.ng-star-inserted:hover>td {
   background: unset !important;
 }
 
@@ -44,4 +44,47 @@ tr>th {
 
 nz-date-picker {
   width: 100%;
+}
+
+.table {
+  width: 100%;
+}
+
+/* Styles for small screens */
+@media screen and (max-width: 600px) {
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table ts {
+    display: block;
+    width: 100%;
+  }
+}
+
+.btn-add {
+  background-color: white;
+  color: #1890ff;
+  border: 2px solid;
+  border-color: #1890ff;
+  border-radius: 5px;
+}
+
+.btn-delete {
+  background-color: white;
+  color: #ff4d4f;
+  border: 2px solid;
+  border-color: #ff4d4f;
+  border-radius: 5px;
+}
+
+.btn-edit {
+  background-color: white;
+  color: #fbd66c;
+  border: 2px solid;
+  border-color: #fbd66c;
+  border-radius: 5px;
 }

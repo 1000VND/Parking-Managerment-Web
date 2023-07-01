@@ -106,13 +106,44 @@ namespace API.Controllers
         [HttpGet("GetPromotionByNow")]
         public async Task<IActionResult> FindPromotionByDate(string plate)
         {
-            var checkExits = await _dataContext.Promotions.AsNoTracking()
-                .Where(e => e.IsDelete == 0 &&  
-                DateTime.Now.Date >= e.FromDate.Value.Date && DateTime.Now.Date <= e.ToDate.Value.Date).ToListAsync();
+            var checkCarExist = await _dataContext.TicketMonthlys.AsNoTracking().FirstOrDefaultAsync(e => e.LicensePlate == plate && e.IsDelete == 0);
+            var checkCarExist1 = await _dataContext.TicketMonthlys.AsNoTracking().OrderBy(e=>e.Id).FirstOrDefaultAsync(e => e.LicensePlate == plate && e.IsDelete == Status.Yes);
 
-            if (checkExits != null)
+            //TH: chưa đăng ký bao giờ sẽ được hưởng những khuyến mãi mặc định
+            var getPromoNow = await _dataContext.Promotions.AsNoTracking()
+                .Where(e => e.IsDelete == 0 &&
+                DateTime.Now.Date >= e.FromDate.Value.Date && DateTime.Now.Date <= e.ToDate.Value.Date
+                && e.PromotionName.ToLower().Contains("mặc định")).ToListAsync();
+
+            if (checkCarExist1 != null)
             {
-                return CustomResult(checkExits);
+                //TH: khách hàng đã đăng ký rồi
+                var getPromoByPlate = await (from pd in _dataContext.PromotionDetails.Where(e => e.IsDelete == 0 && e.Status == 0)
+                                             join p in _dataContext.Promotions.Where(e => e.IsDelete == 0 && DateTime.Now.Date >= e.FromDate.Value.Date
+                                             && DateTime.Now.Date <= e.ToDate.Value.Date) on pd.PromotionId equals p.Id into pJoined
+                                             from lj in pJoined
+                                             join t in _dataContext.TicketMonthlys.Where(e => e.IsDelete == Status.Yes) on pd.UserId equals t.Id into tJoined
+                                             from ljt in tJoined
+                                             where pd.UserId == checkCarExist1.Id
+                                             select new
+                                             {
+                                                 Id = lj.Id,
+                                                 PromotionName = lj.PromotionName
+                                             }).ToListAsync();
+
+                return CustomResult(getPromoByPlate);
+            }
+            else
+            {
+                //TH1
+                if (checkCarExist != null)
+                {
+                    return CustomResult("The car is in the parking lot!", System.Net.HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    return CustomResult(getPromoNow);
+                }
             }
             return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
         }
@@ -122,13 +153,17 @@ namespace API.Controllers
         [HttpGet("GetDataById")]
         public async Task<IActionResult> FindPromotion(int id)
         {
-            var checkExits = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == id);
-
-            if (checkExits != null)
+            if (id != 0)
             {
-                return CustomResult(checkExits);
+                var checkExits = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == id);
+
+                if (checkExits != null)
+                {
+                    return CustomResult(checkExits);
+                }
+                return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
             }
-            return CustomResult("Not Found", System.Net.HttpStatusCode.NotFound);
+            return CustomResult("Not Found");
         }
         #endregion
 
@@ -160,7 +195,7 @@ namespace API.Controllers
                                    from pdj in pdJoined.DefaultIfEmpty()
                                    join tm in _dataContext.TicketMonthlys on pdj.UserId equals tm.Id
                                    where p.Id == id && pdj.IsDelete == 0
-                                   select new 
+                                   select new
                                    {
                                        Id = pdj.Id,
                                        CustomerName = tm.CustomerName,
@@ -208,6 +243,39 @@ namespace API.Controllers
             }
 
             return CustomResult("Promotion not exits", System.Net.HttpStatusCode.NotFound);
+        }
+        #endregion
+
+        #region -- lấy biển số xe
+        [HttpGet("GetCarExits")]
+        public async Task<IActionResult> GetCarExits(int promotionId)
+        {
+            List<GetCarExistsDto> dataList = new List<GetCarExistsDto>();
+
+            var result = from t in _dataContext.TicketMonthlys
+                         where !_dataContext.TicketMonthlys.Any(t2 =>
+                            t2.LicensePlate == t.LicensePlate &&
+                            _dataContext.PromotionDetails
+                                .Where(pd => pd.PromotionId == promotionId && pd.IsDelete == 0)
+                                .Select(pd => pd.UserId)
+                                .Contains(t2.Id))
+                         group t by t.LicensePlate into g
+                         select g.Key;
+
+            foreach (var data in result)
+            {
+                var car = new GetCarExistsDto();
+
+                var licensePlate = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(f => f.LicensePlate == data);
+
+                car.Id = licensePlate.Id;
+
+                car.LicensePlate = data;
+
+                dataList.Add(car);
+            }
+
+            return CustomResult(dataList);
         }
         #endregion
     }

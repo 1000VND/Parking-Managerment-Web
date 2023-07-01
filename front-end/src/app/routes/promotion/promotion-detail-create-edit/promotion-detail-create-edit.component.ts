@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
@@ -15,6 +15,7 @@ import { GetAllDataPromotionDto } from 'src/app/models/Promotion/get-all.model';
 })
 export class PromotionDetailCreateEditComponent implements OnInit {
   @ViewChild(LoadingComponent, { static: false }) loading!: LoadingComponent;
+  @Input() selectedItem!: number;
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
   @Output() modalClose: EventEmitter<any> = new EventEmitter<any>();
 
@@ -28,7 +29,6 @@ export class PromotionDetailCreateEditComponent implements OnInit {
 
   constructor(
     private _service: PromotionService,
-    private _tiketService: TicketService,
     private fb: FormBuilder,
     private _toastr: ToastrService
   ) { }
@@ -76,7 +76,7 @@ export class PromotionDetailCreateEditComponent implements OnInit {
   getUser() {
     this.userList = [];
     this.loading.loading(true);
-    this._tiketService.getPlate().pipe(finalize(() => {
+    this._service.getCarExits(this.selectedItem).pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe(res => {
       res.data.map((e: any) => {

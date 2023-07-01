@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Login } from 'src/app/models/login.model';
+import { Router } from '@angular/router';
+import { Login } from 'src/app/models/User/login.model';
 import { LoadingComponent } from '../common/loading/loading.component';
 import { finalize } from 'rxjs';
-import { UserDto } from 'src/app/models/user.model';
 
 @Component({
   selector: 'login',
@@ -23,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private _login: LoginService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private toastr: ToastrService,
     private router: Router,
   ) { }
@@ -31,19 +30,20 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
-      password: [null, [Validators.required]],
+      passWord: [null, [Validators.required]],
     });
   }
+
   submitForm() {
     this.loading.loading(true);
-    this._login.checkUser(this.dto)?.pipe(finalize(() => {
+    this._login.checkUser(this.validateForm.value)?.pipe(finalize(() => {
       this.loading.loading(false);
     })).subscribe((res: any) => {
       if (res.statusCode == 200) {
         localStorage.setItem('user', JSON.stringify(res.data))
         sessionStorage.setItem('user', JSON.stringify(res.data))
         if (res.data.role == 1) {
-          this.router.navigateByUrl('nav-bar/register');
+          this.router.navigateByUrl('nav-bar/dashboard');
         } else {
           this.router.navigateByUrl('nav-bar/home');
         }

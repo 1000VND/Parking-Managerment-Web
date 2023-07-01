@@ -34,58 +34,80 @@ namespace API.Controllers
 
         private async Task<IActionResult> Create(TicketMonthlyInput input)
         {
-            var checkExits = await _dataContext.TicketMonthlys.FirstOrDefaultAsync(ticket => ticket.LicensePlate == input.LicensePlate);
-
-            var checkExits1 = await _dataContext.TicketMonthlys.AsNoTracking()
-                                     .Where(ticket => ticket.LicensePlate == input.LicensePlate && (int)ticket.IsDelete == 1)
-                                     .OrderByDescending(e => e.LastRegisterDate).Select(t => t).FirstOrDefaultAsync();
 
             int numOfMonths = (input.LastRegisterDate.Year - DateTime.Now.Year) * 12 + (input.LastRegisterDate.Month - DateTime.Now.Month);
 
-            var promotion = await _dataContext.Promotions.FirstOrDefaultAsync(e => e.Id == input.PromotionId);
+            //lấy dữ liệu cho trường hợp chưa đăng ký lần nào
+            var checkCarExist = await _dataContext.TicketMonthlys.AsNoTracking().FirstOrDefaultAsync(e => e.LicensePlate == input.LicensePlate && e.IsDelete == 0);
 
-            if (checkExits == null)
-            {
-                //Khách hàng chưa đăng ký vé tháng lần nào
-                var ticketMonthly = new TicketMonthly
-                {
-                    LicensePlate = input.LicensePlate,
-                    PhoneNumber = input.PhoneNumber,
-                    CustomerName = input.CustomerName,
-                    CustomerAddress = input.CustomerAddress,
-                    CustomerImgage = input.CustomerImage,
-                    Birthday = input.Birthday,
-                    Gender = input.Gender,
-                    LastRegisterDate = input.LastRegisterDate,
-                    CreationTime = DateTime.Now,
-                    Cost = input.Cost
-                };
+            //lấy dữ liệu cho trường hợp quay lại đăng ký
+            var checkCarExist1 = await _dataContext.TicketMonthlys.AsNoTracking().OrderBy(e => e.Id).FirstOrDefaultAsync(e => e.LicensePlate == input.LicensePlate && e.IsDelete == Status.Yes);
 
-                await _dataContext.TicketMonthlys.AddAsync(ticketMonthly);
-                await _dataContext.SaveChangesAsync();
-                return CustomResult("Add success!");
-            }
-            else
+            TicketMonthly ticketMonthly = new TicketMonthly
             {
-                //Khách hàng đã đăng ký vé tháng ít nhất 1 lần
-                var ticketMonthly = new TicketMonthly
+                LicensePlate = input.LicensePlate,
+                PhoneNumber = input.PhoneNumber,
+                CustomerName = input.CustomerName,
+                CustomerAddress = input.CustomerAddress,
+                CustomerImgage = input.CustomerImage,
+                Birthday = input.Birthday,
+                Gender = input.Gender,
+                LastRegisterDate = input.LastRegisterDate,
+                CreationTime = DateTime.Now,
+                Cost = input.Cost * numOfMonths
+            };
+            var userIdnew = await _dataContext.TicketMonthlys.AddAsync(ticketMonthly);
+            await _dataContext.SaveChangesAsync();
+
+            if (input.PromotionId != 0)
+            {
+                if (checkCarExist1 != null)
                 {
-                    LicensePlate = input.LicensePlate,
-                    PhoneNumber = input.PhoneNumber,
-                    CustomerName = input.CustomerName,
-                    CustomerAddress = input.CustomerAddress,
-                    CustomerImgage = input.CustomerImage,
-                    Birthday = input.Birthday,
-                    Gender = input.Gender,
-                    LastRegisterDate = input.LastRegisterDate,
-                    CreationTime = DateTime.Now,
-                    Cost = input.Cost * numOfMonths
-                };
-                _dataContext.TicketMonthlys.Add(ticketMonthly);
-                await _dataContext.SaveChangesAsync();
-                return CustomResult("Add success!");
+                    var getPromoByPlate = await (from pd in _dataContext.PromotionDetails.Where(e => e.IsDelete == 0 && e.Status == 0)
+                                                 join p in _dataContext.Promotions.Where(e => e.IsDelete == 0 && DateTime.Now.Date >= e.FromDate.Value.Date
+                                                 && DateTime.Now.Date <= e.ToDate.Value.Date) on pd.PromotionId equals p.Id into pJoined
+                                                 from lj in pJoined
+                                                 join t in _dataContext.TicketMonthlys.Where(e => e.IsDelete == Status.Yes) on pd.UserId equals t.Id into tJoined
+                                                 from ljt in tJoined
+                                                 where pd.UserId == checkCarExist1.Id
+                                                 select new
+                                                 {
+                                                     PromotionDetailId = pd.Id,
+                                                     PromotionId = lj.Id,
+                                                     Status = pd.Status
+                                                 }).ToListAsync();
+                    var findPromotion = getPromoByPlate.Find(f => f.PromotionId == input.PromotionId);
+                    if (findPromotion.Status == 0)
+                    {
+                        var promoDetail = await _dataContext.PromotionDetails.FindAsync(findPromotion.PromotionDetailId);
+                        promoDetail.Status = 1;
+                        promoDetail.LastModificationTime = DateTime.Now;
+
+                        _dataContext.PromotionDetails.Update(promoDetail);
+                        await _dataContext.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    if (checkCarExist == null)
+                    {
+                        var promoDetail = new PromotionDetail
+                        {
+                            CreationTime = DateTime.Now,
+                            IsDelete = Status.No,
+                            PromotionId = input.PromotionId,
+                            UserId = userIdnew.Entity.Id,
+                            Status = 1
+                        };
+
+                        await _dataContext.PromotionDetails.AddAsync(promoDetail);
+                        await _dataContext.SaveChangesAsync();
+                    }
+                }
             }
-            return CustomResult("Add fail!");
+
+
+            return CustomResult("Add success!");
         }
         private async Task<IActionResult> Update(TicketMonthlyInput input)
         {
@@ -128,17 +150,29 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var dataExits = await _dataContext.TicketMonthlys.FindAsync(id);
+            var dataExist = await _dataContext.TicketMonthlys.FindAsync(id);
 
-            if (dataExits != null && dataExits.IsDelete == Status.No)
+            var dataExistPromotionDetail = await _dataContext.PromotionDetails.Where(e => e.UserId == id).ToListAsync();
+
+            if (dataExist != null && dataExist.IsDelete == Status.No)
             {
-                dataExits.IsDelete = Status.Yes;
-                dataExits.LastModificationTime = DateTime.Now;
-                _dataContext.Entry(dataExits).State = EntityState.Modified;
+                dataExist.IsDelete = Status.Yes;
+                dataExist.LastModificationTime = DateTime.Now;
+                _dataContext.Entry(dataExist).State = EntityState.Modified;
                 await _dataContext.SaveChangesAsync();
-                return CustomResult(dataExits);
-            }
 
+                if (dataExistPromotionDetail.Count != 0)
+                {
+                    foreach (var data in dataExistPromotionDetail)
+                    {
+                        data.IsDelete = Status.Yes;
+                        data.LastModificationTime = DateTime.Now;
+                        _dataContext.Entry(data).State = EntityState.Modified;
+                        await _dataContext.SaveChangesAsync();
+                    }
+                }
+                return CustomResult(dataExist);
+            }
             return NotFound();
         }
 
@@ -163,22 +197,9 @@ namespace API.Controllers
             {
                 return CustomResult("New customer");
             }
-
         }
         #endregion
 
-        #region -- lấy biển số xe
-        [HttpGet("GetCarExits")]
-        public async Task<IActionResult> GetCarExits()
-        {
-            var checkExits = await (from t in _dataContext.TicketMonthlys.AsNoTracking().Where(ticket => (int)ticket.IsDelete == 1)
-                                    group t.LicensePlate by t.LicensePlate into g
-                                    select new
-                                    {
-                                        LicensePlate = g.Key
-                                    }).ToListAsync();
-            return CustomResult(checkExits);
-        }
-        #endregion
+        
     }
 }

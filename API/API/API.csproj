@@ -5,7 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\CarReport.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DevExpress\CarReportPrint.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abp.Dapper" Version="5.0.0" />
     <PackageReference Include="CoreApiResponse" Version="1.0.1" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="20.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
@@ -18,6 +28,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DevExpress\CarReportPrint.cs">
+      <DependentUpon>CarReportPrint.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="DevExpress\CarReportPrint.Designer.cs">
+      <DependentUpon>CarReportPrint.vsrepx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

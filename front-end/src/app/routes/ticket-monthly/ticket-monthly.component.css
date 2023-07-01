@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-::ng-deep .ant-input-group-addon.ng-star-inserted {
+:host ::ng-deep .ant-input-group-addon.ng-star-inserted {
   background: #dcdcdc;
   color: black;
 }
@@ -38,14 +38,42 @@ tr.is-parking-two {
   justify-content: flex-start;
 }
 
-::ng-deep.ant-modal {
-  width: 1200px !important;
-}
-
 nz-date-picker {
   width: 100%;
 }
 
 ::ng-deep.webcam-wrapper>.mirrored {
   transform: scaleX(1) !important;
+}
+
+.btn-add {
+  background-color: white;
+  color: #1890ff;
+  border: 2px solid;
+  border-color: #1890ff;
+  border-radius: 5px;
+}
+
+.btn-delete {
+  background-color: white;
+  color: #ff4d4f;
+  border: 2px solid;
+  border-color: #ff4d4f;
+  border-radius: 5px;
+}
+
+.btn-detail {
+  background-color: white;
+  color: #abc23a;
+  border: 2px solid;
+  border-color: #abc23a;
+  border-radius: 5px;
+}
+
+.btn-prepare {
+  background-color: white;
+  color: #1abc9c;
+  border: 2px solid;
+  border-color: #1abc9c;
+  border-radius: 5px;
 }

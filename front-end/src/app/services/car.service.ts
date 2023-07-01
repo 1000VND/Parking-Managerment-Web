@@ -37,7 +37,7 @@ export class CarService {
     }));
   }
 
-  carOut(input: CarOutDto): Observable<any>{
+  carOut(input: CarOutDto): Observable<any> {
     return this._http.post(this.baseUrl + 'CarOut', input).pipe(catchError((err) => {
       return of(err);
     }));

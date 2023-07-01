@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environment/environment';
-import { UserDto } from '../models/user.model';
+import { UserDto } from '../models/User/user.model';
 import { Observable, catchError, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CreateEditUserDto } from '../models/User/createedit.model';

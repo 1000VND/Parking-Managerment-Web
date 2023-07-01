@@ -18,7 +18,6 @@ export class NavBarComponent implements OnInit {
   ngOnInit(): void {
     this.userLocal = JSON.parse(localStorage.getItem('user') || '{}').fullName;
     this.userSession = JSON.parse(sessionStorage.getItem("user") || '{}').role;
-    //localStorage.removeItem('user')
   }
 
   submitForm() {

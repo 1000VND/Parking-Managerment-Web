@@ -1,0 +1,80 @@
+<parking-loading></parking-loading>
+<div class="mb-3 d-flex justify-content-between">
+    <nz-card style="width:300px;" nzTitle="Car number">
+        <div class="d-flex flex-column">
+            <i class="fa-solid fa-car mb-3"></i>
+            <span class="num mt-1">000</span>
+        </div>
+    </nz-card>
+
+    <nz-card style="width:300px;" nzTitle="Empty space">
+        <div class="d-flex flex-column">
+            <i class="fa-regular fa-hourglass mb-3"></i>
+            <span class="num mt-1">000</span>
+        </div>
+    </nz-card>
+
+    <nz-card style="width:300px;" nzTitle="Car today">
+        <div class="d-flex flex-column">
+            <i class="fa-solid fa-calendar-day mb-3"></i>
+            <span class="num mt-1">000</span>
+        </div>
+    </nz-card>
+
+    <nz-card style="width:300px;" nzTitle="Money today">
+        <div class="d-flex flex-column">
+            <i class="fa-solid fa-coins mb-3"></i>
+            <span class="num mt-1">000</span>
+        </div>
+    </nz-card>
+</div>
+
+<div class="d-flex mt-3">
+    <div class="chart" id="chart">
+        <dx-chart title="Customer data" [dataSource]="data" class="mr-3">
+
+            <dxi-value-axis name="frequency" position="left" [showZero]="true">
+                <dxo-label [customizeText]="customizeLabelText"></dxo-label>
+            </dxi-value-axis>
+
+            <dxo-common-series-settings argumentField="month" type="bar" hoverMode="allArgumentPoints"
+                selectionMode="allArgumentPoints">
+                <dxo-label [visible]="true" [format]="{ type: 'fixedPoint', precision: 0 }">
+                </dxo-label>
+            </dxo-common-series-settings>
+
+            <dxo-legend verticalAlignment="bottom" horizontalAlignment="center" itemTextPosition="top">
+            </dxo-legend>
+
+            <dxo-export [enabled]="true"></dxo-export>
+
+            <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeTooltip">
+            </dxo-tooltip>
+
+            <dxi-series axis="frequency" valueField="value" name="Car parking" type="bar"
+                color="#1ba8f0">
+            </dxi-series>
+
+            <dxi-series  type="line" valueField="valueLine" name="Car return" color="#79d2b5" axis="frequency">
+                <dxo-label [customizeText]="customizeLabelText" ></dxo-label>
+            </dxi-series>
+
+        </dx-chart>
+    </div>
+
+    <div class="pie-chart" id="pie">
+        <dx-pie-chart title="Percent male female ticket monthly" type="doughnut" palette="Soft Pastel"
+            [dataSource]="dataDoughnut">
+            <dxo-export [enabled]="true"></dxo-export>
+            <dxo-legend horizontalAlignment="center" verticalAlignment="bottom"></dxo-legend>
+            <dxi-series argumentField="type" valueField="percent">
+                <dxo-small-values-grouping mode="topN" [topCount]="3"></dxo-small-values-grouping>
+                <dxo-label [visible]="true" format="fixedPoint" [customizeText]="customizeLabelDoughnut">
+                    <dxo-connector [visible]="true" [width]="1"></dxo-connector>
+                </dxo-label>
+            </dxi-series>
+            <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeTooltipPie">
+            </dxo-tooltip>
+        </dx-pie-chart>
+    </div>
+</div>

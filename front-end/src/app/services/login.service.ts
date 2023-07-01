@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from 'src/environment/environment';
-import { Login } from '../models/login.model';
-import { UserDto } from '../models/user.model';
+import { Login } from '../models/User/login.model';
+import { UserDto } from '../models/User/user.model';
 import { ToastrService } from 'ngx-toastr';
 
 

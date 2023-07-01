@@ -1,34 +1,75 @@
 <parking-loading></parking-loading>
-<div class="container">
-    <h3 class="m-0"
-        style="text-align: center; font-weight: bold; text-transform: uppercase; color: #000; margin-bottom: 10px !important;">
-        LOGIN
+<div class="login-bg">
+  <div class="login-card">
+    <img style="width: 45px; height: 45px; margin-top: 50px" src="assets/huce.png" alt="" />
+    <h3 style="
+        font-size: 30px;
+        text-align: center;
+        color: #000;
+        margin-top: 20px;
+        font-weight: 500;
+      ">
+      Welcome back!
     </h3>
-    <form nz-form [formGroup]="validateForm" class="login-form">
+    <h5 style="
+        font-size: 15px;
+        text-align: center;
+        color: #7e7a7a;
+        margin-top: 20px;
+        font-weight: 500;
+      ">
+      Sign in to continue
+    </h5>
+    <div style="display: flex; justify-content: center; align-items: center">
+      <form nz-form [formGroup]="validateForm" class="login-form d-flex flex-column">
+        <h3 style="
+            font-size: 20px;
+            text-align: start;
+            color: #000;
+            margin-top: 20px;
+            font-weight: 500;
+          ">
+          Username
+        </h3>
         <nz-form-item>
-            <nz-form-control nzErrorTip="Please input your user name!">
-                <nz-input-group nzPrefixIcon="user">
-                    <input type="text" nz-input formControlName="userName" placeholder="Username"
-                        [(ngModel)]="dto.userName" />
-                </nz-input-group>
-            </nz-form-control>
+          <nz-form-control nzErrorTip="Please input your user name!">
+            <nz-input-group nzPrefixIcon="user">
+              <input type="text" nz-input formControlName="userName" placeholder="Username" id="userName" />
+            </nz-input-group>
+          </nz-form-control>
         </nz-form-item>
+        <h3 style="
+            font-size: 20px;
+            text-align: start;
+            color: #000;
+            margin-top: 20px;
+            font-weight: 500;
+          ">
+          Password
+        </h3>
         <nz-form-item>
-            <nz-form-control nzErrorTip="Please input your pass word!">
-                <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
-                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password" placeholder="Password"
-                        [(ngModel)]="dto.passWord" />
-                </nz-input-group>
-                <ng-template #suffixTemplate>
-                    <span
-                      nz-icon
-                      [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
-                      (click)="passwordVisible = !passwordVisible"
-                    ></span>
-                  </ng-template>
-            </nz-form-control>
+          <nz-form-control nzErrorTip="Please input your pass word!">
+            <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+              <input [type]="passwordVisible ? 'text' : 'PassWord'" nz-input formControlName="passWord" id="passWord"
+                placeholder="Password" />
+            </nz-input-group>
+            <ng-template #suffixTemplate>
+              <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                (click)="passwordVisible = !passwordVisible"></span>
+            </ng-template>
+          </nz-form-control>
         </nz-form-item>
-        <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" (click)="submitForm()">Log
-            in</button>
-    </form>
+        <div class="btn-login mt-3">
+          <button nz-button class="login-form-button" [nzType]="'primary'" (click)="submitForm()" style="
+              font-size: 20px;
+              color: #000;
+              margin-top: 20px;
+              font-weight: 500;
+            ">
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

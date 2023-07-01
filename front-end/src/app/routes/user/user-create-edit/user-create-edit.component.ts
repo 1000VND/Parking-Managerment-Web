@@ -73,7 +73,7 @@ export class UserCreateEditComponent implements OnInit {
     this.form.reset();
     // this.userDto = null;
     if (userDto) {
-      //this.form.controls['passWord'].setValidators(null);
+      this.form.controls['passWord'].setValidators(null);
       this.form.patchValue(userDto);
       this.userDto = userDto;
     } else {
